@@ -28,6 +28,14 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .layer { position: absolute; pointer-events: none; }
 .layer-in { width: 100%; height: 100%; }
 .layer img { width: 100%; height: 100%; display: block; user-select: none; }
+.strip img { position: absolute; height: auto !important; }
+.strip.at-b img { bottom: 0; }
+/* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
+.strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
+.strip.at-t img { top: 0; }
+/* the window's wall carries on past the picture on wide screens */
+.k-frame { box-shadow: 0 0 0 100vw #7a3b2a; }
+.k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
   radial-gradient(1.2px 1.2px at 44% 12%, #fff, #0000), radial-gradient(1px 1px at 58% 33%, #fff, #0000),

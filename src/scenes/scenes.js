@@ -108,7 +108,7 @@ export const SCENES = [
     layers: [
       L('clouds-horizon-night', 1200, 330, { y: 520, z: 1 }),
       L('cloud-l', 240, 150, { art: 'cloud-night', ax: 'l', x: 60, y: 780, z: 2 }), L('cloud-r', 240, 150, { art: 'cloud-night', ax: 'r', x: 60, y: 900, z: 2, flip: true }),
-      L('mehendi-window', 1180, 2000, { y: 0, z: 3, kind: 'frame', full: true }),
+      L('mehendi-window', 1180, 2000, { y: 0, z: 3, kind: 'frame' }),
       L('mehendi-seat', 1500, 420, { y: 60, z: 4, full: true, kind: 'ground' }),
       person('mehendi-groom', 480, 660, -215, 110, 5), person('mehendi-bride', 520, 600, 215, 80, 6),
       ...foliage(7), ...flowers('flowers-white'),
