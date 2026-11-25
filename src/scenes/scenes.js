@@ -1,4 +1,4 @@
-import { slide, rise, fade, camera, closeUp, lines, idle } from './motion.js'
+import { slide, rise, lines, idle } from './motion.js'
 
 // Each scene: sky, layers, where its text sits, the intro timeline and the idle motion.
 // `leave` is how autoplay goes to the next scene: a hard cut or a cross-fade, as in the film.
@@ -36,12 +36,11 @@ export const SCENES = [
       person('hero-groom', 470, 960, -230, 110, 6), person('hero-bride', 520, 960, 210, 110, 7),
       ...flowers('flowers-yellow'),
     ],
-    play(tl, q, root, world) {
+    play(tl, q, root) {
       rise(tl, q, ['temple-l', 'temple-r'], 0.3, 1.2)
-      slide(tl, q, 'hero-groom', 'left', 2.2, 0.95)
-      slide(tl, q, 'hero-bride', 'right', 2.2, 0.95)
-      closeUp(tl, world, { at: 3.2, until: 4.75, scale: 1.5, on: '50% 66%' })
-      lines(tl, root, 5.2, { step: 0.55 })
+      slide(tl, q, 'hero-groom', 'left', 1.5, 1.1)
+      slide(tl, q, 'hero-bride', 'right', 1.5, 1.1)
+      lines(tl, root, 3, { step: 0.55 })
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9)],
   },
@@ -55,13 +54,11 @@ export const SCENES = [
       L('foliage-l', 480, 480, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -70, z: 8, kind: 'plant' }),
       ...flowers('flowers-lotus'),
     ],
-    play(tl, q, root, world) {
-      tl.set(world, { transformOrigin: '50% 60%', scale: 1.16 }, 0)
-      camera(tl, world, { scale: 1, at: 0.02, dur: 1.5, ease: 'power2.out' })
+    play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.1, 0.9)
       slide(tl, q, 'foliage-l', 'up', 0.3, 1.2)
       slide(tl, q, 'river-props', 'left', 0.75, 0.9)
-      lines(tl, root, 2.5, { step: 0.5 })
+      lines(tl, root, 1.9, { step: 0.5 })
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.drift(q, 'river-boat', 60, 8)],
   },
@@ -73,14 +70,12 @@ export const SCENES = [
       person('briddhi-family', 900, 660, 0, 150, 5), L('briddhi-altar', 620, 300, { y: 60, z: 6 }),
       ...foliage(), ...flowers('flowers-white'),
     ],
-    play(tl, q, root, world) {
-      tl.set(world, { transformOrigin: '50% 75%', scale: 1.3 }, 0)
-      camera(tl, world, { scale: 1, at: 0.02, dur: 2.4, ease: 'power2.inOut' })
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 1.1, 1)
-      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 1.2, 1.2)
-      slide(tl, q, 'briddhi-altar', 'down', 1.7, 0.9)
-      slide(tl, q, 'briddhi-family', 'down', 2.1, 1)
-      lines(tl, root, 3.3)
+    play(tl, q, root) {
+      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
+      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.3, 1.2)
+      slide(tl, q, 'briddhi-family', 'down', 0.9, 1.1)
+      slide(tl, q, 'briddhi-altar', 'down', 1.5, 0.9)
+      lines(tl, root, 2.5)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'briddhi-family')],
   },
@@ -93,13 +88,12 @@ export const SCENES = [
       person('tilak-groom', 400, 600, 170, 120, 5), person('tilak-elder', 420, 620, -200, 110, 6),
       ...flowers('flowers-yellow'),
     ],
-    play(tl, q, root, world) {
-      rise(tl, q, 'tilak-madwa', 0.2, 1.3)
+    play(tl, q, root) {
+      slide(tl, q, 'tilak-madwa', 'down', 0.2, 1.2)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.5, 1)
       slide(tl, q, 'tilak-groom', 'right', 1.3, 0.95)
       slide(tl, q, 'tilak-elder', 'left', 1.5, 0.95)
-      closeUp(tl, world, { at: 3, until: 4.6, scale: 1.6, on: '50% 78%' })
-      lines(tl, root, 5)
+      lines(tl, root, 2.7)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'tilak-elder', 1, 1.6), idle.breathe(q, 'tilak-groom')],
   },
@@ -110,19 +104,16 @@ export const SCENES = [
       L('cloud-l', 240, 150, { art: 'cloud-night', ax: 'l', x: 60, y: 780, z: 2 }), L('cloud-r', 240, 150, { art: 'cloud-night', ax: 'r', x: 60, y: 900, z: 2, flip: true }),
       L('mehendi-wall', 2200, 2000, { z: 2, full: true, kind: 'wall' }),
       L('mehendi-window', 1180, 2000, { y: 0, z: 3, kind: 'frame' }),
-      L('mehendi-seat', 1500, 420, { y: 60, z: 4, full: true, kind: 'ground' }),
-      person('mehendi-groom', 440, 590, -235, 110, 5), person('mehendi-bride', 620, 600, 195, 70, 6),
-      ...foliage(7), ...flowers('flowers-white'),
+      L('mehendi-seat', 1500, 450, { y: 0, z: 4 }),
+      person('mehendi-groom', 440, 590, -235, 60, 5), person('mehendi-bride', 620, 600, 195, 40, 6),
+      ...foliage(7), ...flowers('flowers-white').map((f) => ({ ...f, y: -90 })),
     ],
-    play(tl, q, root, world) {
-      tl.set(world, { transformOrigin: '50% 62%', scale: 1.28 }, 0)
-      camera(tl, world, { scale: 1, at: 0.02, dur: 2.8, ease: 'power1.inOut' })
-      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 1.2, 1.3)
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 1.7, 1)
-      slide(tl, q, 'mehendi-bride', 'down', 2.4, 1)
-      slide(tl, q, 'mehendi-groom', 'left', 3.1, 0.7)
-      closeUp(tl, world, { at: 4.75, until: 7.4, scale: 1.55, on: '50% 84%' })
-      lines(tl, root, 7.6)
+    play(tl, q, root) {
+      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.3, 1.3)
+      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
+      slide(tl, q, 'mehendi-groom', 'left', 1.1, 1.1)
+      slide(tl, q, 'mehendi-bride', 'right', 1.4, 1.1)
+      lines(tl, root, 2.7)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'mehendi-groom'), idle.lean(q, 'mehendi-bride', -0.8, 2)],
   },
@@ -135,16 +126,13 @@ export const SCENES = [
       L('aibur-thali', 600, 400, { y: 30, z: 6 }),
       ...foliage(), ...flowers('flowers-white'),
     ],
-    play(tl, q, root, world) {
-      tl.set(world, { transformOrigin: '50% 60%', scale: 1.16 }, 0)
-      camera(tl, world, { scale: 1, at: 0.02, dur: 1.5, ease: 'power2.out' })
+    play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
       slide(tl, q, 'aibur-bride', 'right', 1, 0.95)
       slide(tl, q, 'aibur-mother', 'left', 1.3, 0.95)
       slide(tl, q, 'aibur-thali', 'down', 1.9, 0.9)
-      closeUp(tl, world, { at: 3.4, until: 5, scale: 1.45, on: '50% 84%' })
-      lines(tl, root, 5.3)
+      lines(tl, root, 3)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'aibur-bride'), idle.lean(q, 'aibur-mother', 1, 1.8)],
   },
@@ -160,13 +148,15 @@ export const SCENES = [
       L('drape-r', 260, 1500, { art: 'haldi-drape', ax: 'r', x: -40, ay: 't', y: -20, z: 7, flip: true }),
       ...foliage(), ...flowers('flowers-yellow'),
     ],
-    play(tl, q, root, world) {
-      closeUp(tl, world, { at: 0, until: 3.5, scale: 1.55, on: '50% 80%' })
-      slide(tl, q, 'drape-l', 'left', 3.4, 1.2)
-      slide(tl, q, 'drape-r', 'right', 3.4, 1.2)
-      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 3.5, 1.2)
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 3.5, 1)
-      lines(tl, root, 5.2)
+    play(tl, q, root) {
+      slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
+      slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
+      slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
+      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
+      slide(tl, q, 'haldi-groom', 'left', 1, 1.1)
+      slide(tl, q, 'haldi-arm', 'left', 1, 1.1)
+      slide(tl, q, 'haldi-bride', 'right', 1.2, 1.1)
+      lines(tl, root, 2.6)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.lean(q, 'haldi-groom', 0.9, 1.2), idle.lean(q, 'haldi-bride', -0.6, 1.5), idle.hinge(q, 'haldi-arm', -30, -24, 0.9, '6% 60%')],
   },
@@ -212,15 +202,13 @@ export const SCENES = [
       L('sangeet-hanging', 1120, 323, { ay: 't', y: -85, z: 8, full: true, kind: 'plant' }),
       ...flowers('flowers-white'),
     ],
-    play(tl, q, root, world) {
-      tl.set(world, { transformOrigin: '50% 65%', scale: 1.28 }, 0)
-      camera(tl, world, { scale: 1, at: 0.02, dur: 2.2, ease: 'power1.inOut' })
-      slide(tl, q, 'sangeet-hanging', 'up', 0.6, 1)
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 1, 1)
-      slide(tl, q, 'reception-bride', 'right', 1.3, 1)
-      slide(tl, q, 'reception-groom', 'left', 1.5, 1)
-      slide(tl, q, 'reception-table', 'down', 2, 0.9)
-      lines(tl, root, 3.2)
+    play(tl, q, root) {
+      slide(tl, q, 'sangeet-hanging', 'up', 0.1, 1)
+      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.3, 1)
+      slide(tl, q, 'reception-bride', 'right', 0.8, 1.1)
+      slide(tl, q, 'reception-groom', 'left', 1, 1.1)
+      slide(tl, q, 'reception-table', 'down', 1.6, 0.9)
+      lines(tl, root, 2.7)
     },
     idle: (q) => [...petals(q), idle.sway(q, 'sangeet-hanging', 0.5, 2.4), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
   },
