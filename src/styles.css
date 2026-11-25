@@ -23,7 +23,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .stage { position: absolute; inset: 0; container-type: size; }
 /* 1 unit = 1/1080 of the film's width, or of its height on wide screens */
 .world { --u: min(100cqw / 1080, 100cqh / 1800); position: absolute; inset: 0; --dx: 0px; }
-.scene.is-live .world { will-change: transform; }
 
 .layer { position: absolute; pointer-events: none; }
 .layer-in { width: 100%; height: 100%; }
@@ -111,6 +110,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .name { font-size: calc(118 * var(--u)); }
   .k-frame img { border-inline: calc(8 * var(--u)) solid #a8672a; }
   .closing-line { font-size: calc(62 * var(--u)); }
+  /* the Mehendi carpet runs the whole width of the room */
+  [data-l='mehendi-seat']::before { content: ''; position: absolute; z-index: -1; inset: 59% -100vw 0; border-top: calc(8 * var(--u)) solid #170603; background: linear-gradient(to top, #0000 calc(51.8 * var(--u)), #f0b23c 0 calc(55.2 * var(--u)), #0000 0 calc(65.6 * var(--u)), #f0b23c 0 calc(71.8 * var(--u)), #0000 0) #a62604; }
   .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { object-position: center bottom !important; }
 }
 
