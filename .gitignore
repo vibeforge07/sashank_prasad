@@ -6,7 +6,5 @@ dist/
 .claude/
 *.log
 # raw generated pictures; the processed WebP layers in src/art are what ships
-art/raw/
-art/refs/
-art/
+/art/
 src/content/contact.js
