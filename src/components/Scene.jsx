@@ -51,13 +51,13 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
   }), [scene])
 
   return (
-    <section ref={root} id={scene.id} className={`scene tone-${scene.tone}`} style={{ background: scene.sky }}>
+    <section ref={root} id={scene.id} className={`scene tone-${scene.tone}${scene.card === 'right' ? ' card-right' : ''}`} style={{ background: scene.sky }}>
       <div className="stage">
         <div className="world" ref={world}>
           {scene.stars && <div className="stars" />}
-          {scene.moon && <div className="moon" style={{ left: `calc(50% + ${scene.moon.x} * var(--u))`, bottom: `calc(${scene.moon.y} * var(--u))`, width: `calc(${scene.moon.s} * var(--u))` }} />}
+          {scene.moon && <div className="moon" style={{ left: `calc(50% + ${scene.moon.x} * var(--u) + var(--dx))`, bottom: `calc(${scene.moon.y} * var(--u))`, width: `calc(${scene.moon.s} * var(--u))` }} />}
           {scene.layers.map((l) => <Layer key={l.id} {...l} />)}
-          <div className="words" style={{ '--top': scene.text.top }}>{children}</div>
+          <div className="words" style={{ '--top': scene.text.top }}><i className="card" data-t="-0.4" />{children}</div>
         </div>
       </div>
     </section>
