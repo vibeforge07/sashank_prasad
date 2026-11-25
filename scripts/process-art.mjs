@@ -7,8 +7,10 @@ import sharp from 'sharp'
 
 const RAW = 'art/raw'
 const OUT = 'src/art'
+const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
+const EDGE = /^(foliage-corner|flowers-|haldi-drape|mehendi-window)/ // meant to run off the picture
 const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|sunrise|clouds-horizon)/
 
 const key = ([r, g, b]) => {
@@ -27,18 +29,23 @@ async function one(file) {
   const name = path.parse(file).name
   const { data, info } = await sharp(path.join(RAW, file)).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
   const { width: W, height: H } = info
-  let note = 'kept as it is'
+  let note = 'already transparent'
+  let bad = ''
 
   const hasAlpha = data.some((v, i) => i % 4 === 3 && v < 250)
   if (!hasAlpha) {
-    // the key is whatever flat colour sits along the top
-    const px = (x, y) => [...data.subarray((y * W + x) * 4, (y * W + x) * 4 + 3)]
-    const spots = [px(3, 3), px(W - 4, 3), px(W >> 1, 3), px(W >> 1, H >> 1)] // the window frame is keyed in the middle
-    const found = spots.map(key).filter(Boolean)
-    const k = found[0]
-    if (!k) note = 'NO KEY COLOUR FOUND, check this one'
+    // the key is the flat colour that covers most of the picture
+    const count = { green: [], blue: [], magenta: [] }
+    for (let i = 0; i < data.length; i += 4 * 13) {
+      const c = [data[i], data[i + 1], data[i + 2]]
+      const k = key(c)
+      if (k) count[k].push(c)
+    }
+    const [k, hits] = Object.entries(count).sort((x, y) => y[1].length - x[1].length)
+      .map(([name, list]) => [list.length > data.length / 52 * 0.04 ? name : null, list])[0]
+    if (!k) bad = 'NO KEY COLOUR FOUND'
     else {
-      const ref = spots.find((c) => key(c) === k)
+      const ref = [0, 1, 2].map((c) => hits.map((h) => h[c]).sort((x, y) => x - y)[hits.length >> 1])
       const full = excess[k](...ref)
       for (let i = 0; i < data.length; i += 4) {
         const [r, g, b] = data.subarray(i, i + 3)
@@ -65,7 +72,14 @@ async function one(file) {
   for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (data[(y * W + x) * 4 + 3] > 12) {
     if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y
   }
-  if (x1 < 0) return console.log(`${name}: empty after keying, skipped`)
+  if (x1 < 0) return console.log(`${name}: CHECK, empty after keying, skipped`)
+  if (!bad && WIDE.test(name)) {
+    // a strip has to touch both sides; sample the columns at the two edges
+    const touches = (x) => { for (let y = 0; y < H; y++) if (data[(y * W + x) * 4 + 3] > 200) return true; return false }
+    if (!touches(2) || !touches(W - 3)) bad = 'CHECK, does not reach both side edges'
+  } else if (!bad && !EDGE.test(name)) {
+    if (x0 < 2 || x1 > W - 3 || y0 < 2 || y1 > H - 3) bad = 'CHECK, touches the picture edge, probably cut off'
+  }
   const box = WIDE.test(name)
     ? { left: 0, top: y0, width: W, height: y1 - y0 + 1 }
     : { left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 }
@@ -75,10 +89,20 @@ async function one(file) {
     .webp({ quality: 84, alphaQuality: 90 })
     .toFile(path.join(OUT, `${name}.webp`))
   const kb = Math.round(fs.statSync(path.join(OUT, `${name}.webp`)).size / 1024)
-  console.log(`${name}: ${note}, ${box.width}x${box.height}, ${kb} KB`)
+  // on plain grey, to look for fringes and holes
+  await sharp(path.join(OUT, `${name}.webp`)).resize({ width: 900, height: 900, fit: 'inside', withoutEnlargement: true })
+    .flatten({ background: '#8a8a8a' }).png().toFile(path.join(PREVIEW, `${name}.png`))
+  console.log(`${name}: ${bad || note}, ${box.width}x${box.height}, ${kb} KB`)
 }
 
+fs.mkdirSync(PREVIEW, { recursive: true })
 const only = process.argv.slice(2)
 const files = fs.readdirSync(RAW).filter((f) => /\.(png|jpe?g|webp)$/i.test(f)).filter((f) => !only.length || only.includes(path.parse(f).name))
 if (!files.length) console.log('No pictures in art/raw yet.')
 for (const f of files) await one(f)
+
+if (fs.existsSync('art/LIST.txt')) {
+  const want = fs.readFileSync('art/LIST.txt', 'utf8').split(/\s+/).filter(Boolean)
+  const left = want.filter((n) => !fs.existsSync(path.join(OUT, `${n}.webp`)))
+  console.log(`\n${want.length - left.length} of ${want.length} pictures ready.${left.length ? ' Still missing: ' + left.join(', ') : ''}`)
+}

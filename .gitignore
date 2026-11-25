@@ -5,6 +5,4 @@ dist/
 .vercel/
 .claude/
 *.log
-# raw generated pictures; the processed WebP layers in src/art are what ships
-/art/
 src/content/contact.js
