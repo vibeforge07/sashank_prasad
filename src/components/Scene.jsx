@@ -8,7 +8,6 @@ const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matche
 // Holds one scene's timeline and idle loops. App decides which scene is on screen.
 export default forwardRef(function Scene({ scene, lang, children }, ref) {
   const root = useRef(null)
-  const world = useRef(null)
   const tl = useRef(null)
   const idles = useRef([])
   const live = useRef(false)
@@ -17,7 +16,7 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
     const progress = tl.current?.progress() || 0
     const ctx = gsap.context(() => {
       const t = gsap.timeline({ paused: true })
-      scene.play(t, makeQ(root.current), root.current, world.current)
+      scene.play(t, makeQ(root.current), root.current)
       t.progress(still() ? 1 : progress)
       if (live.current && progress < 1) t.play()
       tl.current = t
@@ -53,7 +52,7 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
   return (
     <section ref={root} id={scene.id} className={`scene tone-${scene.tone}${scene.card === 'right' ? ' card-right' : ''}`} style={{ background: scene.sky }}>
       <div className="stage">
-        <div className="world" ref={world}>
+        <div className="world">
           {scene.stars && <div className="stars" />}
           {scene.moon && <div className="moon" style={{ left: `calc(50% + ${scene.moon.x} * var(--u) + var(--dx))`, bottom: `calc(${scene.moon.y} * var(--u))`, width: `calc(${scene.moon.s} * var(--u))` }} />}
           {scene.layers.map((l) => <Layer key={l.id} {...l} />)}
