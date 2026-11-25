@@ -52,7 +52,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .words span { display: block; white-space: pre-line; }
 .words [data-t] { visibility: hidden; }
 .name, .title { font: 400 calc(132 * var(--u)) / 1.08 var(--display); color: var(--crimson); white-space: pre-line; }
-.name.sm { font-size: calc(70 * var(--u)); margin-top: calc(10 * var(--u)); }
+/* the display face is wide in Latin */
+.name.sm { font-size: calc(62 * var(--u)); margin-top: calc(10 * var(--u)); }
 .invocation { font-size: calc(42 * var(--u)); color: var(--crimson); }
 .amp { font: italic 400 calc(54 * var(--u)) / 1.3 var(--body); }
 .shloka { font: 400 calc(31 * var(--u)) / 1.5 'Tiro Devanagari Hindi', serif; color: #6a3a2c; margin: calc(12 * var(--u)) 0; }
@@ -65,7 +66,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .side { font-size: calc(32 * var(--u)); letter-spacing: .08em; margin-bottom: calc(8 * var(--u)); opacity: .85; }
 :lang(hi) .side, :lang(bn) .side { letter-spacing: 0; }
 .title { font-size: calc(104 * var(--u)); }
-#tilak .title { font-size: calc(80 * var(--u)); }
+#tilak .title { font-size: calc(78 * var(--u)); }
+:is(#haldi, #sangeet, #reception, #aiburobhaat) .title { font-size: calc(86 * var(--u)); }
+#sangeet .venue { font-size: calc(36 * var(--u)); }
 .tag { font: italic 400 calc(40 * var(--u)) / 1.3 var(--body); margin-top: calc(8 * var(--u)); }
 :lang(hi) .tag { font-style: normal; }
 .when { margin-top: calc(26 * var(--u)); font-size: calc(42 * var(--u)); }

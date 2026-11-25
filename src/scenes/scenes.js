@@ -66,7 +66,7 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.drift(q, 'river-boat', 60, 8)],
   },
   {
-    id: 'briddhi', sky: RIVER, tone: 'day', text: { top: 130 }, leave: 'cut', hold: 4,
+    id: 'briddhi', sky: RIVER, tone: 'day', text: { top: 220 }, leave: 'cut', hold: 4,
     layers: [
       L('sunrise', 1500, 620, { y: 760, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('briddhi-courtyard', 1000, 3),
@@ -126,7 +126,7 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'mehendi-groom'), idle.lean(q, 'mehendi-bride', -0.8, 2)],
   },
   {
-    id: 'aiburobhaat', sky: RIVER, tone: 'day', text: { top: 130 }, leave: 'cut', hold: 4,
+    id: 'aiburobhaat', sky: RIVER, tone: 'day', text: { top: 250 }, leave: 'cut', hold: 4,
     layers: [
       L('sunrise', 1500, 620, { y: 760, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('aibur-veranda', 1000, 3),
@@ -148,7 +148,7 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'aibur-bride'), idle.lean(q, 'aibur-mother', 1, 1.8)],
   },
   {
-    id: 'haldi', sky: RIVER, tone: 'haldi', text: { top: 190 }, leave: 'fade', hold: 4,
+    id: 'haldi', sky: RIVER, tone: 'haldi', text: { top: 250 }, leave: 'fade', hold: 4,
     layers: [
       L('sunrise', 1500, 620, { y: 560, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('river-ground', 760, 2),
@@ -170,12 +170,12 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.lean(q, 'haldi-groom', 0.9, 1.2), idle.lean(q, 'haldi-bride', -0.6, 1.5), idle.hinge(q, 'haldi-arm', -4, 5, 0.9, '10% 85%')],
   },
   {
-    id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 330 }, leave: 'cut', hold: 4,
+    id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 165 }, leave: 'cut', hold: 4,
     layers: [
       ground('sangeet-stage', 900, 2),
       L('lamp-l', 220, 560, { art: 'sangeet-lamps', ax: 'l', x: -20, y: 330, z: 3 }), L('lamp-r', 220, 560, { art: 'sangeet-lamps', ax: 'r', x: -20, y: 330, z: 3, flip: true }),
-      person('sangeet-groom', 460, 820, -170, 110, 5), person('sangeet-bride', 560, 800, 160, 100, 6),
-      L('sangeet-hanging', 1500, 340, { ay: 't', y: -30, z: 8, full: true, kind: 'plant' }),
+      person('sangeet-groom', 380, 680, -170, 110, 5), person('sangeet-bride', 470, 670, 160, 100, 6),
+      L('sangeet-hanging', 1500, 230, { ay: 't', y: -40, z: 8, full: true, kind: 'plant' }),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
@@ -188,7 +188,7 @@ export const SCENES = [
     idle: (q) => [...petals(q), idle.sway(q, 'sangeet-hanging', 0.5, 2.4), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75), idle.bob(q, 'lamp-l', 2, 2, 0), idle.bob(q, 'lamp-r', 2, 2.2, 0)],
   },
   {
-    id: 'wedding', sky: DUSK, tone: 'wedding', stars: true, moon: { x: 110, y: 990, s: 90 }, text: { top: 210 }, leave: 'fade', hold: 5,
+    id: 'wedding', sky: DUSK, tone: 'wedding', stars: true, moon: { x: 110, y: 990, s: 90 }, text: { top: 180 }, leave: 'fade', hold: 5,
     layers: [
       ...clouds(true), ground('wedding-ground', 1120, 2),
       L('wedding-sofa', 1240, 480, { y: 120, z: 4 }),
@@ -203,12 +203,12 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.lean(q, 'wedding-groom', 0.7, 2), idle.lean(q, 'wedding-bride', -0.7, 2.2)],
   },
   {
-    id: 'reception', sky: STAGE, tone: 'stage', stars: true, text: { top: 330 }, leave: 'fade', hold: 4,
+    id: 'reception', sky: STAGE, tone: 'stage', stars: true, text: { top: 165 }, leave: 'fade', hold: 4,
     layers: [
       ground('reception-hall', 1000, 2),
-      person('reception-groom', 430, 860, -170, 110, 5), person('reception-bride', 480, 840, 170, 100, 6),
+      person('reception-groom', 380, 760, -170, 110, 5), person('reception-bride', 430, 745, 170, 100, 6),
       L('reception-table', 620, 300, { y: 40, z: 7 }),
-      L('sangeet-hanging', 1500, 340, { ay: 't', y: -30, z: 8, full: true, kind: 'plant' }),
+      L('sangeet-hanging', 1500, 230, { ay: 't', y: -40, z: 8, full: true, kind: 'plant' }),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root, world) {
@@ -224,7 +224,7 @@ export const SCENES = [
     idle: (q) => [...petals(q), idle.sway(q, 'sangeet-hanging', 0.5, 2.4), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
   },
   {
-    id: 'closing', sky: RIVER, tone: 'day', text: { top: 150 }, hold: 8,
+    id: 'closing', sky: RIVER, tone: 'day', text: { top: 160 }, hold: 8,
     layers: [
       L('sunrise', 1500, 620, { y: 560, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('river-ground', 760, 3),
