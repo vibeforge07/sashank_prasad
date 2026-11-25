@@ -5,6 +5,13 @@ import { gsap } from 'gsap'
 
 export const makeQ = (root) => (id) => root.querySelector(`[data-l="${id}"]`)
 
+// on a wide screen the picture sits to the right (or left) of the card, so the camera aims there
+const aim = (world, on) => {
+  if (window.innerWidth < window.innerHeight) return on
+  const to = world.closest('.card-right') ? 38 : 70
+  return on.replace(/^[\d.]+%/, to + '%')
+}
+
 const list = (q, ids) => [].concat(ids).map(q).filter(Boolean)
 
 // slide in from off screen: from = 'left' | 'right' | 'up' | 'down'
@@ -32,12 +39,12 @@ export function fade(tl, q, ids, at, dur = 0.6) {
 // camera. `on` is the point of the stage that stays put, as percentages
 export function camera(tl, world, { scale = 1, on = '50% 80%', at = 0, dur = 0, ease = 'power2.inOut', y = 0 }) {
   if (dur) tl.to(world, { scale, yPercent: y, duration: dur, ease }, at)
-  else tl.set(world, { scale, yPercent: y, transformOrigin: on }, at)
+  else tl.set(world, { scale, yPercent: y, transformOrigin: aim(world, on) }, at)
 }
 
 // the hard cut to a close-up, a slow push while it holds, and the cut back
 export function closeUp(tl, world, { at, until, scale = 2.1, on = '50% 78%', y = 0 }) {
-  tl.set(world, { transformOrigin: on, scale, yPercent: y }, at)
+  tl.set(world, { transformOrigin: aim(world, on), scale, yPercent: y }, at)
   tl.to(world, { scale: scale * 1.035, duration: until - at - 0.02, ease: 'none' }, at + 0.01)
   tl.set(world, { scale: 1, yPercent: 0 }, until)
 }
