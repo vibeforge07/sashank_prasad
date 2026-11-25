@@ -5,13 +5,6 @@ import { gsap } from 'gsap'
 
 export const makeQ = (root) => (id) => root.querySelector(`[data-l="${id}"]`)
 
-// on a wide screen the picture sits to the right (or left) of the card, so the camera aims there
-const aim = (world, on) => {
-  if (window.innerWidth < window.innerHeight) return on
-  const to = world.closest('.card-right') ? 38 : 70
-  return on.replace(/^[\d.]+%/, to + '%')
-}
-
 const list = (q, ids) => [].concat(ids).map(q).filter(Boolean)
 
 // slide in from off screen: from = 'left' | 'right' | 'up' | 'down'
@@ -22,31 +15,10 @@ export function slide(tl, q, ids, from, at, dur = 0.9, ease = 'power3.out') {
   tl.fromTo(els, v, { x: 0, yPercent: 0, duration: dur, ease, stagger: 0.12 }, at)
 }
 
-// grow out of the ground, the way the temples come up behind the trees
-export function rise(tl, q, ids, at, dur = 1.1) {
+// come up from behind the hills; nothing on the page ever changes size
+export function rise(tl, q, ids, at, dur = 1.3) {
   const els = list(q, ids)
-  if (!els.length) return
-  tl.fromTo(els, { yPercent: 70, scale: 0.35, autoAlpha: 0, transformOrigin: '50% 100%' },
-    { yPercent: 0, scale: 1, duration: dur, ease: 'power3.out', stagger: 0.35 }, at)
-  tl.to(els, { autoAlpha: 1, duration: 0.15, stagger: 0.35 }, at)
-}
-
-export function fade(tl, q, ids, at, dur = 0.6) {
-  const els = list(q, ids)
-  if (els.length) tl.fromTo(els, { autoAlpha: 0 }, { autoAlpha: 1, duration: dur, ease: 'none', stagger: 0.1 }, at)
-}
-
-// camera. `on` is the point of the stage that stays put, as percentages
-export function camera(tl, world, { scale = 1, on = '50% 80%', at = 0, dur = 0, ease = 'power2.inOut', y = 0 }) {
-  if (dur) tl.to(world, { scale, yPercent: y, duration: dur, ease }, at)
-  else tl.set(world, { scale, yPercent: y, transformOrigin: aim(world, on) }, at)
-}
-
-// the hard cut to a close-up, a slow push while it holds, and the cut back
-export function closeUp(tl, world, { at, until, scale = 2.1, on = '50% 78%', y = 0 }) {
-  tl.set(world, { transformOrigin: aim(world, on), scale, yPercent: y }, at)
-  tl.to(world, { scale: scale * 1.035, duration: until - at - 0.02, ease: 'none' }, at + 0.01)
-  tl.set(world, { scale: 1, yPercent: 0 }, until)
+  if (els.length) tl.fromTo(els, { yPercent: 100 }, { yPercent: 0, duration: dur, ease: 'power3.out', stagger: 0.3 }, at)
 }
 
 // text lines, one after the other, in the order they sit in the markup
