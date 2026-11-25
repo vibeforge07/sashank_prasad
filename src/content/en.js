@@ -1,0 +1,42 @@
+export default {
+  lang: 'English',
+  gate: { line: 'The wedding of', date: '27 January 2027 · Jamshedpur', open: 'Open the invitation', choose: 'Choose your language' },
+  hero: { invocation: '॥ Shri Ganeshaya Namah ॥', groom: 'Shashank', and: 'and', bride: 'Debashruti', scroll: 'Scroll' },
+  family: {
+    request: ['With the blessings of our elders, we invite you', 'to the wedding of'],
+    groom: 'Shashank Prasad',
+    groomLines: [
+      ['Son of', 'Mrs. Indu Kumari & Mr. Bindeshwar Prasad'],
+      ['Grandson of', 'Late Manmati Devi & Late Deonandan Sao'],
+    ],
+    and: 'AND',
+    bride: 'Debashruti Bhattacharjee',
+    brideLines: [
+      ['Daughter of', 'Mrs. Sanjukta Bhattacharjee\n& Mr. Kalyan Bhattacharjee'],
+      ['Granddaughter of', 'Mrs. Anima Bhattacharjee\n& Mr. Arun Baran Bhattacharjee'],
+    ],
+  },
+  side: { bride: "Bride's family", groom: "Groom's family", both: 'Both families' },
+  events: {
+    briddhi: { title: 'Briddhi', tag: 'Asking those who came before us for their blessing', day: 'Monday', date: '25 January 2027', time: 'Morning', venue: [] },
+    tilak: { title: 'Dhanbatti, Tilak,\nMatkor & Madwa', tag: 'The mandap goes up and the wedding begins at home', day: 'Monday', date: '25 January 2027', time: '', venue: ["Hotel De'Hamray", 'New Kalimati Road, Hirasingh Bagan', 'Sakchi, Jamshedpur 831007'] },
+    mehendi: { title: 'Mehendi', tag: 'His name, hidden somewhere in her hands', day: 'Monday', date: '25 January 2027', time: 'Evening', venue: [] },
+    aiburobhaat: { title: 'Aiburobhaat', tag: 'One last feast as the daughter of the house', day: 'Tuesday', date: '26 January 2027', time: 'Morning', venue: [] },
+    haldi: { title: 'Haldi & Mehendi', tag: 'Turmeric, laughter and nobody left clean', day: 'Tuesday', date: '26 January 2027', time: 'Morning', venue: ["Hotel De'Hamray", 'Sakchi, Jamshedpur'] },
+    sangeet: { title: 'Sangeet &\nEngagement', tag: 'Two rings and a floor full of family', day: 'Tuesday', date: '26 January 2027', time: 'Evening', venue: ['Telco Club', 'K42, Cross Road Number 14', 'Telco Colony, Jamshedpur 831004'] },
+    wedding: { title: 'Wedding', tag: 'Seven steps, one fire, every day after', day: 'Wednesday', date: '27 January 2027', time: '5:30 PM onwards', venue: ["Baraat leaves from Hotel De'Hamray, Sakchi", 'Wedding at Telco Club,', 'Telco Colony, Jamshedpur'] },
+    reception: { title: 'Bahubhat\n& Reception', tag: 'The first meal she serves in her new home', day: 'Thursday', date: '28 January 2027', time: '7:30 PM onwards', venue: ["Hotel De'Hamray", 'Sakchi, Jamshedpur'] },
+  },
+  map: 'View on map',
+  closing: {
+    lines: ['Come as you are.', 'Stay till the last song.'],
+    awaiting: 'Awaiting your presence',
+    names: 'Sneha Prasad, Swati Prasad, Arvind Sah\n& Little Sharvik Sah',
+    rsvp: 'RSVP',
+    call: 'Prasad Family',
+    homes: ['Prasad residence', 'Bhattacharjee residence'],
+    units: ['days', 'hours', 'minutes'],
+    until: 'until the wedding',
+  },
+  ui: { play: 'Play', pause: 'Pause', sound: 'Music', replay: 'Watch again' },
+}
