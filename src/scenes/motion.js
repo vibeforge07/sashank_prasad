@@ -38,7 +38,7 @@ export function camera(tl, world, { scale = 1, on = '50% 80%', at = 0, dur = 0, 
 // the hard cut to a close-up, a slow push while it holds, and the cut back
 export function closeUp(tl, world, { at, until, scale = 2.1, on = '50% 78%', y = 0 }) {
   tl.set(world, { transformOrigin: on, scale, yPercent: y }, at)
-  tl.to(world, { scale: scale * 1.035, duration: until - at, ease: 'none' }, at + 0.01)
+  tl.to(world, { scale: scale * 1.035, duration: until - at - 0.02, ease: 'none' }, at + 0.01)
   tl.set(world, { scale: 1, yPercent: 0 }, until)
 }
 
