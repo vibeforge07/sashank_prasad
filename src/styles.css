@@ -1,1 +1,112 @@
-html,body{margin:0}
+:root {
+  --display: 'Yeseva One', serif;
+  --body: 'EB Garamond', Georgia, serif;
+  --crimson: #b3123f;
+  --ink: #3a2320;
+  --cream: #fff6e4;
+}
+:root:lang(hi) { --display: 'Yatra One', serif; --body: 'Tiro Devanagari Hindi', serif; }
+:root:lang(bn) { --display: 'Noto Serif Bengali', serif; --body: 'Tiro Bangla', serif; }
+
+* { box-sizing: border-box; margin: 0; }
+html, body, #root { height: 100%; overflow: hidden; background: #1a1030; }
+body { font-family: var(--body); color: var(--ink); -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+:focus-visible { outline: 2px solid #f4c35a; outline-offset: 3px; }
+.reel:focus { outline: none; }
+
+/* ---- sections, one under the other ---- */
+.reel { height: 100svh; overflow: hidden auto; scroll-snap-type: y mandatory; overscroll-behavior: none; scrollbar-width: none; }
+.reel::-webkit-scrollbar { display: none; }
+.scene { position: relative; height: 100svh; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; contain: paint; }
+.ghost { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
+.stage { position: absolute; inset: 0; container-type: size; }
+/* 1 unit = 1/1080 of the film's width, or of its height on wide screens */
+.world { --u: min(100cqw / 1080, 100cqh / 1800); position: absolute; inset: 0; }
+.scene.is-live .world { will-change: transform; }
+
+.layer { position: absolute; pointer-events: none; }
+.layer-in { width: 100%; height: 100%; }
+.layer img { width: 100%; height: 100%; display: block; user-select: none; }
+.stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
+  radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
+  radial-gradient(1.2px 1.2px at 44% 12%, #fff, #0000), radial-gradient(1px 1px at 58% 33%, #fff, #0000),
+  radial-gradient(1.5px 1.5px at 71% 21%, #fff, #0000), radial-gradient(1px 1px at 83% 48%, #fff, #0000),
+  radial-gradient(1.2px 1.2px at 93% 10%, #fff, #0000), radial-gradient(1px 1px at 36% 66%, #fff, #0000);
+  background-size: 310px 340px; }
+.moon { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #fffbe8; box-shadow: 0 0 calc(60 * var(--u)) calc(18 * var(--u)) #fff2c488; }
+
+/* shown until the real picture for a layer arrives */
+.todo { position: absolute; inset: 0; border-radius: calc(24 * var(--u)); background: #ffffff2e; border: 1.5px dashed #ffffffb0; display: grid; place-items: end center; overflow: hidden; }
+.todo i { font: 500 10px/1.3 ui-monospace, monospace; color: #fff; background: #0009; padding: 1px 5px; border-radius: 4px; margin: 4px; }
+.k-person .todo { border-radius: 46% 46% 12% 12% / 24% 24% 6% 6%; background: #ffe0c080; }
+.k-ground .todo { border-radius: 0; background: #5d8a5f66; border-width: 1.5px 0 0; }
+.k-plant .todo { background: #3f7d4077; border-radius: 40%; }
+.k-building .todo { background: #f1cfa08c; border-radius: 50% 50% 0 0; }
+.k-frame .todo { background: none; border: calc(90 * var(--u)) solid #7a3b2a; border-radius: 0; }
+
+/* ---- words ---- */
+.words { position: absolute; z-index: 20; left: 50%; width: min(960 * var(--u), 92cqw); transform: translateX(-50%); text-align: center; line-height: 1.28;
+  /* tall phones have more sky than the film: share a third of it above the words */
+  top: calc(var(--top) * var(--u) + max(0px, (100cqh - 1920 * var(--u)) / 3)); }
+.words span { display: block; white-space: pre-line; }
+.words [data-t] { visibility: hidden; }
+.name, .title { font: 400 calc(132 * var(--u)) / 1.08 var(--display); color: var(--crimson); white-space: pre-line; }
+.name.sm { font-size: calc(70 * var(--u)); margin-top: calc(10 * var(--u)); }
+.invocation { font-size: calc(42 * var(--u)); color: var(--crimson); }
+.amp { font: italic 400 calc(54 * var(--u)) / 1.3 var(--body); }
+.shloka { font: 400 calc(31 * var(--u)) / 1.5 'Tiro Devanagari Hindi', serif; color: #6a3a2c; margin: calc(12 * var(--u)) 0; }
+.request { font-size: calc(40 * var(--u)); }
+.kin { font-size: calc(36 * var(--u)); margin-top: calc(8 * var(--u)); }
+.kin em { display: block; font-size: .86em; color: #8a4a33; }
+.kin a { color: inherit; text-underline-offset: 3px; }
+.kin.home { font-size: calc(31 * var(--u)); }
+.and { font-size: calc(36 * var(--u)); letter-spacing: .12em; margin-top: calc(22 * var(--u)); }
+.side { font-size: calc(32 * var(--u)); letter-spacing: .08em; margin-bottom: calc(8 * var(--u)); opacity: .85; }
+:lang(hi) .side, :lang(bn) .side { letter-spacing: 0; }
+.title { font-size: calc(104 * var(--u)); }
+#tilak .title { font-size: calc(80 * var(--u)); }
+.tag { font: italic 400 calc(40 * var(--u)) / 1.3 var(--body); margin-top: calc(8 * var(--u)); }
+:lang(hi) .tag { font-style: normal; }
+.when { margin-top: calc(26 * var(--u)); font-size: calc(42 * var(--u)); }
+.when .date { font-size: calc(54 * var(--u)); font-weight: 500; }
+.venue { margin-top: calc(18 * var(--u)); font-size: calc(38 * var(--u)); }
+.pill { display: inline-block; margin-top: calc(18 * var(--u)); padding: calc(12 * var(--u)) calc(38 * var(--u)); font-size: calc(36 * var(--u)); border: 1px solid currentColor; border-radius: 99px; color: inherit; text-decoration: none; }
+.closing-line { font: 400 calc(74 * var(--u)) / 1.25 var(--display); color: var(--crimson); }
+.countdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 calc(54 * var(--u)); margin: calc(20 * var(--u)) 0; }
+.countdown b { display: block; font: 400 calc(70 * var(--u)) / 1.1 var(--display); color: var(--crimson); }
+.countdown span, .countdown small { font-size: calc(32 * var(--u)); }
+.countdown small { flex-basis: 100%; }
+
+.tone-haldi .title { color: #d2235c; }
+.tone-night, .tone-stage, .tone-wedding { color: var(--cream); }
+.tone-night .title, .tone-stage .title { color: #f0e27a; }
+.tone-wedding .title { color: #ff8fa6; }
+:is(.tone-night, .tone-stage, .tone-wedding) .shloka { color: #ffd9a8; }
+.tone-night .words { width: min(760 * var(--u), 80cqw); }
+
+/* ---- opening screen ---- */
+.gate { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; overflow-y: auto; --u: min(100vw / 1080, 100svh / 1900); background: radial-gradient(120% 70% at 50% 0%, #fff3d6, #f8d9a6 55%, #ef9f7e); }
+.gate-inv { color: var(--crimson); font-size: 17px; }
+.gate-line { margin-top: 18px; font-size: 18px; }
+.gate .name { font-size: clamp(40px, calc(140 * var(--u)), 92px); }
+.gate .amp { font-size: 22px; }
+.gate-date { margin-top: 12px; font-size: 18px; }
+.gate-choose { margin-top: 34px; font-size: 15px; }
+.langs { display: flex; gap: 8px; margin-top: 10px; }
+.langs button { min-height: 44px; padding: 8px 18px; border: 1px solid #b3123f66; border-radius: 99px; font-size: 17px; }
+.langs button[aria-pressed='true'] { background: var(--crimson); color: #fff; border-color: var(--crimson); }
+.langs [lang='en'] { font-family: 'EB Garamond', serif; } .langs [lang='hi'] { font-family: 'Tiro Devanagari Hindi', serif; } .langs [lang='bn'] { font-family: 'Tiro Bangla', serif; }
+.open { margin-top: 26px; min-height: 52px; padding: 12px 34px; border-radius: 99px; background: var(--crimson); color: #fff; font-size: 19px; }
+
+/* ---- controls ---- */
+.bar { position: fixed; z-index: 40; right: max(10px, env(safe-area-inset-right)); bottom: max(10px, env(safe-area-inset-bottom)); display: flex; gap: 8px; align-items: center; }
+.langs.small { margin: 0; gap: 0; padding: 0 4px; border-radius: 99px; background: #1a1030b0; color: #fff; }
+.langs.small button { border: 0; min-width: 40px; padding: 0 8px; font-size: 14px; background: none; opacity: .65; }
+.langs.small button[aria-pressed='true'] { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
+.round { width: 44px; height: 44px; border-radius: 50%; background: #1a1030b0; color: #fff; display: grid; place-items: center; }
+.round i { width: 14px; height: 14px; background: currentColor; display: block; }
+.i-play { clip-path: polygon(15% 0, 100% 50%, 15% 100%); }
+.i-pause { clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0); }
+.i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
+.i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
