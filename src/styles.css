@@ -22,7 +22,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .ghost { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
 .stage { position: absolute; inset: 0; container-type: size; }
 /* 1 unit = 1/1080 of the film's width, or of its height on wide screens */
-.world { --u: min(100cqw / 1080, 100cqh / 1800); position: absolute; inset: 0; }
+.world { --u: min(100cqw / 1080, 100cqh / 1800); position: absolute; inset: 0; --dx: 0px; }
 .scene.is-live .world { will-change: transform; }
 
 .layer { position: absolute; pointer-events: none; }
@@ -33,8 +33,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
-/* the window's wall carries on past the picture on wide screens */
-.k-frame { box-shadow: 0 0 0 100vw #7a3b2a; }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
@@ -57,6 +55,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .words { position: absolute; z-index: 20; left: 50%; width: min(960 * var(--u), 92cqw); transform: translateX(-50%); text-align: center; line-height: 1.28;
   /* tall phones have more sky than the film: share a third of it above the words */
   top: calc(var(--top) * var(--u) + max(0px, (100cqh - 1920 * var(--u)) / 3)); }
+.card { display: none; }
+.k-wall { mask: linear-gradient(90deg, #000 calc(50% + var(--dx) - 585 * var(--u)), #0000 0, #0000 calc(50% + var(--dx) + 585 * var(--u)), #000 0); }
 .words span { display: block; white-space: pre-line; }
 .words [data-t] { visibility: hidden; }
 .name, .title { font: 400 calc(132 * var(--u)) / 1.08 var(--display); color: var(--crimson); white-space: pre-line; }
@@ -95,6 +95,24 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .tone-wedding .title { color: #ff8fa6; }
 :is(.tone-night, .tone-stage, .tone-wedding) .shloka { color: #ffd9a8; }
 .tone-night .words { width: min(760 * var(--u), 80cqw); }
+
+/* ---- short phones: everything a little smaller, so words and picture stay apart ---- */
+@container (min-aspect-ratio: 53/100) and (max-aspect-ratio: 1/1) { .world { --u: calc(100cqh / 2010); } }
+
+/* ---- wide screens: the words on a card at one side, the picture larger beside it ---- */
+@container (min-aspect-ratio: 1/1) {
+  .world { --u: min(100cqw / 2000, 100cqh / 1400); --dx: 21cqw; }
+  .card-right .world { --dx: -10cqw; }
+  .words { left: 4.5cqw; right: auto; width: min(820 * var(--u), 37cqw); top: 50%; translate: 0 -50%; transform: none; padding: calc(64 * var(--u)) calc(44 * var(--u)); }
+  .card-right .words { left: auto; right: 4.5cqw; }
+  .tone-night .words { width: min(820 * var(--u), 37cqw); }
+  .card { display: block; position: absolute; inset: 0; z-index: -1; border-radius: calc(26 * var(--u)); background: #fff7e6ee; border: 1px solid #d9a441; box-shadow: inset 0 0 0 calc(9 * var(--u)) #fff7e600, inset 0 0 0 calc(10 * var(--u)) #d9a44188, 0 12px 40px #3a232033; }
+  :is(.tone-night, .tone-stage, .tone-wedding) .card { background: #130f33e6; border-color: #e0b45a; }
+  .name { font-size: calc(118 * var(--u)); }
+  .k-frame img { border-inline: calc(8 * var(--u)) solid #a8672a; }
+  .closing-line { font-size: calc(62 * var(--u)); }
+  .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { object-position: center bottom !important; }
+}
 
 /* ---- opening screen ---- */
 .gate { position: fixed; inset: 0; z-index: 50; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; overflow-y: auto; --u: min(100vw / 1080, 100svh / 1900); background: radial-gradient(120% 70% at 50% 0%, #fff3d6, #f8d9a6 55%, #ef9f7e); }
