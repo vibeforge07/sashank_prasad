@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import Scene from './components/Scene.jsx'
+import Gate from './components/Gate.jsx'
 import { Hero, Family, EventWords, Closing } from './components/Words.jsx'
 import { SCENES } from './scenes/scenes.js'
 import en from './content/en.js'
@@ -28,6 +29,7 @@ const words = (id, c, lang) => {
 export default function App() {
   const [lang, setLang] = useState(firstLang)
   const [open, setOpen] = useState(false)
+  const [gone, setGone] = useState(false)
   const [auto, setAuto] = useState(true)
   const [sound, setSound] = useState(true)
   const [at, setAt] = useState(0)
@@ -120,20 +122,10 @@ export default function App() {
         ))}
       </main>
 
-      {!open && (
-        <div className="gate">
-          <p className="gate-inv">{c.hero.invocation}</p>
-          <p className="gate-line">{c.gate.line}</p>
-          <h1 className="name">{c.hero.groom}</h1>
-          <p className="amp">{c.hero.and}</p>
-          <h1 className="name">{c.hero.bride}</h1>
-          <p className="gate-date">{c.gate.date}</p>
-          <p className="gate-choose" id="choose">{c.gate.choose}</p>
-          <div className="langs" role="group" aria-labelledby="choose">
-            {LANGS.map((l) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{TEXT[l].lang}</button>)}
-          </div>
-          <button className="open" onClick={() => setOpen(true)}>{c.gate.open}</button>
-        </div>
+      {!gone && (
+        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, TEXT[l].lang])}
+          names={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`}
+          onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
       )}
 
       {open && (
