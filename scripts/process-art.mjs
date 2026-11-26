@@ -13,8 +13,15 @@ const MAX = { default: 1400, wide: 2600 }
 const EDGE = /^(foliage-corner|flowers-|haldi-drape|mehendi-window)/ // meant to run off the picture
 const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|sunrise|clouds-horizon)/
 
+// a picture that is cut in two so one part can move: the part keeps the same frame as the rest
+// (fractions of the raw picture: keep = the part's box, cut = what the rest loses)
+const SPLIT = {
+  'haldi-groom': { part: 'haldi-arm', keep: [0.564, 0, 1, 0.467], cut: [0.587, 0, 1, 0.467] },
+}
+
 const key = ([r, g, b]) => {
   if (g > 150 && g - Math.max(r, b) > 70) return 'green'
+  if (g > 70 && r < 25 && b < 25) return 'green' // a dark flat green
   if (b > 120 && b - Math.max(r, g) > 60) return 'blue'
   if (r > 150 && b > 150 && Math.min(r, b) - g > 90) return 'magenta'
   return null
@@ -83,11 +90,23 @@ async function one(file) {
   const box = WIDE.test(name)
     ? { left: 0, top: y0, width: W, height: y1 - y0 + 1 }
     : { left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 }
-  await sharp(data, { raw: { width: W, height: H, channels: 4 } })
+  const write = (buf, as) => sharp(buf, { raw: { width: W, height: H, channels: 4 } })
     .extract(box)
     .resize({ width: WIDE.test(name) ? MAX.wide : MAX.default, height: 1800, fit: 'inside', withoutEnlargement: true })
     .webp({ quality: 84, alphaQuality: 90 })
-    .toFile(path.join(OUT, `${name}.webp`))
+    .toFile(path.join(OUT, `${as}.webp`))
+  const split = SPLIT[name]
+  if (split) {
+    const inside = (x, y, [a, b, c, d]) => x >= a * W && x < c * W && y >= b * H && y < d * H
+    const part = Buffer.from(data)
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      if (!inside(x, y, split.keep)) part[(y * W + x) * 4 + 3] = 0
+      if (inside(x, y, split.cut)) data[(y * W + x) * 4 + 3] = 0
+    }
+    await write(part, split.part)
+    console.log(`${split.part}: cut out of ${name}, same frame`)
+  }
+  await write(data, name)
   const kb = Math.round(fs.statSync(path.join(OUT, `${name}.webp`)).size / 1024)
   // on plain grey, to look for fringes and holes
   await sharp(path.join(OUT, `${name}.webp`)).resize({ width: 900, height: 900, fit: 'inside', withoutEnlargement: true })
