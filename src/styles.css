@@ -32,7 +32,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
-/* on a phone the two stages stand tall, cropped at the sides, instead of a thin strip */
+/* on a phone the two stages stand tall, cropped at the sides, instead of a thin strip,
+   and the words get a dark card so they stay readable over the lights */
+@container (max-aspect-ratio: 1/1) {
+  :is(#sangeet, #reception) .card { display: block; position: absolute; inset: calc(-34 * var(--u)) calc(-30 * var(--u)); z-index: -1; border-radius: calc(26 * var(--u)); background: #130f33e8; border: 1px solid #e0b45a; box-shadow: 0 10px 34px #0006; }
+}
 @media (max-aspect-ratio: 1/1) { .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { height: min(100%, 64cqh) !important; object-position: center bottom !important; mask-image: linear-gradient(#0000, #000 9%); } }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
@@ -161,14 +165,21 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-petals img { position: absolute; left: 0; top: 0; height: auto; will-change: transform; }
 
 @media (min-aspect-ratio: 1/1) {
-  .gate { --seal: min(44svh, 470px); }
+  .gate { --seal: min(50svh, 600px); }
+  .g-disc { width: 66%; }
+  .g-title:lang(en) { font-size: calc(var(--seal) * 0.098); }
+  .g-inv { font-size: clamp(16px, 2.5svh, 24px); }
+  .g-date { font-size: clamp(16px, 3svh, 28px); }
+  .g-langs button { min-height: 44px; padding: 8px 22px; font-size: clamp(16px, 2.3svh, 21px); }
+  .g-hint { font-size: clamp(16px, 2.3svh, 21px); }
   .g-garland { height: min(13svh, 110px); }
   .g-leaf { width: min(22vw, 300px); top: -6svh; }
   .g-bed { width: min(30vw, 460px); }
   .g-bed-l { left: -2vw; } .g-bed-r { right: -2vw; }
-  .g-inner { padding: 12svh 20px 6svh; }
-  .g-names { font-size: clamp(30px, 4.6svh, 50px); }
+  .g-inner { padding: 10svh 20px 3svh; }
+  .g-names { font-size: clamp(30px, 6.4svh, 70px); }
 }
+@media (max-height: 720px) and (min-aspect-ratio: 1/1) { .gate { --seal: min(46svh, 600px); } .g-inner { padding-top: 13svh; } }
 @media (max-height: 680px) and (max-aspect-ratio: 1/1) { .gate { --seal: min(58vw, 34svh); } .g-inner { padding-top: 13svh; } }
 
 .langs { display: flex; gap: 8px; margin-top: 10px; }
