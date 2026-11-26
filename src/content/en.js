@@ -1,6 +1,6 @@
 export default {
   lang: 'English',
-  gate: { line: 'The wedding of', date: '27 January 2027 · Jamshedpur', open: 'Open the invitation', choose: 'Choose your language' },
+  gate: { line: 'The wedding of', date: '27 January 2027 · Jamshedpur', open: 'Open the invitation', seal: ['Shubh', 'Vivah'], tap: 'Tap the seal to open', choose: 'Choose your language' },
   hero: { invocation: '॥ Shri Ganeshaya Namah ॥', groom: 'Shashank', and: 'and', bride: 'Debashruti', scroll: 'Scroll' },
   family: {
     request: ['With the blessings of our elders, we invite you', 'to the wedding of'],
