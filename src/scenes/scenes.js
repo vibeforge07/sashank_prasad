@@ -22,8 +22,8 @@ const NIGHT = 'linear-gradient(#0b0d24 0%, #15133a 40%, #3a1b4d 72%, #63284f 92%
 const STAGE = 'linear-gradient(#120f33 0%, #2a1a63 45%, #43268c 78%)'
 const DUSK = 'linear-gradient(#0c1030 0%, #141a4a 48%, #1d2f6d 78%)'
 
-// the haldi groom and his arm share one frame; the shoulder is where the arm turns
-const HG = { w: 560, h: 606, shoulder: '57.9% 34%' }
+// the boat floats on the river, not on the bank
+const BOAT_Y = 230
 
 export const SCENES = [
   {
@@ -52,8 +52,7 @@ export const SCENES = [
     layers: [
       L('sunrise', 1500, 620, { y: 300, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('river-ground', 690, 3),
-      L('river-boat', 260, 120, { x: 250, y: 455, z: 4 }),
-      L('river-props', 640, 640, { ax: 'l', x: -60, y: 40, z: 6 }),
+      L('river-boat', 260, 120, { x: 250, y: BOAT_Y, z: 4 }),
       L('foliage-l', 480, 480, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -70, z: 8, kind: 'plant' }),
       ...flowers('flowers-lotus'),
     ],
@@ -87,7 +86,7 @@ export const SCENES = [
       L('sunrise', 1500, 620, { y: 420, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('tilak-ground', 860, 2),
       L('tilak-madwa', 1460, 810, { y: 190, z: 4, kind: 'building' }),
-      person('tilak-groom', 400, 600, 170, 120, 5), person('tilak-elder', 420, 620, -200, 110, 6),
+      person('tilak-groom', 560, 724, 200, 110, 5), person('tilak-elder', 450, 640, -190, 110, 6),
       ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
@@ -113,7 +112,7 @@ export const SCENES = [
     play(tl, q, root) {
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.3, 1.3)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
-      rise(tl, q, 'mehendi-couple', 1.1, 1.2)
+      slide(tl, q, 'mehendi-couple', 'right', 1.1, 1.2)
       lines(tl, root, 2.7)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'mehendi-couple')],
@@ -129,7 +128,7 @@ export const SCENES = [
     play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
-      rise(tl, q, 'aibur-family', 1, 1.2)
+      slide(tl, q, 'aibur-family', 'right', 1, 1.2)
       lines(tl, root, 3)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'aibur-family')],
@@ -140,8 +139,7 @@ export const SCENES = [
       L('sunrise', 1500, 620, { y: 400, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), L('hero-ground', 2200, 880, { z: 2, full: true, kind: 'ground', fit: 'cover' }),
       L('haldi-backdrop', 1020, 800, { y: 190, z: 3 }),
-      person('haldi-groom', HG.w, HG.h, -190, 90, 5), L('haldi-arm', HG.w, HG.h, { x: -190, y: 90, z: 6, kind: 'person' }),
-      person('haldi-bride', 466, 654, 215, 90, 4),
+      person('haldi-couple', 1000, 677, 20, 70, 5),
       L('drape-l', 260, 1500, { art: 'haldi-drape', ax: 'l', x: -40, ay: 't', y: -20, z: 7 }),
       L('drape-r', 260, 1500, { art: 'haldi-drape', ax: 'r', x: -40, ay: 't', y: -20, z: 7, flip: true }),
       ...foliage(), ...flowers('flowers-yellow'),
@@ -151,18 +149,16 @@ export const SCENES = [
       slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
-      slide(tl, q, 'haldi-groom', 'left', 1, 1.1)
-      slide(tl, q, 'haldi-arm', 'left', 1, 1.1)
-      slide(tl, q, 'haldi-bride', 'right', 1.2, 1.1)
+      slide(tl, q, 'haldi-couple', 'right', 1, 1.2)
       lines(tl, root, 2.6)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'haldi-groom'), idle.lean(q, 'haldi-bride', -0.6, 1.5), idle.hinge(q, 'haldi-arm', 2, -7, 1.1, HG.shoulder)],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'haldi-couple')],
   },
   {
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 215 }, leave: 'cut', hold: 4,
     layers: [
       ground('sangeet-stage', 1800, 2, 1500),
-      person('sangeet-groom', 440, 680, -200, 110, 5), person('sangeet-bride', 470, 670, 160, 100, 6),
+      person('sangeet-groom', 520, 800, -170, 90, 5), person('sangeet-bride', 560, 790, 150, 80, 6),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
@@ -210,8 +206,7 @@ export const SCENES = [
     layers: [
       L('sunrise', 1500, 620, { y: 300, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('river-ground', 690, 3),
-      L('river-boat', 260, 120, { x: 250, y: 455, z: 4 }),
-      L('river-props', 640, 640, { ax: 'l', x: -60, y: 40, z: 6 }),
+      L('river-boat', 260, 120, { x: 250, y: BOAT_Y, z: 4 }),
       L('foliage-l', 480, 480, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -70, z: 8, kind: 'plant' }),
       ...flowers('flowers-lotus'),
     ],
