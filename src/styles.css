@@ -32,6 +32,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
+/* on a phone the two stages stand tall, cropped at the sides, instead of a thin strip */
+@media (max-aspect-ratio: 1/1) { .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { height: min(100%, 64cqh) !important; object-position: center bottom !important; mask-image: linear-gradient(#0000, #000 9%); } }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),

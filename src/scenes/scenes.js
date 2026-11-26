@@ -22,6 +22,9 @@ const NIGHT = 'linear-gradient(#0b0d24 0%, #15133a 40%, #3a1b4d 72%, #63284f 92%
 const STAGE = 'linear-gradient(#120f33 0%, #2a1a63 45%, #43268c 78%)'
 const DUSK = 'linear-gradient(#0c1030 0%, #141a4a 48%, #1d2f6d 78%)'
 
+// the haldi groom and his arm share one frame; the shoulder is where the arm turns
+const HG = { w: 560, h: 606, shoulder: '57.9% 34%' }
+
 export const SCENES = [
   {
     id: 'hero', sky: DAY, tone: 'day', text: { top: 85 }, leave: 'cut', hold: 4,
@@ -67,14 +70,13 @@ export const SCENES = [
     layers: [
       L('sunrise', 1500, 620, { y: 600, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('briddhi-courtyard', 1000, 3),
-      person('briddhi-family', 900, 660, 0, 150, 5), L('briddhi-altar', 620, 300, { y: 60, z: 6 }),
+      person('briddhi-family', 1000, 563, 0, 120, 5),
       ...foliage(), ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.3, 1.2)
       slide(tl, q, 'briddhi-family', 'down', 0.9, 1.1)
-      slide(tl, q, 'briddhi-altar', 'down', 1.5, 0.9)
       lines(tl, root, 2.5)
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'briddhi-family')],
@@ -105,36 +107,32 @@ export const SCENES = [
       L('mehendi-wall', 2200, 2000, { z: 2, full: true, kind: 'wall' }),
       L('mehendi-window', 1180, 2000, { y: 0, z: 3, kind: 'frame' }),
       L('mehendi-seat', 1500, 450, { y: 0, z: 4 }),
-      person('mehendi-groom', 440, 590, -235, 60, 5), person('mehendi-bride', 620, 600, 195, 40, 6),
+      person('mehendi-couple', 980, 650, -10, 40, 5),
       ...foliage(7), ...flowers('flowers-white').map((f) => ({ ...f, y: -90 })),
     ],
     play(tl, q, root) {
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.3, 1.3)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
-      slide(tl, q, 'mehendi-groom', 'left', 1.1, 1.1)
-      slide(tl, q, 'mehendi-bride', 'right', 1.4, 1.1)
+      rise(tl, q, 'mehendi-couple', 1.1, 1.2)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'mehendi-groom'), idle.lean(q, 'mehendi-bride', -0.8, 2)],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'mehendi-couple')],
   },
   {
     id: 'aiburobhaat', sky: RIVER, tone: 'day', text: { top: 250 }, leave: 'cut', hold: 4,
     layers: [
       L('sunrise', 1500, 620, { y: 470, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), ground('aibur-veranda', 1000, 3),
-      person('aibur-mother', 430, 700, -250, 190, 5), person('aibur-bride', 560, 620, 180, 180, 5),
-      L('aibur-thali', 600, 400, { y: 30, z: 6 }),
+      person('aibur-family', 980, 660, 0, 150, 5),
       ...foliage(), ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
-      slide(tl, q, 'aibur-bride', 'right', 1, 0.95)
-      slide(tl, q, 'aibur-mother', 'left', 1.3, 0.95)
-      slide(tl, q, 'aibur-thali', 'down', 1.9, 0.9)
+      rise(tl, q, 'aibur-family', 1, 1.2)
       lines(tl, root, 3)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'aibur-bride'), idle.lean(q, 'aibur-mother', 1, 1.8)],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'aibur-family')],
   },
   {
     id: 'haldi', sky: RIVER, tone: 'haldi', text: { top: 225 }, leave: 'fade', hold: 4,
@@ -142,8 +140,8 @@ export const SCENES = [
       L('sunrise', 1500, 620, { y: 400, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), L('hero-ground', 2200, 880, { z: 2, full: true, kind: 'ground', fit: 'cover' }),
       L('haldi-backdrop', 1020, 800, { y: 190, z: 3 }),
-      person('haldi-groom', 520, 700, -170, 100, 5), person('haldi-bride', 520, 660, 190, 80, 4),
-      L('haldi-arm', 290, 100, { x: 12, y: 468, z: 6 }),
+      person('haldi-groom', HG.w, HG.h, -190, 90, 5), L('haldi-arm', HG.w, HG.h, { x: -190, y: 90, z: 6, kind: 'person' }),
+      person('haldi-bride', 466, 654, 215, 90, 4),
       L('drape-l', 260, 1500, { art: 'haldi-drape', ax: 'l', x: -40, ay: 't', y: -20, z: 7 }),
       L('drape-r', 260, 1500, { art: 'haldi-drape', ax: 'r', x: -40, ay: 't', y: -20, z: 7, flip: true }),
       ...foliage(), ...flowers('flowers-yellow'),
@@ -158,25 +156,22 @@ export const SCENES = [
       slide(tl, q, 'haldi-bride', 'right', 1.2, 1.1)
       lines(tl, root, 2.6)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.lean(q, 'haldi-groom', 0.9, 1.2), idle.lean(q, 'haldi-bride', -0.6, 1.5), idle.hinge(q, 'haldi-arm', -30, -24, 0.9, '6% 60%')],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'haldi-groom'), idle.lean(q, 'haldi-bride', -0.6, 1.5), idle.hinge(q, 'haldi-arm', 2, -7, 1.1, HG.shoulder)],
   },
   {
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 215 }, leave: 'cut', hold: 4,
     layers: [
-      ground('sangeet-stage', 1300, 2, 1500),
-      L('lamp-l', 220, 560, { art: 'sangeet-lamps', ax: 'l', x: -20, y: 330, z: 3 }), L('lamp-r', 220, 560, { art: 'sangeet-lamps', ax: 'r', x: -20, y: 330, z: 3, flip: true }),
+      ground('sangeet-stage', 1800, 2, 1500),
       person('sangeet-groom', 440, 680, -200, 110, 5), person('sangeet-bride', 470, 670, 160, 100, 6),
-      L('sangeet-hanging', 1120, 323, { ay: 't', y: -85, z: 8, full: true, kind: 'plant' }),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
-      slide(tl, q, 'sangeet-hanging', 'up', 0, 1)
       slide(tl, q, 'sangeet-bride', 'right', 0.2, 1.3)
       slide(tl, q, 'sangeet-groom', 'left', 0.4, 1.3)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.1, 1.2)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...petals(q), idle.sway(q, 'sangeet-hanging', 0.5, 2.4), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75), idle.bob(q, 'lamp-l', 2, 2, 0), idle.bob(q, 'lamp-r', 2, 2.2, 0)],
+    idle: (q) => [...petals(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
   },
   {
     id: 'wedding', sky: DUSK, tone: 'wedding', stars: true, moon: { x: 350, y: 930, s: 90 }, text: { top: 180 }, leave: 'fade', hold: 5,
@@ -196,21 +191,19 @@ export const SCENES = [
   {
     id: 'reception', sky: STAGE, tone: 'stage', stars: true, text: { top: 250 }, leave: 'fade', hold: 4,
     layers: [
-      ground('reception-hall', 1400, 2, 1700),
+      ground('reception-hall', 1900, 2, 1700),
       person('reception-groom', 380, 760, -170, 110, 5), person('reception-bride', 430, 745, 170, 100, 6),
       L('reception-table', 620, 300, { y: 40, z: 7 }),
-      L('sangeet-hanging', 1120, 323, { ay: 't', y: -85, z: 8, full: true, kind: 'plant' }),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
-      slide(tl, q, 'sangeet-hanging', 'up', 0.1, 1)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.3, 1)
       slide(tl, q, 'reception-bride', 'right', 0.8, 1.1)
       slide(tl, q, 'reception-groom', 'left', 1, 1.1)
       slide(tl, q, 'reception-table', 'down', 1.6, 0.9)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...petals(q), idle.sway(q, 'sangeet-hanging', 0.5, 2.4), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
+    idle: (q) => [...petals(q), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
   },
   {
     id: 'closing', card: 'right', sky: RIVER, tone: 'day', text: { top: 78 }, hold: 8,
