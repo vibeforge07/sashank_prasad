@@ -1,0 +1,132 @@
+import { useLayoutEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+import { artUrl } from '../art/index.js'
+import ring from '../opening/ring.webp'
+import sindoor from '../opening/sindoor.webp'
+
+const PETALS = Object.values(import.meta.glob('../opening/petal-*.webp', { eager: true, query: '?url', import: 'default' }))
+const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+const rnd = gsap.utils.random
+
+// flowers thrown out of a point, or let fall from the top edge
+function petals(box, n, from) {
+  const W = window.innerWidth
+  const H = window.innerHeight
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('img')
+    p.src = PETALS[i % PETALS.length]
+    p.alt = ''
+    const s = rnd(18, 34)
+    p.style.width = `${s}px`
+    box.appendChild(p)
+    const x0 = from ? from.x : rnd(0, W)
+    const y0 = from ? from.y : rnd(-80, -20)
+    gsap.set(p, { x: x0 - s / 2, y: y0 - s / 2, rotation: rnd(0, 360), scale: from ? 0.3 : 1 })
+    const tl = gsap.timeline({ onComplete: () => p.remove() })
+    if (from) {
+      tl.to(p, { x: x0 + rnd(-0.55, 0.55) * W, y: y0 - rnd(0.12, 0.4) * H, scale: 1, rotation: `+=${rnd(-200, 200)}`, duration: rnd(0.6, 0.9), ease: 'power2.out' })
+    }
+    tl.to(p, { y: H + 60, x: `+=${rnd(-60, 60)}`, rotation: `+=${rnd(-260, 260)}`, duration: rnd(2.6, 4.2), ease: 'power1.in' })
+    tl.to(p, { rotationX: 70, duration: 0.6, repeat: 5, yoyo: true, ease: 'sine.inOut' }, 0.2)
+  }
+}
+
+// The cover: a sindoor seal on cream paper. One tap and the sindoor spreads
+// over the whole screen, the red page lifts away, and the doors open on the wedding.
+export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone }) {
+  const root = useRef(null)
+  const busy = useRef(false)
+  const q = (s) => root.current.querySelector(s)
+
+  useLayoutEffect(() => {
+    if (still()) return
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.15 })
+      tl.from('.g-garland', { yPercent: -100, duration: 1, ease: 'power3.out' }, 0)
+      tl.from('.g-leaf-l', { xPercent: -100, yPercent: -40, duration: 1.1, ease: 'power3.out' }, 0.2)
+      tl.from('.g-leaf-r', { xPercent: 100, yPercent: -40, duration: 1.1, ease: 'power3.out' }, 0.2)
+      tl.from('.g-disc', { scale: 0.25, autoAlpha: 0, duration: 0.8, ease: 'back.out(1.6)' }, 0.3)
+      tl.from('.g-ring', { scale: 0.7, autoAlpha: 0, duration: 1.3, ease: 'power3.out' }, 0.75)
+      tl.from('.g-title span', { y: 14, autoAlpha: 0, duration: 0.7, stagger: 0.18, ease: 'power2.out' }, 1.1)
+      tl.from('.g-bed-l', { xPercent: -60, yPercent: 70, duration: 1.1, ease: 'power3.out' }, 1.2)
+      tl.from('.g-bed-r', { xPercent: 60, yPercent: 70, duration: 1.1, ease: 'power3.out' }, 1.35)
+      tl.from(['.g-inv', '.g-names', '.g-date'], { y: 14, autoAlpha: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out' }, 1.4)
+      tl.from(['.g-langs', '.g-hint'], { autoAlpha: 0, duration: 0.8, stagger: 0.2 }, 2)
+      gsap.to('.g-ring', { rotation: 360, duration: 120, ease: 'none', repeat: -1 })
+      gsap.fromTo('.g-pulse', { scale: 0.95, autoAlpha: 0.9 }, { scale: 1.5, autoAlpha: 0, duration: 2.6, ease: 'power1.out', repeat: -1, delay: 2.2 })
+      gsap.to('.g-hint', { opacity: 0.45, duration: 1.1, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 2.8 })
+    }, root)
+    return () => ctx.revert()
+  }, [])
+
+  const open = () => {
+    if (busy.current) return
+    busy.current = true
+    if (still()) { onOpen(); onGone(); return }
+    const seal = q('.g-seal').getBoundingClientRect()
+    const cx = seal.left + seal.width / 2
+    const cy = seal.top + seal.height / 2
+    const far = Math.max(Math.hypot(cx, cy), Math.hypot(innerWidth - cx, cy), Math.hypot(cx, innerHeight - cy), Math.hypot(innerWidth - cx, innerHeight - cy))
+    const cover = (far * 2.15) / q('.g-flood').offsetWidth
+    const box = q('.g-petals')
+    petals(box, 34, { x: cx, y: cy })
+
+    const tl = gsap.timeline()
+    tl.to('.g-seal', { scale: 0.94, duration: 0.12, yoyo: true, repeat: 1 }, 0)
+    tl.to(['.g-langs', '.g-hint', '.g-pulse'], { autoAlpha: 0, duration: 0.3 }, 0)
+    tl.to('.g-flood', { scale: cover, duration: 1.6, ease: 'power2.in' }, 0.1)
+    tl.to('.g-garland', { yPercent: -110, duration: 1, ease: 'power2.in' }, 0.2)
+    tl.to('.g-leaf-l', { xPercent: -110, rotation: -12, duration: 1, ease: 'power2.in' }, 0.2)
+    tl.to('.g-leaf-r', { xPercent: 110, rotation: 12, duration: 1, ease: 'power2.in' }, 0.2)
+    tl.to('.g-bed-l', { xPercent: -120, yPercent: 80, rotation: -10, duration: 1, ease: 'power2.in' }, 0.25)
+    tl.to('.g-bed-r', { xPercent: 120, yPercent: 80, rotation: 10, duration: 1, ease: 'power2.in' }, 0.25)
+    tl.to('.g-names', { color: '#f1cf7c', duration: 0.5 }, 0.8)
+    tl.to(['.g-inv', '.g-date'], { color: '#fff1d6', duration: 0.5 }, 0.8)
+    tl.to('.g-seal', { scale: 1.08, duration: 1.6, ease: 'power1.inOut' }, 0.2)
+    // the red page lifts away and shows the doors
+    tl.to('.g-page', { yPercent: -100, duration: 1.15, ease: 'power3.inOut' }, 2.2)
+    tl.call(() => onOpen(), null, 3.15)
+    tl.to('.g-door-l', { rotationY: -104, duration: 1.5, ease: 'power2.inOut' }, 3.4)
+    tl.to('.g-door-r', { rotationY: 104, duration: 1.5, ease: 'power2.inOut' }, 3.4)
+    tl.fromTo('.g-light', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 3.45)
+    tl.call(() => petals(box, 26), null, 3.5)
+    tl.to('.g-doors', { autoAlpha: 0, duration: 0.4 }, 4.75)
+    tl.call(() => onGone(), null, 8)
+  }
+
+  return (
+    <div className="gate" ref={root}>
+      <div className="g-doors" aria-hidden="true">
+        <div className="g-light" />
+        <div className="g-door g-door-l"><i className="g-panel" /><i className="g-panel" /><b className="g-knock" /></div>
+        <div className="g-door g-door-r"><i className="g-panel" /><i className="g-panel" /><b className="g-knock" /></div>
+      </div>
+
+      <div className="g-page">
+        <div className="g-garland" style={{ backgroundImage: `url(${artUrl('sangeet-hanging')})` }} />
+        <img className="g-leaf g-leaf-l" src={artUrl('foliage-corner')} alt="" />
+        <img className="g-leaf g-leaf-r" src={artUrl('foliage-corner')} alt="" />
+        <img className="g-bed g-bed-l" src={artUrl('flowers-yellow')} alt="" />
+        <img className="g-bed g-bed-r" src={artUrl('flowers-yellow')} alt="" />
+
+        <div className="g-inner">
+          <p className="g-inv">{c.hero.invocation}</p>
+          <button className="g-seal" onClick={open} aria-label={c.gate.open}>
+            <span className="g-flood" />
+            <img className="g-ring" src={ring} alt="" />
+            <img className="g-disc" src={sindoor} alt="" />
+            <span className="g-title" lang={lang}>{c.gate.seal.map((w) => <span key={w}>{w}</span>)}</span>
+            <span className="g-pulse" />
+          </button>
+          <h1 className="g-names">{names}</h1>
+          <p className="g-date">{c.gate.date}</p>
+          <div className="g-langs" role="group" aria-label={c.gate.choose}>
+            {langs.map(([l, label]) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
+          </div>
+          <button className="g-hint" onClick={open}>{c.gate.tap}</button>
+        </div>
+      </div>
+      <div className="g-petals" aria-hidden="true" />
+    </div>
+  )
+}
