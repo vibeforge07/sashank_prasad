@@ -16,6 +16,8 @@ const flowers = (art, z = 9) => [L('fg-l', 520, 290, { art, ax: 'l', x: -60, y: 
 const person = (id, w, h, x, y, z) => L(id, w, h, { x, y, z, kind: 'person' })
 const ground = (id, h, z = 2, w = 2200) => L(id, w, h, { z, full: true, kind: 'ground', fit: 'cover' })
 const petals = (q) => [idle.sway(q, 'fg-l', 0.9, 2.8, '0% 100%'), idle.sway(q, 'fg-r', 0.9, 3.1, '100% 100%')]
+// the corner drapes swing a little from the top
+const drapes = (q) => [idle.sway(q, 'drape-l', 0.8, 3.6, '0% 0%'), idle.sway(q, 'drape-r', 0.8, 4.1, '100% 0%')]
 const leaves = (q) => [idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.sway(q, 'foliage-r', 1.2, 2.9, '100% 0%')]
 
 const CALM = 'linear-gradient(#a9cbe0 0%, #bcd6e2 45%, #d9e2dc 75%, #eadfcc 100%)'
@@ -165,19 +167,24 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), ...['haldi-couple', 'haldi-arm', 'haldi-cuff'].map((id) => idle.breathe(q, id)), idle.haldi(q, 'haldi-arm')],
   },
   {
-    // the reference film's Sangeet: a purple night, strands of flowers and lights hanging from the top,
-    // the client's lavender-and-gold stage (redrawn in the site's style), candle stands at the sides, the couple dancing in front
+    // the reference film's Sangeet, laid out like Haldi and Mehendi: a purple night, strands of flowers and lights
+    // hanging from the top, lavender drapes at the two top corners, the client's lavender-and-gold stage drawn small
+    // at the bottom, candle stands at the sides, the couple dancing in front
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 250 }, leave: 'cut', hold: 4,
     layers: [
       L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
-      L('sangeet-stage-art', 1750, 1002, { y: 0, z: 2 }),
+      L('sangeet-stage-small', 1250, 668, { y: 330, z: 2 }),
+      L('drape-l', 330, 790, { art: 'sangeet-drape', ax: 'l', x: -60, ay: 't', y: -10, z: 2 }),
+      L('drape-r', 330, 790, { art: 'sangeet-drape', ax: 'r', x: -60, ay: 't', y: -10, z: 2, flip: true }),
       L('candle-l', 200, 763, { art: 'sangeet-candles', ax: 'l', x: 6, y: 70, z: 4 }),
       L('candle-r', 200, 763, { art: 'sangeet-candles', ax: 'r', x: 6, y: 70, z: 4, flip: true }),
-      person('sangeet-groom', 520, 800, -170, 150, 5), person('sangeet-bride', 560, 790, 150, 140, 6),
+      person('sangeet-groom', 450, 692, -150, 130, 5), person('sangeet-bride', 485, 684, 130, 120, 6),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
       slide(tl, q, 'sangeet-hanging', 'up', 0, 1.1)
+      slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
+      slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['candle-l'], 'left', 0.1, 1.1)
       slide(tl, q, ['candle-r'], 'right', 0.1, 1.1)
       slide(tl, q, 'sangeet-bride', 'right', 0.3, 1.3)
@@ -185,27 +192,38 @@ export const SCENES = [
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.1, 1.2)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...petals(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
+    idle: (q) => [...petals(q), ...drapes(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
   },
   {
-    // the reference film's Wedding: a moonlit night, the client's maroon-and-gold stage (redrawn in the site's style)
-    // on the carpet, the couple side by side on their sofa on the stage
-    id: 'wedding', sky: WED, tone: 'wedding', stars: true, moon: { x: 230, y: 1130, s: 120 }, text: { top: 150 }, leave: 'fade', hold: 5,
+    // the reference film's Wedding, laid out like Haldi and Mehendi: a moonlit night, a marigold toran across the top,
+    // maroon drapes at the two top corners, the client's maroon-and-gold stage drawn small on the carpet,
+    // a banana plant with its mangal ghot at each side, the couple side by side on their sofa in front
+    id: 'wedding', sky: WED, tone: 'wedding', stars: true, moon: { x: 230, y: 1130, s: 120 }, text: { top: 250 }, leave: 'fade', hold: 5,
     layers: [
       L('cloud-l', 380, 167, { art: 'cloud-night', ax: 'l', x: -150, y: 1250, z: 1 }),
       L('cloud-r', 440, 193, { art: 'cloud-night', ax: 'r', x: -190, y: 1080, z: 1, flip: true }),
       L('carpet', 3400, 255, { z: 2, full: true, kind: 'ground' }),
-      L('wedding-stage-art', 1800, 1017, { y: 0, z: 3 }),
+      L('wedding-stage-small', 1000, 621, { y: 330, z: 3 }),
+      L('wedding-hanging', 1100, 350, { full: true, ay: 't', y: -24, z: 4 }),
+      L('drape-l', 330, 842, { art: 'wedding-drape', ax: 'l', x: -60, ay: 't', y: -10, z: 3 }),
+      L('drape-r', 330, 842, { art: 'wedding-drape', ax: 'r', x: -60, ay: 't', y: -10, z: 3, flip: true }),
+      L('banana-l', 280, 438, { art: 'wedding-banana', ax: 'l', x: -90, y: 150, z: 7 }),
+      L('banana-r', 280, 438, { art: 'wedding-banana', ax: 'r', x: -90, y: 150, z: 7, flip: true }),
       L('wedding-sofa', 1180, 475, { y: 70, z: 5 }),
       person('wedding-couple', 1020, 737, 0, 95, 6),
       ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
+      slide(tl, q, 'wedding-hanging', 'up', 0, 1.1)
+      slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
+      slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
+      slide(tl, q, 'banana-l', 'left', 0.4, 1.1)
+      slide(tl, q, 'banana-r', 'right', 0.4, 1.1)
       slide(tl, q, ['wedding-sofa', 'wedding-couple'], 'down', 0.7, 1.2)
       lines(tl, root, 2.8)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), idle.breathe(q, 'wedding-couple')],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...drapes(q), idle.sway(q, 'banana-l', 1, 3.4, '50% 100%'), idle.sway(q, 'banana-r', 1, 3.8, '50% 100%'), idle.breathe(q, 'wedding-couple')],
   },
   {
     // the Reception in the same hand: the client's reception stage (redrawn in the site's style) under the night,

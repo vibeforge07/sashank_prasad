@@ -10,12 +10,13 @@ const OUT = 'src/art'
 const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
-const EDGE = /^(foliage-corner|flowers-|haldi-drape|mehendi-window)/ // meant to run off the picture
-const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon)/
+const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape)/ // meant to run off the picture
+// (a small stage stands on its own, so it is not a strip)
+const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon)/
 // backgrounds a phone shows larger than they were drawn (a wide strip shows only its middle there, at about
 // 1.5 times its pixels): written at twice their size and sharpened, so the ink lines stay crisp on the phone
 // instead of being stretched soft by the browser
-const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-ground|\w+-stage-art)$/
+const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-ground|\w+-stage-art|\w+-stage-small|\w+-drape|wedding-hanging|wedding-banana)$/
 
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)

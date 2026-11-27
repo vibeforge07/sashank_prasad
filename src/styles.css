@@ -104,13 +104,13 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* Sangeet: the flower strands hang a little higher, the words sit a little lower */
   #sangeet [data-l='sangeet-hanging'] { margin-top: calc(-70 * var(--u)); }
   #sangeet .words { --top: 280 !important; }
-  #sangeet [data-l='sangeet-stage-art'] { margin-bottom: calc(-160 * var(--u)); }
   /* Reception: the stage sits lower, so its chandelier stays clear of the address */
   #reception [data-l='reception-stage-art'] { margin-bottom: calc(-150 * var(--u)); }
-  /* Wedding: no sky left between the words and the stage, so the moon and clouds go up to the corners */
-  #wedding .moon { bottom: auto !important; left: auto !important; top: calc(40 * var(--u)); right: calc(70 * var(--u)); }
-  #wedding [data-l='cloud-l'] { bottom: auto !important; top: calc(30 * var(--u)); }
-  #wedding [data-l='cloud-r'] { bottom: auto !important; top: calc(150 * var(--u)); }
+  /* Wedding: the toran hangs a little higher and the words sit a little lower, so the bells stay clear of
+     them; no sky is left for the moon and clouds */
+  #wedding [data-l='wedding-hanging'] { margin-top: calc(-70 * var(--u)); }
+  #wedding .words { --top: 290 !important; }
+  #wedding :is(.moon, [data-l^='cloud-']) { display: none; }
 }
 
 /* ---- wide screens: the words on a card at one side, the picture larger beside it ---- */
@@ -221,9 +221,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* first page: the tall backdrop on phones, the wide one on laptops */
 @container (min-aspect-ratio: 1/1) { #hero [data-l$='-t'] { display: none; } }
 @container (max-aspect-ratio: 1/1) { #hero [data-l$='-w'] { display: none; } }
-/* the client's stages are whole paintings with square edges: their sides and top fade into the night,
-   so on a laptop no box shows around them (on a phone the sides are off the screen anyway) */
-[data-l$='-stage-art'] {
+/* the Reception's stage is still a whole painting with square edges: its sides and top fade into the night,
+   so on a laptop no box shows around it (Sangeet and Wedding now have small stages standing on their own) */
+[data-l='reception-stage-art'] {
   -webkit-mask-image: linear-gradient(90deg, #0000, #000 11%, #000 89%, #0000), linear-gradient(#0000, #000 8%);
   -webkit-mask-composite: source-in;
   mask-image: linear-gradient(90deg, #0000, #000 11%, #000 89%, #0000), linear-gradient(#0000, #000 8%);
