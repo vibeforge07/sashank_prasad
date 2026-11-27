@@ -207,5 +207,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .i-pause { clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0); }
 .i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
 .i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
-#hero .layer:not(.k-person) img { filter: saturate(.84); }
-#hero .layer[data-l='sunrise'] img { filter: saturate(.55) brightness(1.06); opacity: .8; }
+/* first page: the tall backdrop on phones, the wide one on laptops */
+@container (min-aspect-ratio: 1/1) { #hero [data-l$='-t'] { display: none; } }
+@container (max-aspect-ratio: 1/1) { #hero [data-l$='-w'] { display: none; } }
+#hero [data-l^='scene-'] img { max-height: none !important; } /* the road must stay where the tram and taxi ride */

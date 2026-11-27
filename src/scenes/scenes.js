@@ -16,6 +16,7 @@ const ground = (id, h, z = 2, w = 2200) => L(id, w, h, { z, full: true, kind: 'g
 const petals = (q) => [idle.sway(q, 'fg-l', 0.9, 2.8, '0% 100%'), idle.sway(q, 'fg-r', 0.9, 3.1, '100% 100%')]
 const leaves = (q) => [idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.sway(q, 'foliage-r', 1.2, 2.9, '100% 0%')]
 
+const CALM = 'linear-gradient(#a9cbe0 0%, #bcd6e2 45%, #d9e2dc 75%, #eadfcc 100%)'
 const DAY = 'linear-gradient(#b3cfc0 0%, #cfd6b4 34%, #f3cf9b 56%, #f6b183 78%)'
 const RIVER = 'linear-gradient(#77c2c9 0%, #b9d6bd 22%, #f2e1a6 48%, #f8c98f 74%)'
 const NIGHT = 'linear-gradient(#0b0d24 0%, #15133a 40%, #3a1b4d 72%, #63284f 92%)'
@@ -27,28 +28,27 @@ const BOAT_Y = 230
 
 export const SCENES = [
   {
-    id: 'hero', sky: DAY, tone: 'day', text: { top: 85 }, leave: 'cut', hold: 4,
+    id: 'hero', sky: CALM, tone: 'day', text: { top: 85 }, leave: 'cut', hold: 4,
     layers: [
-      L('sunrise', 1500, 620, { y: 700, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(),
-      // the two home towns on the far bank: Kolkata on the left, Jamshedpur on the right
-      L('hills', 2200, 607, { art: 'jamshedpur-hills', y: 560, z: 2, full: true, kind: 'ground' }),
-      L('city-l', 680, 624, { art: 'city-kolkata', x: -340, y: 540, z: 3, kind: 'building' }),
-      L('city-r', 640, 623, { art: 'city-jamshedpur', x: 350, y: 540, z: 3, kind: 'building' }),
-      L('tram', 380, 162, { art: 'kolkata-tram', x: 0, y: 578, z: 4 }),
-      ground('hero-ground', 621, 5),
-      L('taxi', 300, 136, { art: 'kolkata-taxi', x: 0, y: 190, z: 6 }),
+      // one painted far bank (Howrah Bridge, the steel works, the Tata Park diamond, a road with tram rails),
+      // a wide picture for laptops and a tall one for phones; the tram and the taxi drive along its road
+      L('scene-w', 2200, 1376, { art: 'hero-wide', z: 2, full: true, kind: 'ground' }),
+      L('scene-t', 1300, 1765, { art: 'hero-tall', z: 2, full: true, kind: 'ground' }),
+      L('tram-w', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 2200, at: 0.2729, rw: 0.108 } }),
+      L('taxi-w', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 2200, at: 0.2519, rw: 0.076 } }),
+      L('tram-t', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 1300, at: 0.4317, rw: 0.2 } }),
+      L('taxi-t', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 1300, at: 0.3889, rw: 0.135 } }),
       person('hero-groom', 470, 960, -230, 110, 7), person('hero-bride', 520, 960, 210, 110, 8),
       ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
-      rise(tl, q, ['city-l', 'city-r'], 0.3, 1.2)
       slide(tl, q, 'hero-groom', 'left', 1.5, 1.1)
       slide(tl, q, 'hero-bride', 'right', 1.5, 1.1)
       lines(tl, root, 3, { step: 0.55 })
     },
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9),
-      idle.drive(q, 'taxi', 13, 2), idle.drive(q, 'tram', 34, 0)],
+      idle.drive(q, 'taxi-w', 11, 1.5), idle.drive(q, 'tram-w', 30, 0), idle.drive(q, 'taxi-t', 8, 1.5), idle.drive(q, 'tram-t', 20, 0)],
   },
   {
     id: 'family', card: 'right', sky: RIVER, tone: 'day', text: { top: 100 }, leave: 'cut', hold: 5,

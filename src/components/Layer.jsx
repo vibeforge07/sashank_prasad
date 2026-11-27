@@ -7,9 +7,17 @@ import { artUrl } from '../art/index.js'
 //   w,h size of the picture
 const u = (n) => `calc(${n} * var(--u))`
 
-export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain' }) {
+export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road }) {
   const name = art || id
   const url = artUrl(name)
+  // something that rides on a painted road: sized and placed as fractions of the backdrop strip's width,
+  // so it stays on its lane whatever the screen size ({ base: strip width in units, at: lane height, rw: own width })
+  if (road) {
+    const sw = `max(${u(road.base)}, 100cqw)`
+    const width = `calc(${sw} * ${road.rw})`
+    const style = { zIndex: z, width, height: `calc(${width} * ${h / w})`, left: '50%', marginLeft: `calc(${width} / -2)`, bottom: `calc(${sw} * ${road.at})` }
+    return <div className={`layer k-${kind}`} data-l={id} style={style}><div className="layer-in"><img src={url} alt="" draggable="false" decoding="async" style={{ objectFit: 'contain', objectPosition: 'center bottom' }} /></div></div>
+  }
   const style = { zIndex: z, height: u(h), width: full ? `max(${u(w)}, 100cqw)` : u(w) }
   // a full-width strip keeps its proportions when a wide screen stretches it
   if (full) style.height = `calc(${style.width} * ${h / w})`
