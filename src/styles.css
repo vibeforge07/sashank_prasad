@@ -123,17 +123,21 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 
 /* ---- opening screen: a sindoor seal on cream paper, then the doors ---- */
-.gate { position: fixed; inset: 0; z-index: 50; overflow: hidden; --seal: min(66vw, 40svh, 430px); }
+.gate { position: fixed; inset: 0; z-index: 50; overflow: hidden; --seal: min(66vw, 40svh, 430px); --bed: min(36vw, 300px, 17svh); }
 .g-page { position: absolute; inset: 0; z-index: 2; overflow: hidden; background: #fbefd6 50% 50% / cover no-repeat; }
 .g-garland { position: absolute; z-index: 4; top: -1px; left: 0; right: 0; height: min(15vw, 120px); background: 50% 0 / auto 100% repeat-x; pointer-events: none; }
-.g-mala { position: absolute; z-index: 3; top: 0; height: min(46svh, 132vw); width: auto; pointer-events: none; transform-origin: 50% 0; }
-.g-mala-l { left: max(8px, 2.5vw); } .g-mala-r { right: max(8px, 2.5vw); }
+/* marigold strands hanging from the toran: a long one with a shorter one inside it (and a third outside on wide screens) */
+.g-mala { position: absolute; z-index: 3; top: 0; width: auto; pointer-events: none; transform-origin: 50% 0; }
+.g-mala-l { left: var(--x); } .g-mala-r { right: var(--x); }
+.g-m1 { --x: max(6px, 2vw); height: min(46svh, 132vw); }
+.g-m2 { --x: 12.5vw; height: min(26svh, 74vw); }
+.g-m3 { display: none; }
 .g-pais { position: absolute; z-index: 1; width: min(46vw, 360px); opacity: .5; pointer-events: none; }
 .g-pais-l { left: 0; top: 9svh; } .g-pais-r { right: 0; top: 9svh; scale: -1 1; }
 .g-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9svh, 90px); background: 50% 100% / auto 100% repeat-x; pointer-events: none; }
-.g-bed { position: absolute; z-index: 4; bottom: 1svh; width: min(36vw, 300px); pointer-events: none; }
+.g-bed { position: absolute; z-index: 4; bottom: 1svh; width: var(--bed); pointer-events: none; }
 .g-bed-l { left: 1vw; } .g-bed-r { right: 1vw; }
-.g-inner { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15svh 20px 16svh; }
+.g-inner { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15svh 20px calc(var(--bed) * 0.86 + 2svh); }
 .g-inv { position: relative; z-index: 3; color: var(--crimson); font-size: 16px; margin-bottom: 1.6svh; }
 .g-seal { position: relative; width: var(--seal); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; -webkit-tap-highlight-color: transparent; }
 .g-seal > * { grid-area: 1 / 1; }
@@ -175,7 +179,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .g-langs button { min-height: 44px; padding: 8px 22px; font-size: clamp(16px, 2.3svh, 21px); }
   .g-hint { font-size: clamp(16px, 2.3svh, 21px); }
   .g-garland { height: min(14svh, 130px); }
-  .g-mala { height: min(60svh, 560px); } .g-mala-l { left: 4vw; } .g-mala-r { right: 4vw; }
+  .g-m1 { --x: 4.6vw; height: min(60svh, 560px); }
+  .g-m2 { --x: 10.4vw; height: min(44svh, 420px); }
+  .g-m3 { display: block; --x: 1.2vw; height: min(50svh, 470px); }
   .g-pais { width: min(30vw, 440px); }
   .g-bed { width: min(21vw, 46svh, 330px); bottom: 2svh; }
   .g-bed-l { left: 3vw; } .g-bed-r { right: 3vw; }
