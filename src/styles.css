@@ -71,8 +71,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .request { font-size: calc(40 * var(--u)); }
 .kin { font-size: calc(36 * var(--u)); margin-top: calc(8 * var(--u)); }
 .kin em { display: block; font-size: .86em; color: #8a4a33; }
-.kin a { color: inherit; text-underline-offset: 3px; }
-.kin.home { font-size: calc(31 * var(--u)); }
 .and { font-size: calc(36 * var(--u)); letter-spacing: .12em; margin-top: calc(22 * var(--u)); }
 .side { font-size: calc(32 * var(--u)); letter-spacing: .08em; margin-bottom: calc(8 * var(--u)); opacity: .85; }
 :lang(hi) .side, :lang(bn) .side { letter-spacing: 0; }
@@ -85,11 +83,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .when { margin-top: calc(26 * var(--u)); font-size: calc(42 * var(--u)); }
 .when .date { font-size: calc(54 * var(--u)); font-weight: 500; }
 .venue { margin-top: calc(18 * var(--u)); font-size: calc(38 * var(--u)); }
-.closing-line { font: 400 calc(74 * var(--u)) / 1.25 var(--display); color: var(--crimson); }
-.countdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 calc(54 * var(--u)); margin: calc(20 * var(--u)) 0; }
-.countdown b { display: block; font: 400 calc(70 * var(--u)) / 1.1 var(--display); color: var(--crimson); }
-.countdown span, .countdown small { font-size: calc(32 * var(--u)); }
-.countdown small { flex-basis: 100%; }
 
 .tone-haldi .title { color: #d2235c; }
 .tone-night, .tone-stage, .tone-wedding { color: var(--cream); }
@@ -124,7 +117,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   :is(.tone-night, .tone-stage, .tone-wedding) .card { background: #130f33e6; border-color: #e0b45a; }
   .name { font-size: calc(118 * var(--u)); }
   .k-frame img { border-inline: calc(8 * var(--u)) solid #a8672a; }
-  .closing-line { font-size: calc(62 * var(--u)); }
   /* the Mehendi carpet runs the whole width of the room */
   [data-l='mehendi-seat']::before { content: ''; position: absolute; z-index: -1; inset: 59% -100vw 0; border-top: calc(8 * var(--u)) solid #170603; background: linear-gradient(to top, #0000 calc(51.8 * var(--u)), #f0b23c 0 calc(55.2 * var(--u)), #0000 0 calc(65.6 * var(--u)), #f0b23c 0 calc(71.8 * var(--u)), #0000 0) #a62604; }
 }

@@ -32,13 +32,13 @@ export default {
   closing: {
     lines: ['Come as you are.', 'Stay till the last song.'],
     awaiting: 'Awaiting your presence',
-    names: 'Sneha Prasad, Swati Prasad, Arvind Sah\n& Little Sharvik Sah',
+    names: ['Sneha Prasad', 'Swati Prasad', 'Arvind Sah', 'Debaneeta Bhattacharjee', '& Little Sharvik Sah'],
     rsvp: 'RSVP',
     call: 'Prasad Family',
     homes: ['Prasad residence', 'Bhattacharjee residence'],
-    units: ['days', 'hours', 'minutes'],
+    units: ['days', 'hours', 'minutes', 'seconds'],
     until: 'until the wedding',
   },
   date: { title: 'The Date', parts: ['Day', 'Month', 'Year'], add: 'Add to calendar', apps: ['Google', 'Apple', 'Outlook'], place: 'Telco Club, Telco Colony, Jamshedpur' },
-  ui: { scratch: 'Scratch to see the date', play: 'Play', pause: 'Pause', sound: 'Music', replay: 'Watch again' },
+  ui: { scratch: 'Scratch to see the date', play: 'Play', pause: 'Pause', sound: 'Music', replay: 'Watch again', light: 'Tap to light the lamp' },
 }

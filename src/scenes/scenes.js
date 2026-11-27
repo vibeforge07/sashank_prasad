@@ -1,6 +1,7 @@
 import { slide, rise, lines, idle } from './motion.js'
 import { playInvitation, idleInvitation } from './invitation.js'
 import { playDate, idleDate } from './date.js'
+import { playClosing, idleClosing } from './closing.js'
 
 // Each scene: sky, layers, where its text sits, the intro timeline and the idle motion.
 // `leave` is how autoplay goes to the next scene: a hard cut or a cross-fade, as in the film.
@@ -31,7 +32,6 @@ const RECEPTION = 'linear-gradient(#120a26 0%, #26123f 45%, #431b45 80%, #52203f
 const WED = 'linear-gradient(#0a0e2c 0%, #121a4a 50%, #1e2a66 100%)'
 
 // the boat floats on the river, not on the bank
-const BOAT_Y = 230
 
 export const SCENES = [
   {
@@ -249,20 +249,11 @@ export const SCENES = [
     idle: (q) => [...petals(q), idle.sway(q, 'lantern-l', 1.6, 3.1, '50% 0%'), idle.sway(q, 'lantern-r', 1.6, 2.7, '50% 0%'), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
   },
   {
-    id: 'closing', card: 'right', sky: RIVER, tone: 'day', text: { top: 78 }, hold: 8,
-    layers: [
-      L('sunrise', 1500, 620, { y: 300, z: 1, full: true, kind: 'ground', fit: 'cover' }),
-      ...clouds(), ground('river-ground', 690, 3),
-      L('river-boat', 260, 120, { x: 250, y: BOAT_Y, z: 4 }),
-      L('foliage-l', 480, 480, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -70, z: 8, kind: 'plant' }),
-      ...flowers('flowers-lotus'),
-    ],
-    play(tl, q, root) {
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0, 0.8)
-      slide(tl, q, 'foliage-l', 'up', 0.1, 1)
-      slide(tl, q, 'river-props', 'left', 0.5, 0.8)
-      lines(tl, root, 1.8, { step: 0.5 })
-    },
-    idle: (q) => [...cloudIdle(q), ...petals(q), idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.drift(q, 'river-boat', 60, 8)],
+    // the last page, after the client's reference film: a carved arch on a blue night and a lamp to light with a tap,
+    // then the countdown and who awaits you (components/Words.jsx Closing, scenes/closing.js)
+    id: 'closing', own: true, sky: 'radial-gradient(110% 70% at 50% 70%, #2a2468 0%, #1a1650 40%, #0e0c33 75%, #080722 100%)', tone: 'wedding', stars: true, text: { top: 0 }, hold: 8,
+    layers: [],
+    play: (tl, q, root) => playClosing(tl, root),
+    idle: (q) => idleClosing(q),
   },
 ]

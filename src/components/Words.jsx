@@ -431,31 +431,140 @@ export function DatePage({ c, lang }) {
   )
 }
 
-function Countdown({ c, lang }) {
+// days, hours, minutes and seconds left; while the lamp is being lit they roll up from nothing (k 0 to 1)
+function Countdown({ c, lang, k }) {
   const [now, setNow] = useState(Date.now())
-  useEffect(() => { const i = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(i) }, [])
+  useEffect(() => { const i = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(i) }, [])
   const left = Math.max(0, WEDDING_AT - now)
+  const n = [left / 864e5, (left / 36e5) % 24, (left / 6e4) % 60, (left / 1e3) % 60].map((v) => Math.floor(Math.floor(v) * k))
+  const f = new Intl.NumberFormat({ bn: 'bn-IN-u-nu-beng', hi: 'hi-IN-u-nu-deva' }[lang] || 'en-IN', { minimumIntegerDigits: 2 })
+  const box = useRef(null)
+  const was = useRef(n)
+  // a number that changes drops into its tile
+  useLayoutEffect(() => {
+    if (k < 1) { was.current = n; return }
+    box.current.querySelectorAll('b').forEach((b, i) => {
+      if (was.current[i] !== n[i]) gsap.fromTo(b, { yPercent: -45, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.45, ease: 'back.out(1.8)' })
+    })
+    was.current = n
+  })
   if (!left) return null
-  const n = [left / 864e5, (left / 36e5) % 24, (left / 6e4) % 60].map(Math.floor)
-  const f = new Intl.NumberFormat({ bn: 'bn-IN-u-nu-beng', hi: 'hi-IN-u-nu-deva' }[lang] || 'en-IN')
   return (
-    <div className="countdown" data-t="2.4">
-      {n.map((v, i) => <p key={c.closing.units[i]}><b>{f.format(v)}</b><span>{c.closing.units[i]}</span></p>)}
-      <small>{c.closing.until}</small>
+    <div className="cl-count" data-r ref={box}>
+      {n.map((v, i) => <p key={i}><span className="cl-tile"><b>{f.format(v)}</b></span><span className="cl-unit">{c.closing.units[i]}</span></p>)}
     </div>
   )
 }
 
+// The last page, after the client's reference film (saath.studio): a carved arch in the blue of the night and an
+// unlit brass lamp on a marble ledge. A tap lights the lamp: the light spreads from the flame over the arch,
+// which turns warm, the small lamps on its pillars come on one by one, and the words come in: the line,
+// the countdown to the minute and second, and who awaits you. If nobody taps, the lamp lights itself.
+// glints on the carving (per cent of the arch), as in the reference
+const GLINTS = [[6, 30, 0.7], [94, 22, 0.8], [8, 58, 0.6], [92, 64, 0.7], [5, 86, 0.6], [95, 92, 0.5], [30, 6, 0.6], [70, 7, 0.7], [50, 2.5, 0.5], [16, 12, 0.5], [84, 13, 0.6]]
+const NICHES = [24.5, 32, 39.6, 47.1, 54.7, 62.2, 69.8, 77.3, 84.9].flatMap((y) => [[9.2, y], [90.8, y]])
+
 export function Closing({ c, lang }) {
   const k = c.closing
-  return <>
-    <p className="closing-line" data-t="0">{k.lines.map((l) => <span key={l}>{l}</span>)}</p>
-    <Countdown c={c} lang={lang} />
-    <p className="kin" data-t="3.4"><em>{k.awaiting}</em><span>{k.names}</span></p>
-    {contact && <>
-      <p className="kin" data-t="4.2"><em>{k.rsvp}</em><a href={`tel:${contact.phone.replace(/-/g, '')}`}>{k.call} {digits(contact.phone, lang)}</a></p>
-      {contact.homes[lang].map((h, i) => <p className="kin home" key={h} data-t={4.8 + i * 0.5}><em>{k.homes[i]}</em><span>{h}</span></p>)}
-    </>}
-    <Shloka id="closing" t="6" lang={lang} />
+  const [lit, setLit] = useState(false)
+  const [roll, setRoll] = useState(0)
+  const root = useRef(null)
+  const light = () => setLit(true)
+
+  // nobody tapped: the lamp lights itself after a while on screen
+  useEffect(() => {
+    if (lit) return
+    let t
+    const io = new IntersectionObserver(([e]) => { clearTimeout(t); if (e.isIntersecting) t = setTimeout(light, 7000) }, { threshold: 0.6 })
+    io.observe(root.current)
+    return () => { clearTimeout(t); io.disconnect() }
+  }, [lit])
+
+  useLayoutEffect(() => {
+    if (!lit) return
+    const el = root.current
+    const $ = (s) => el.querySelector(s)
+    const $$ = (s) => [...el.querySelectorAll(s)]
+    const r = $('.cl-lamp').getBoundingClientRect()
+    burst({ left: r.left, top: r.top - r.height * 0.4, width: r.width, height: r.height * 0.5 }, 14)
+    const count = { k: 0 }
+    const tl = gsap.timeline()
+      .to($('.cl-hint'), { autoAlpha: 0, duration: 0.3 }, 0)
+      .fromTo($('.cl-flame'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(2.4)' }, 0)
+      .fromTo($('.cl-glow'), { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.6, ease: 'power2.out' }, 0.1)
+      .fromTo($$('.cl-night'), { '--r': '-25%' }, { '--r': '140%', duration: 2.4, ease: 'power1.inOut' }, 0.2)
+      .fromTo($$('.cl-niche'), { autoAlpha: 0, scale: 0.2 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: { each: 0.07, from: 'end' } }, 0.5)
+      .fromTo($$('.cl-lantern'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.6)
+      .fromTo($$('.cl-body [data-r]'), { autoAlpha: 0, y: 14, filter: 'blur(6px)' },
+        { autoAlpha: 1, y: 0, filter: 'blur(0px)', duration: 0.9, ease: 'power2.out', stagger: 0.28, clearProps: 'all' }, 1.2)
+      .to(count, { k: 1, duration: 1.6, ease: 'power2.out', onUpdate: () => setRoll(count.k) }, 1.6)
+      .add(() => el.dispatchEvent(new CustomEvent('scratched', { bubbles: true })), 2.4)
+    // the flame never stands quite still
+    const flick = gsap.to($('.cl-flame i'), { scaleY: 1.12, scaleX: 0.9, skewX: 3, duration: 0.18, repeat: -1, yoyo: true, ease: 'sine.inOut', repeatRefresh: true })
+    return () => { tl.kill(); flick.kill() }
+  }, [lit])
+
+  const kin = (
+    <div className="cl-kin" data-r>
+      <p className="cl-head"><i />{k.awaiting}<i /></p>
+      <div className="cl-names">
+        {k.names.slice(0, -1).map((n) => <span key={n}>{n}</span>)}
+        <span className="cl-last">{k.names[k.names.length - 1]}</span>
+      </div>
+    </div>
+  )
+  // the carved arch in its two lights, with its lanterns, the lamps on its pillars and the glints on its carving
+  const face = <>
+    <img className="cl-warm" src={artUrl('closing-arch-warm')} alt="" />
+    <img className="cl-night" src={artUrl('closing-arch-night')} alt="" />
+    {[3.6, 96.4].map((x) => <i key={x} className="cl-lantern" style={{ left: `${x}%` }} />)}
+    {NICHES.map(([x, y]) => <i key={`${x}-${y}`} className="cl-niche" style={{ left: `${x}%`, top: `${y}%` }} />)}
+    <div className="iv-sparks">{GLINTS.map(([x, y, sz]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': sz }} />)}</div>
   </>
+  return (
+    <div className={`cl${lit ? ' is-lit' : ''}`} ref={root}>
+      {/* on a wide screen the arch is one of a row, like a palace colonnade */}
+      <i className="cl-floor" />
+      {[-2, -1, 1, 2].map((o) => <div key={o} className="cl-wing" style={{ '--o': o }} aria-hidden="true">{face}</div>)}
+      <div className="cl-arch" data-l="cl-arch">
+        <i className="cl-glow" />
+        {face}
+        <div className="cl-ledge" />
+        <button type="button" className={`cl-lamp scratch${lit ? ' done' : ''}`} onClick={light} aria-label={c.ui.light} disabled={lit}>
+          <span className="cl-flame"><i /></span>
+          <svg viewBox="0 0 120 92" aria-hidden="true">
+            <defs>
+              <linearGradient id="cl-brass" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor="#ffe08a" /><stop offset=".45" stopColor="#d9a13d" /><stop offset="1" stopColor="#8a5418" />
+              </linearGradient>
+            </defs>
+            <g stroke="#3a1c08" strokeWidth="2.4" strokeLinejoin="round" fill="url(#cl-brass)">
+              <ellipse cx="60" cy="85" rx="27" ry="5.5" />
+              <path d="M52 84 C54 74 55 68 56 62 L64 62 C65 68 66 74 68 84 Z" />
+              <ellipse cx="60" cy="62" rx="12" ry="3.4" />
+              <path d="M14 42 C22 62 44 66 60 66 C80 66 96 60 104 48 L114 38 C104 40 96 42 90 42 Z" />
+              <ellipse cx="54" cy="43" rx="40" ry="7" fill="#5a2c0c" />
+            </g>
+            <path d="M104 41 L111 36" stroke="#2a1406" strokeWidth="2.6" strokeLinecap="round" />
+          </svg>
+        </button>
+        <p className="cl-hint"><i />{c.ui.light}<i /></p>
+      </div>
+      <div className="cl-body" aria-hidden={!lit}>
+        <p className="cl-line" data-r>{k.lines.map((l) => <span key={l}>{l}</span>)}</p>
+        <Countdown c={c} lang={lang} k={roll} />
+        <p className="cl-until" data-r>{k.until}</p>
+        {kin}
+        {/* on a phone these follow on under the names; on a wide screen they stand at the two sides of the arch */}
+        {contact && <div className="cl-side cl-side-l" data-r>
+          <p><em>{k.rsvp}</em><a href={`tel:${contact.phone.replace(/-/g, '')}`}>{k.call} {digits(contact.phone, lang)}</a></p>
+          <p><em>{k.homes[0]}</em><span>{contact.homes[lang][0]}</span></p>
+        </div>}
+        <div className="cl-side cl-side-r" data-r>
+          {contact && <p><em>{k.homes[1]}</em><span>{contact.homes[lang][1]}</span></p>}
+          <Shloka id="closing" t="0" lang={lang} />
+        </div>
+      </div>
+    </div>
+  )
 }
