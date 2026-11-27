@@ -1,5 +1,6 @@
 import { slide, rise, lines, idle } from './motion.js'
 import { playInvitation, idleInvitation } from './invitation.js'
+import { playDate, idleDate } from './date.js'
 
 // Each scene: sky, layers, where its text sits, the intro timeline and the idle motion.
 // `leave` is how autoplay goes to the next scene: a hard cut or a cross-fade, as in the film.
@@ -63,6 +64,14 @@ export const SCENES = [
     layers: [],
     play: (tl, q, root) => playInvitation(tl, root),
     idle: (q) => idleInvitation(q),
+  },
+  {
+    // the wedding date on its own page, under gold foil, on a lamplit night (components/Words.jsx DatePage, scenes/date.js);
+    // autoplay waits here until the guest has scratched it open
+    id: 'date', own: true, sky: 'radial-gradient(120% 80% at 50% 40%, #3b2674 0%, #24185c 38%, #150f3c 72%, #0b0926 100%)', tone: 'wedding', stars: true, text: { top: 0 }, leave: 'cut', hold: 9,
+    layers: [],
+    play: (tl, q, root) => playDate(tl, root),
+    idle: (q) => idleDate(q),
   },
   {
     id: 'briddhi', sky: RIVER, tone: 'day', text: { top: 220 }, leave: 'cut', hold: 4,

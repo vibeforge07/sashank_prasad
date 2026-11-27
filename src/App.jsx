@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { petals } from './components/petals.js'
 import Scene from './components/Scene.jsx'
 import Gate from './components/Gate.jsx'
-import { Hero, Family, EventWords, Closing } from './components/Words.jsx'
+import { Hero, Family, DatePage, EventWords, Closing } from './components/Words.jsx'
 import { SCENES } from './scenes/scenes.js'
 import en from './content/en.js'
 import hi from './content/hi.js'
@@ -36,6 +36,7 @@ function firstLang() {
 const words = (id, c, lang) => {
   if (id === 'hero') return <Hero c={c} lang={lang} />
   if (id === 'family') return <Family c={c} lang={lang} />
+  if (id === 'date') return <DatePage c={c} lang={lang} />
   if (id === 'closing') return <Closing c={c} lang={lang} />
   return <EventWords c={c} id={id} lang={lang} />
 }
