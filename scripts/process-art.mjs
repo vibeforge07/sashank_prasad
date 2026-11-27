@@ -11,7 +11,7 @@ const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
 const EDGE = /^(foliage-corner|flowers-|haldi-drape|mehendi-window)/ // meant to run off the picture
-const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|sunrise|clouds-horizon)/
+const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon)/
 
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)

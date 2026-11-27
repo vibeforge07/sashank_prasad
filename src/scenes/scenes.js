@@ -31,21 +31,24 @@ export const SCENES = [
     layers: [
       L('sunrise', 1500, 620, { y: 700, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(),
-      L('temple-l', 560, 640, { art: 'temple-dakshineswar', x: -290, y: 670, z: 3, kind: 'building' }),
-      L('temple-r', 520, 680, { art: 'temple-baidyanath', x: 300, y: 670, z: 3, kind: 'building' }),
-      L('tree-l', 560, 620, { art: 'tree-big', ax: 'l', x: -330, y: 640, z: 4, kind: 'plant' }),
-      L('tree-r', 560, 620, { art: 'tree-big', ax: 'r', x: -330, y: 640, z: 4, flip: true, kind: 'plant' }),
-      ground('hero-ground', 880, 5),
-      person('hero-groom', 470, 960, -230, 110, 6), person('hero-bride', 520, 960, 210, 110, 7),
+      // the two home towns on the far bank: Kolkata on the left, Jamshedpur on the right
+      L('hills', 2200, 607, { art: 'jamshedpur-hills', y: 560, z: 2, full: true, kind: 'ground' }),
+      L('city-l', 680, 624, { art: 'city-kolkata', x: -340, y: 540, z: 3, kind: 'building' }),
+      L('city-r', 640, 623, { art: 'city-jamshedpur', x: 350, y: 540, z: 3, kind: 'building' }),
+      L('tram', 380, 162, { art: 'kolkata-tram', x: 0, y: 578, z: 4 }),
+      ground('hero-ground', 621, 5),
+      L('taxi', 300, 136, { art: 'kolkata-taxi', x: 0, y: 190, z: 6 }),
+      person('hero-groom', 470, 960, -230, 110, 7), person('hero-bride', 520, 960, 210, 110, 8),
       ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
-      rise(tl, q, ['temple-l', 'temple-r'], 0.3, 1.2)
+      rise(tl, q, ['city-l', 'city-r'], 0.3, 1.2)
       slide(tl, q, 'hero-groom', 'left', 1.5, 1.1)
       slide(tl, q, 'hero-bride', 'right', 1.5, 1.1)
       lines(tl, root, 3, { step: 0.55 })
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9)],
+    idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9),
+      idle.drive(q, 'taxi', 13, 2), idle.drive(q, 'tram', 34, 0)],
   },
   {
     id: 'family', card: 'right', sky: RIVER, tone: 'day', text: { top: 100 }, leave: 'cut', hold: 5,

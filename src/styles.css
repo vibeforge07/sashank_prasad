@@ -124,14 +124,15 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 
 /* ---- opening screen: a sindoor seal on cream paper, then the doors ---- */
 .gate { position: fixed; inset: 0; z-index: 50; overflow: hidden; --seal: min(66vw, 40svh, 430px); }
-.g-page { position: absolute; inset: 0; z-index: 2; overflow: hidden; background: radial-gradient(120% 80% at 50% 38%, #fffaf0, #fbefd6 60%, #f3d9ae); }
-.g-garland { position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: min(19vw, 120px); background: 50% 0 / auto 100% repeat-x; }
-.g-leaf { position: absolute; z-index: 4; top: -4svh; width: min(34vw, 260px); pointer-events: none; }
-.g-leaf-l { left: -6vw; }
-.g-leaf-r { right: -6vw; scale: -1 1; }
-.g-bed { position: absolute; z-index: 4; bottom: -2svh; width: min(52vw, 400px); pointer-events: none; }
-.g-bed-l { left: -10vw; }
-.g-bed-r { right: -10vw; scale: -1 1; }
+.g-page { position: absolute; inset: 0; z-index: 2; overflow: hidden; background: #fbefd6 50% 50% / cover no-repeat; }
+.g-garland { position: absolute; z-index: 4; top: -1px; left: 0; right: 0; height: min(15vw, 120px); background: 50% 0 / auto 100% repeat-x; pointer-events: none; }
+.g-mala { position: absolute; z-index: 3; top: 0; height: min(46svh, 132vw); width: auto; pointer-events: none; transform-origin: 50% 0; }
+.g-mala-l { left: max(8px, 2.5vw); } .g-mala-r { right: max(8px, 2.5vw); }
+.g-pais { position: absolute; z-index: 1; width: min(46vw, 360px); opacity: .5; pointer-events: none; }
+.g-pais-l { left: 0; top: 9svh; } .g-pais-r { right: 0; top: 9svh; scale: -1 1; }
+.g-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9svh, 90px); background: 50% 100% / auto 100% repeat-x; pointer-events: none; }
+.g-bed { position: absolute; z-index: 4; bottom: 1svh; width: min(36vw, 300px); pointer-events: none; }
+.g-bed-l { left: 1vw; } .g-bed-r { right: 1vw; }
 .g-inner { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15svh 20px 16svh; }
 .g-inv { position: relative; z-index: 3; color: var(--crimson); font-size: 16px; margin-bottom: 1.6svh; }
 .g-seal { position: relative; width: var(--seal); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; -webkit-tap-highlight-color: transparent; }
@@ -166,21 +167,22 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-petals img { position: absolute; left: 0; top: 0; height: auto; will-change: transform; }
 
 @media (min-aspect-ratio: 1/1) {
-  .gate { --seal: min(50svh, 600px); }
+  .gate { --seal: min(44svh, 560px); }
   .g-disc { width: 66%; }
   .g-title:lang(en) { font-size: calc(var(--seal) * 0.098); }
   .g-inv { font-size: clamp(16px, 2.5svh, 24px); }
   .g-date { font-size: clamp(16px, 3svh, 28px); }
   .g-langs button { min-height: 44px; padding: 8px 22px; font-size: clamp(16px, 2.3svh, 21px); }
   .g-hint { font-size: clamp(16px, 2.3svh, 21px); }
-  .g-garland { height: min(13svh, 110px); }
-  .g-leaf { width: min(22vw, 300px); top: -6svh; }
-  .g-bed { width: min(30vw, 460px); }
-  .g-bed-l { left: -2vw; } .g-bed-r { right: -2vw; }
-  .g-inner { padding: 10svh 20px 3svh; }
+  .g-garland { height: min(14svh, 130px); }
+  .g-mala { height: min(60svh, 560px); } .g-mala-l { left: 4vw; } .g-mala-r { right: 4vw; }
+  .g-pais { width: min(30vw, 440px); }
+  .g-bed { width: min(21vw, 46svh, 330px); bottom: 2svh; }
+  .g-bed-l { left: 3vw; } .g-bed-r { right: 3vw; }
+  .g-inner { padding: 17svh 20px 8svh; }
   .g-names { font-size: clamp(30px, 6.4svh, 70px); }
 }
-@media (max-height: 720px) and (min-aspect-ratio: 1/1) { .gate { --seal: min(46svh, 600px); } .g-inner { padding-top: 13svh; } }
+@media (max-height: 720px) and (min-aspect-ratio: 1/1) { .gate { --seal: min(40svh, 600px); } .g-inner { padding-top: 17svh; } }
 @media (max-height: 680px) and (max-aspect-ratio: 1/1) { .gate { --seal: min(58vw, 34svh); } .g-inner { padding-top: 13svh; } }
 
 .langs { display: flex; gap: 8px; margin-top: 10px; }
@@ -199,3 +201,5 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .i-pause { clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0); }
 .i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
 .i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
+#hero .layer:not(.k-person) img { filter: saturate(.84); }
+#hero .layer[data-l='sunrise'] img { filter: saturate(.55) brightness(1.06); opacity: .8; }
