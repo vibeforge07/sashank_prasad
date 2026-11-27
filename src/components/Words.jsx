@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { PETALS, petals } from './petals.js'
+import { shower } from './petals.js'
 import { EVENTS, WEDDING_AT } from '../content/events.js'
 import { SHLOKAS } from '../content/shlokas.js'
 import { artUrl } from '../art/index.js'
@@ -164,9 +164,6 @@ export function Family({ c, lang }) {
         <div className="iv-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
       </div>
       <img className="inv-ring" src={ring} alt="" aria-hidden="true" />
-      <div className="inv-petals" data-l="inv-petals" aria-hidden="true">
-        {Array.from({ length: 12 }, (_, i) => <img key={i} src={PETALS[i % PETALS.length]} alt="" />)}
-      </div>
       <h2 className="inv-head">{f.title}</h2>
       <div className="env-stage">
         <div className="env">
@@ -248,14 +245,8 @@ function foil(cv) {
   g.fill()
 }
 
-// flowers thrown out of the middle of a box on the screen
-function burst(r, n) {
-  const layer = document.createElement('div')
-  layer.className = 'g-petals sc-petals'
-  document.body.appendChild(layer)
-  petals(layer, n, { x: r.left + r.width / 2, y: r.top + r.height / 2 })
-  setTimeout(() => layer.remove(), 6000)
-}
+// a few petals drifting down out of the middle of a box on the screen (only ever after a tap)
+const burst = (r, n) => shower(r.left + r.width / 2, r.top + r.height / 2, n)
 
 // the wedding for Google Calendar, Apple Calendar (an .ics file, which Outlook on a computer opens too)
 // and Outlook on the web, in the reader's own language
@@ -286,9 +277,20 @@ function calendars(c) {
     'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', `DESCRIPTION:${esc(title)}`, 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].map(fold).join('\r\n')
   return [
     [`https://calendar.google.com/calendar/render?${q({ action: 'TEMPLATE', text: title, dates: AT.join('/'), details: about, location: place })}`],
-    [`data:text/calendar;charset=utf-8,${encodeURIComponent(ics)}`, 'shashank-debashruti-wedding.ics'],
+    [ics, 'shashank-debashruti-wedding.ics'],
     [`https://outlook.live.com/calendar/0/deeplink/compose?${q({ path: '/calendar/action/compose', rru: 'addevent', subject: title, startdt: iso(AT[0]), enddt: iso(AT[1]), body: about, location: place })}`],
   ]
+}
+
+function downloadIcs(ics, file) {
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }))
+  const a = document.createElement('a')
+  a.href = url
+  a.download = file
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
 export function DatePage({ c, lang }) {
@@ -298,6 +300,8 @@ export function DatePage({ c, lang }) {
   const row = useRef(null)
   const cal = useRef(null)
   const shown = useRef([false, false, false])
+  const revealed = useRef(false)
+  const revealTl = useRef(null)
   const [open, setOpen] = useState([false, false, false])
   const all = open.every(Boolean)
 
@@ -305,40 +309,70 @@ export function DatePage({ c, lang }) {
   useEffect(() => {
     const el = row.current
     const cvs = [...el.querySelectorAll('canvas')]
-    const gone = [...shown.current]
+    const gone = shown.current
     let last = null
+    let start = null
+    let moved = false
     let moves = 0
     const paint = () => cvs.forEach((cv, i) => {
       const r = cv.getBoundingClientRect()
+      if (!r.width || !r.height) return
       const dpr = Math.min(window.devicePixelRatio || 1, 2)
       if (!gone[i] && (cv.width !== Math.round(r.width * dpr) || cv.height !== Math.round(r.height * dpr))) foil(cv)
     })
+    const clearTile = (i) => {
+      if (gone[i]) return
+      gone[i] = true
+      setOpen((o) => o.map((v, x) => v || x === i))
+    }
+    const checkDone = (cv, i) => {
+      if (gone[i] || !cv.width || !cv.height) return
+      const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data
+      let clear = 0
+      let n = 0
+      for (let j = 3; j < px.length; j += 4 * 17) { n++; if (px[j] < 40) clear++ }
+      if (n && clear / n > 0.25) clearTile(i)
+    }
     const rub = (ev) => {
-      if (!(ev.buttons || ev.pointerType === 'touch')) return
+      if (!(ev.buttons || ev.pointerType === 'touch' || ev.type === 'pointerdown')) return
       const p = [ev.clientX, ev.clientY]
+      if (start && Math.hypot(p[0] - start[0], p[1] - start[1]) > 8) moved = true
       const a = last || p
-      const check = ++moves % 5 === 0
+      const check = ++moves % 2 === 0
       cvs.forEach((cv, i) => {
-        if (gone[i]) return
+        if (gone[i] || !cv.width || !cv.height) return
         const r = cv.getBoundingClientRect()
+        if (!r.width || !r.height) return
         const k = cv.width / r.width
         const g = cv.getContext('2d')
-        const w = Math.min(cv.width, cv.height) * 0.36
+        const w = Math.min(cv.width, cv.height) * 0.42
         g.globalCompositeOperation = 'destination-out'
         g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = w
         g.beginPath(); g.moveTo((a[0] - r.left) * k, (a[1] - r.top) * k); g.lineTo((p[0] - r.left) * k, (p[1] - r.top) * k); g.stroke()
         const near = p[0] > r.left - w / k && p[0] < r.right + w / k && p[1] > r.top - w / k && p[1] < r.bottom + w / k
-        if (!check || !near) return
-        const px = g.getImageData(0, 0, cv.width, cv.height).data
-        let clear = 0
-        let n = 0
-        for (let j = 3; j < px.length; j += 4 * 19) { n++; if (px[j] < 40) clear++ }
-        if (clear / n > 0.45) { gone[i] = true; setOpen((o) => o.map((v, x) => v || x === i)) }
+        if (check && near) checkDone(cv, i)
       })
       last = p
     }
-    const down = (ev) => { last = null; el.setPointerCapture?.(ev.pointerId); rub(ev) }
-    const up = () => { last = null }
+    const down = (ev) => {
+      last = null
+      start = [ev.clientX, ev.clientY]
+      moved = false
+      el.setPointerCapture?.(ev.pointerId)
+      rub(ev)
+    }
+    const up = (ev) => {
+      cvs.forEach((cv, i) => checkDone(cv, i))
+      if (!moved && start) {
+        const idx = cvs.findIndex((cv) => {
+          const r = cv.getBoundingClientRect()
+          return ev.clientX >= r.left - 6 && ev.clientX <= r.right + 6 && ev.clientY >= r.top - 6 && ev.clientY <= r.bottom + 6
+        })
+        if (idx >= 0) clearTile(idx)
+      }
+      last = null
+      start = null
+    }
     paint()
     const ro = new ResizeObserver(paint)
     ro.observe(el)
@@ -356,6 +390,7 @@ export function DatePage({ c, lang }) {
   }, [])
 
   // a tile drops its foil in petals; when all three are open, January opens beside or under them
+  useEffect(() => () => revealTl.current?.kill(), [])
   useLayoutEffect(() => {
     const el = row.current
     open.forEach((o, i) => {
@@ -366,18 +401,25 @@ export function DatePage({ c, lang }) {
       gsap.to(tile.querySelector('canvas'), { autoAlpha: 0, duration: 0.45 })
       gsap.fromTo(tile.querySelector('.dt-v'), { scale: 0.82 }, { scale: 1, duration: 0.6, ease: 'back.out(2.2)' })
     })
-    if (!all) return
-    burst(el.getBoundingClientRect(), 22)
+    if (!all || revealed.current) return
+    revealed.current = true
+    burst(el.getBoundingClientRect(), 14)
     const box = cal.current
     const inner = box.firstElementChild
-    const tl = gsap.timeline({ delay: 0.3 })
-      .fromTo(box, wide ? { width: 0, autoAlpha: 0 } : { height: 0, autoAlpha: 0 },
-        { ...(wide ? { width: inner.offsetLeft + inner.offsetWidth } : { height: inner.offsetTop + inner.offsetHeight }), autoAlpha: 1, duration: 0.9, ease: 'power2.inOut', clearProps: 'width,height' })
-      .fromTo(box.querySelector('ellipse'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power1.inOut' }, 0.8)
-      .fromTo(box.querySelectorAll('.dt-when, .dt-add > *'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08 }, 1)
+    const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    if (still) {
+      gsap.set(box, { autoAlpha: 1, clearProps: 'width,height' })
+      gsap.set(box.querySelector('ellipse'), { strokeDashoffset: 0 })
+      gsap.set(box.querySelectorAll('.dt-when, .dt-add > *'), { autoAlpha: 1, y: 0 })
+    } else {
+      revealTl.current = gsap.timeline({ delay: 0.3 })
+        .fromTo(box, wide ? { width: 0, autoAlpha: 0 } : { height: 0, autoAlpha: 0 },
+          { ...(wide ? { width: inner.offsetLeft + inner.offsetWidth } : { height: inner.offsetTop + inner.offsetHeight }), autoAlpha: 1, duration: 0.9, ease: 'power2.inOut', clearProps: 'width,height' })
+        .fromTo(box.querySelector('ellipse'), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7, ease: 'power1.inOut' }, 0.8)
+        .fromTo(box.querySelectorAll('.dt-when, .dt-add > *'), { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.5, stagger: 0.08 }, 1)
+    }
     el.dispatchEvent(new CustomEvent('scratched', { bubbles: true }))
-    return () => tl.kill()
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open, all, wide])
 
   // the month of the wedding, Sunday first, in the reader's own words and digits
   const [day, month, year] = e.date.split(' ')
@@ -426,7 +468,11 @@ export function DatePage({ c, lang }) {
             <p className="dt-when">{e.day} · {e.time}</p>
             <div className="dt-add">
               <p>{d.add}</p>
-              <div>{links.map(([href, file], i) => <a key={d.apps[i]} href={href} target="_blank" rel="noopener" download={file}>{d.apps[i]}</a>)}</div>
+              <div>{links.map(([href, file], i) => (
+                file
+                  ? <button key={d.apps[i]} type="button" onClick={() => downloadIcs(href, file)}>{d.apps[i]}</button>
+                  : <a key={d.apps[i]} href={href} target="_blank" rel="noopener noreferrer">{d.apps[i]}</a>
+              ))}</div>
             </div>
           </div>
         </div>
@@ -466,7 +512,8 @@ function Countdown({ c, lang, k }) {
 // the countdown to the minute and second, and who awaits you. If nobody taps, the lamp lights itself.
 // glints on the carving (per cent of the arch), as in the reference
 const GLINTS = [[6, 30, 0.7], [94, 22, 0.8], [8, 58, 0.6], [92, 64, 0.7], [5, 86, 0.6], [95, 92, 0.5], [30, 6, 0.6], [70, 7, 0.7], [50, 2.5, 0.5], [16, 12, 0.5], [84, 13, 0.6]]
-const NICHES = [24.5, 32, 39.6, 47.1, 54.7, 62.2, 69.8, 77.3, 84.9].flatMap((y) => [[9.2, y], [90.8, y]])
+// the little lamps up the two pillars: how far down the straight run of the pillar (0 to 1), which side
+const NICHES = [441, 576, 713, 848, 985, 1120, 1256, 1391, 1528].flatMap((y) => [[0, (y - 380) / 1360], [1, (y - 380) / 1360]])
 
 export function Closing({ c, lang }) {
   const k = c.closing
@@ -474,6 +521,12 @@ export function Closing({ c, lang }) {
   const [roll, setRoll] = useState(0)
   const root = useRef(null)
   const light = () => setLit(true)
+  // a tap on the lamp lights it, and petals float up from the flame (lighting itself, it sends none)
+  const tap = () => {
+    const r = root.current.querySelector('.cl-lamp').getBoundingClientRect()
+    shower(r.left + r.width / 2, r.top + r.height * 0.3, 14)
+    light()
+  }
 
   // nobody tapped: the lamp lights itself after a while on screen
   useEffect(() => {
@@ -489,12 +542,10 @@ export function Closing({ c, lang }) {
     const el = root.current
     const $ = (s) => el.querySelector(s)
     const $$ = (s) => [...el.querySelectorAll(s)]
-    const r = $('.cl-lamp').getBoundingClientRect()
-    burst({ left: r.left, top: r.top - r.height * 0.4, width: r.width, height: r.height * 0.5 }, 14)
     const count = { k: 0 }
     const tl = gsap.timeline()
       .to($('.cl-hint'), { autoAlpha: 0, duration: 0.3 }, 0)
-      .fromTo($('.cl-flame'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(2.4)' }, 0)
+      .fromTo($$('.cl-flame'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(2.4)', stagger: 0.12 }, 0)
       .fromTo($('.cl-glow'), { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.6, ease: 'power2.out' }, 0.1)
       .fromTo($$('.cl-night'), { '--r': '-25%' }, { '--r': '140%', duration: 2.4, ease: 'power1.inOut' }, 0.2)
       .fromTo($$('.cl-niche'), { autoAlpha: 0, scale: 0.2 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: { each: 0.07, from: 'end' } }, 0.5)
@@ -504,8 +555,9 @@ export function Closing({ c, lang }) {
       .to(count, { k: 1, duration: 1.6, ease: 'power2.out', onUpdate: () => setRoll(count.k) }, 1.6)
       .add(() => el.dispatchEvent(new CustomEvent('scratched', { bubbles: true })), 2.4)
     // the flame never stands quite still
-    const flick = gsap.to($('.cl-flame i'), { scaleY: 1.12, scaleX: 0.9, skewX: 3, duration: 0.18, repeat: -1, yoyo: true, ease: 'sine.inOut', repeatRefresh: true })
-    return () => { tl.kill(); flick.kill() }
+    const flick = $$('.cl-flame img').map((f, i) => gsap.fromTo(f, { scaleY: 0.94, scaleX: 1.03, skewX: -2 },
+      { scaleY: 1.08, scaleX: 0.95, skewX: 2, duration: 0.16 + i * 0.03, repeat: -1, yoyo: true, ease: 'sine.inOut' }))
+    return () => { tl.kill(); flick.forEach((f) => f.kill()) }
   }, [lit])
 
   const kin = (
@@ -519,10 +571,10 @@ export function Closing({ c, lang }) {
   )
   // the carved arch in its two lights, with its lanterns, the lamps on its pillars and the glints on its carving
   const face = <>
-    <img className="cl-warm" src={artUrl('closing-arch-warm')} alt="" />
-    <img className="cl-night" src={artUrl('closing-arch-night')} alt="" />
-    {[3.6, 96.4].map((x) => <i key={x} className="cl-lantern" style={{ left: `${x}%` }} />)}
-    {NICHES.map(([x, y]) => <i key={`${x}-${y}`} className="cl-niche" style={{ left: `${x}%`, top: `${y}%` }} />)}
+    <i className="cl-face cl-warm" style={{ borderImageSource: `url(${artUrl('closing-arch-warm')})` }} />
+    <i className="cl-face cl-night" style={{ borderImageSource: `url(${artUrl('closing-arch-night')})` }} />
+    {['l', 'r'].map((x) => <i key={x} className={`cl-lantern is-${x}`} />)}
+    {NICHES.map(([x, y]) => <i key={`${x}-${y}`} className="cl-niche" style={{ '--nx': x, '--ny': y.toFixed(4) }} />)}
     <div className="iv-sparks">{GLINTS.map(([x, y, sz]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': sz }} />)}</div>
   </>
   return (
@@ -534,23 +586,10 @@ export function Closing({ c, lang }) {
         <i className="cl-glow" />
         {face}
         <div className="cl-ledge" />
-        <button type="button" className={`cl-lamp scratch${lit ? ' done' : ''}`} onClick={light} aria-label={c.ui.light} disabled={lit}>
-          <span className="cl-flame"><i /></span>
-          <svg viewBox="0 0 120 92" aria-hidden="true">
-            <defs>
-              <linearGradient id="cl-brass" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#ffe08a" /><stop offset=".45" stopColor="#d9a13d" /><stop offset="1" stopColor="#8a5418" />
-              </linearGradient>
-            </defs>
-            <g stroke="#3a1c08" strokeWidth="2.4" strokeLinejoin="round" fill="url(#cl-brass)">
-              <ellipse cx="60" cy="85" rx="27" ry="5.5" />
-              <path d="M52 84 C54 74 55 68 56 62 L64 62 C65 68 66 74 68 84 Z" />
-              <ellipse cx="60" cy="62" rx="12" ry="3.4" />
-              <path d="M14 42 C22 62 44 66 60 66 C80 66 96 60 104 48 L114 38 C104 40 96 42 90 42 Z" />
-              <ellipse cx="54" cy="43" rx="40" ry="7" fill="#5a2c0c" />
-            </g>
-            <path d="M104 41 L111 36" stroke="#2a1406" strokeWidth="2.6" strokeLinecap="round" />
-          </svg>
+        <button type="button" className={`cl-lamp scratch${lit ? ' done' : ''}`} onClick={tap} aria-label={c.ui.light} disabled={lit}>
+          {/* the brass lamp of the reception table, each of its three flames on its own (scripts/closing-lamp.py) */}
+          <img className="cl-lamp-art" src={artUrl('closing-lamp')} alt="" draggable="false" />
+          {['l', 'c', 'r'].map((f) => <span key={f} className={`cl-flame cl-flame-${f}`}><img src={artUrl(`closing-flame-${f}`)} alt="" draggable="false" /></span>)}
         </button>
         <p className="cl-hint"><i />{c.ui.light}<i /></p>
       </div>

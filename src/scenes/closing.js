@@ -18,8 +18,8 @@ export function idleClosing(q) {
   return [
     gsap.fromTo(box.querySelector('.cl-hint i:first-child'), { scale: 0.6, rotation: 0 }, { scale: 1.1, rotation: 45, duration: 1.1, ...loop }),
     gsap.fromTo(box.querySelector('.cl-hint i:last-child'), { scale: 1.1, rotation: 45 }, { scale: 0.6, rotation: 0, duration: 1.1, ...loop }),
-    gsap.fromTo(box.querySelector('.cl-lamp svg'), { filter: 'drop-shadow(0 0 0 #ffd27a00)' }, { filter: 'drop-shadow(0 0 10px #ffd27aaa)', duration: 1.2, ...loop }),
-    ...[...box.querySelectorAll('.cl-niche')].map((n, i) => gsap.fromTo(n, { '--f': 1 }, { '--f': 0.62, duration: 0.5 + (i % 5) * 0.13, delay: (i * 0.23) % 1.1, ...loop })),
+    gsap.fromTo(box.querySelector('.cl-lamp'), { '--halo': 0 }, { '--halo': 1, duration: 1.2, ...loop }),
+    ...[...box.querySelectorAll('.cl-niche')].map((n, i) => gsap.fromTo(n, { '--f2': 1 }, { '--f2': 0.62, duration: 0.5 + (i % 5) * 0.13, delay: (i * 0.23) % 1.1, ...loop })),
     gsap.fromTo(box.querySelector('.cl-glow'), { '--g': 1 }, { '--g': 0.8, duration: 2.6, ...loop }),
     ...[...box.querySelectorAll('.iv-spark')].map((s, i) => gsap.fromTo(s, { scale: 0.3, opacity: 0.1, rotation: 0 },
       { scale: 1, opacity: 1, rotation: 45, duration: 1.1 + (i % 4) * 0.3, delay: (i * 0.41) % 2, ...loop })),

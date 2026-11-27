@@ -2,7 +2,7 @@
 /* while the card has pages left, the guest's swipe turns them (components/drive.js) instead of scrolling */
 .scene.grab { touch-action: none; }
 .inv { position: absolute; inset: 0; z-index: 20; overflow: hidden; --gold: #b4873c; }
-.inv-decor, .inv-petals { position: absolute; inset: 0; pointer-events: none; }
+.inv-decor { position: absolute; inset: 0; pointer-events: none; }
 .iv-toran { position: absolute; z-index: 3; top: -1px; left: 0; right: 0; height: min(15cqw, 15cqh, 120px); background: 50% 0 / auto 100% repeat-x; }
 .iv-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9cqh, 80px); background: 50% 100% / auto 100% repeat-x; }
 /* the room behind the envelope, back to front (motion: scenes/invitation.js, the parallax and the touch: Family in Words.jsx):
@@ -53,8 +53,6 @@
   .iv-ele-l { left: 1cqw; }
   .iv-ele-r { right: 1cqw; }
 }
-.inv-petals { z-index: 9; overflow: hidden; }
-.inv-petals img { position: absolute; top: 0; width: 22px; height: auto; will-change: transform; }
 .inv-ring { position: absolute; z-index: 1; left: 50%; top: 52%; width: min(120cqh, 110cqw); translate: -50% -50%; opacity: .14; pointer-events: none; }
 .inv-head { position: absolute; z-index: 4; left: 0; right: 0; top: calc(min(15cqw, 15cqh, 120px) + 7cqh); text-align: center; font: 400 clamp(30px, 7cqw, 60px) / 1.2 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #3d061299; }
 .inv-hint { position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(min(9cqh, 80px) + 54px); text-align: center; font-size: 17px; color: #fbe6bd; letter-spacing: .04em; }
@@ -143,9 +141,8 @@
 .has-photo .cv-title { font-size: 26px; }
 
 /* ---- the wedding date's own page: three gold tiles to scratch, then January (Words.jsx DatePage, scenes/date.js) ---- */
-.sc-petals { position: fixed; z-index: 40; }
 /* 1 k = 1px on a 390 x 844 phone */
-.dt { position: absolute; inset: 0; z-index: 20; overflow: hidden; color: var(--cream); --k: min(100cqw / 390, 100cqh / 844); --gold: #e2bd6e; }
+.dt { position: absolute; inset: 0; z-index: 20; overflow: hidden; color: var(--cream); --k: min(100cqw / 490, 100cqh / 920); --gold: #e2bd6e; }
 .dt-decor { position: absolute; inset: 0; pointer-events: none; }
 .dt-glow { position: absolute; z-index: 0; left: 50%; top: 46%; --gw: min(160cqw, 120cqh); width: var(--gw); height: var(--gw); margin: calc(var(--gw) / -2) 0 0 calc(var(--gw) / -2); border-radius: 50%; background: radial-gradient(closest-side, #ffcf7a40, #e0954a1f 40%, #0000); }
 /* indigo velvet with gold butis; a carved jharokha frames the whole page, its opening holds the words;
@@ -153,7 +150,7 @@
 .dt-velvet { position: absolute; inset: 0; z-index: 0; background: 50% 50% / calc(64 * var(--k)) auto repeat; opacity: .55; }
 .dt-arch { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: drop-shadow(0 0 calc(18 * var(--k)) #05031acc); }
 .dt-ledge { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: calc(100cqw * 532 / 1914); background: 50% 100% / auto 100% repeat-x; }
-.dt-body { position: absolute; z-index: 5; left: 15cqw; right: 15cqw; top: 19cqh; bottom: calc(100cqw * 532 / 1914 + 2cqh);
+.dt-body { position: absolute; z-index: 5; left: 13cqw; right: 13cqw; top: 18cqh; bottom: calc(100cqw * 532 / 1914 + 1cqh);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .dt-main { display: flex; flex-direction: column; align-items: center; }
 .dt-title { font: 400 calc(44 * var(--k)) / 1.15 var(--display); color: #f6d38a; text-shadow: 0 2px 14px #0b062a; }
@@ -167,11 +164,11 @@
 .dt-col { display: flex; flex-direction: column; align-items: center; gap: calc(7 * var(--k)); }
 .dt-tile { position: relative; overflow: hidden; width: calc(88 * var(--k)); height: calc(96 * var(--k)); display: grid; place-items: center; border-radius: calc(12 * var(--k));
   background: radial-gradient(120% 90% at 50% 30%, #b3173f, #7d0d27 70%, #560a1b); box-shadow: 0 0 0 1.5px #e0b45a, 0 0 0 calc(4 * var(--k)) #e0b45a33, 0 8px 22px #05031a99; }
-.dt-tile.dt-month { width: calc(128 * var(--k)); }
-.dt-v { font: 400 calc(40 * var(--k)) / 1 var(--display); color: #ffe3a3; }
-.dt-month .dt-v { font-size: calc(23 * var(--k)); }
-.dt-tile.dt-year { width: calc(100 * var(--k)); }
-.dt-year .dt-v { font-size: calc(30 * var(--k)); }
+.dt-tile.dt-month { width: calc(132 * var(--k)); }
+.dt-v { font: 400 calc(38 * var(--k)) / 1 var(--display); color: #ffe3a3; }
+.dt-month .dt-v { font-size: calc(22 * var(--k)); }
+.dt-tile.dt-year { width: calc(114 * var(--k)); }
+.dt-year .dt-v { font-size: calc(27 * var(--k)); }
 .dt-tile canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; }
 .dt-tile.open canvas { pointer-events: none; }
 .dt-part { font-size: calc(12.5 * var(--k)); letter-spacing: .18em; text-transform: uppercase; color: #f1d79b; }
@@ -193,14 +190,14 @@
 .dt-g b { font-weight: 400; opacity: .65; font-size: .86em; }
 .dt-g i { position: relative; font-style: normal; }
 .dt-g i.on { color: #ffd27a; font-weight: 600; }
-.dt-g svg { position: absolute; left: 50%; top: 50%; width: 130%; translate: -50% -50%; overflow: visible; }
+.dt-g svg { position: absolute; left: 50%; top: 50%; width: 130%; height: auto; aspect-ratio: 40 / 30; translate: -50% -50%; overflow: visible; pointer-events: none; }
 .dt-g ellipse { fill: none; stroke: #ff6f8e; stroke-width: 2.4; stroke-dasharray: 1; stroke-dashoffset: 1; }
 .dt-when { margin-top: calc(8 * var(--k)); font-size: calc(14.5 * var(--k)); color: #fbe6bd; }
 .dt-add { margin-top: calc(10 * var(--k)); }
 .dt-add p { font-size: calc(13 * var(--k)); letter-spacing: .08em; color: #f1d79b; }
 :lang(bn) .dt-add p, :lang(hi) .dt-add p { letter-spacing: 0; font-size: calc(14 * var(--k)); }
 .dt-add div { display: flex; justify-content: center; gap: calc(8 * var(--k)); margin-top: calc(7 * var(--k)); }
-.dt-add a { font-size: calc(14 * var(--k)); line-height: 1; padding: calc(9 * var(--k)) calc(14 * var(--k)); border-radius: 999px; color: #2a1606; text-decoration: none;
+.dt-add a, .dt-add button { font-size: calc(14 * var(--k)); line-height: 1; padding: calc(9 * var(--k)) calc(14 * var(--k)); border-radius: 999px; color: #2a1606; text-decoration: none;
   background: linear-gradient(160deg, #f6dc98, #d7a84d 55%, #b98832); box-shadow: 0 3px 10px #05031a80, inset 0 0 0 1px #fff3cf88; }
 
 @container (min-aspect-ratio: 1/1) {
@@ -214,57 +211,73 @@
 }
 
 /* ---- the last page: a carved arch on a blue night, a lamp to light (Words.jsx Closing, scenes/closing.js) ---- */
-/* 1 k = 1px on a 390 x 844 phone, where the arch is 421px wide */
+/* --f is one pixel of the arch picture (1064 x 1800) on the screen. On a phone the arch fills the whole screen down
+   to the buttons: its carved crown and base keep their shape and only the straight runs between them stretch
+   (a border-image cut at the crown, the pillars and the base). On a wide screen it is drawn at its own shape.
+   --bt / --bb: the room for the words, from the crown down to the lamp. 1 k is about 1px on a 390 x 844 phone. */
 .cl { position: absolute; inset: 0; z-index: 20; overflow: hidden; color: var(--cream);
-  --aw: min(108cqw, (100cqh - 96px) * 1064 / 1800); --ah: calc(var(--aw) * 1800 / 1064); --k: calc(var(--aw) / 421);
-  --top: 0px; }
+  --aw: 100cqw; --ah: calc(100cqh - 74px); --top: 0px;
+  --f: calc((100cqw / 1064 + (100cqh - 74px) / 1800) / 2);
+  --bt: calc(205 * var(--f)); --bb: calc(468 * var(--f));
+  --k: min(calc((var(--aw) - 300 * var(--f)) / 255), calc((var(--ah) - var(--bt) - var(--bb)) / 450), 1.3px); }
 .cl-wing { display: none; }
-/* a dark marble floor under the arch (on a phone there is room below it), warmed once the lamp burns */
+/* a dark marble floor under the arch, warmed once the lamp burns */
 .cl-floor { position: absolute; left: 0; right: 0; bottom: 0; top: calc(var(--top) + var(--ah) - 2px);
   background: linear-gradient(#2b2452, #16123a 45%, #0a0822); box-shadow: inset 0 2px 0 #b8903f; }
 .cl-floor::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 90% at 50% 0, #ffb45a40, #ff9a3a14 55%, #0000); opacity: 0; transition: opacity 1.8s ease .4s; }
 .cl.is-lit .cl-floor::after { opacity: 1; }
 .cl-arch, .cl-wing { position: absolute; left: 50%; top: var(--top); width: var(--aw); height: var(--ah); margin-left: calc(var(--aw) / -2); }
-.cl-arch > img, .cl-wing > img { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.cl-face { position: absolute; inset: 0; box-sizing: border-box; pointer-events: none;
+  border: solid transparent; border-width: calc(380 * var(--f)) calc(140 * var(--f)) calc(60 * var(--f));
+  border-image-slice: 380 140 60; border-image-repeat: stretch; }
 /* the arch by night in moon-blue; the light of the lamp wipes it away to show the warm one under it (scripts/tint-arch.py) */
 .cl-night { --r: -25%;
   -webkit-mask-image: radial-gradient(circle at var(--cx, 50%) 90%, #0000 var(--r), #000 calc(var(--r) + 22%));
   mask-image: radial-gradient(circle at var(--cx, 50%) 90%, #0000 var(--r), #000 calc(var(--r) + 22%)); }
-.cl-glow { position: absolute; left: -40%; width: 180%; aspect-ratio: 1; top: calc(var(--ah) * .86 - var(--aw) * .9); border-radius: 50%; pointer-events: none;
+.cl-glow { position: absolute; left: -40%; width: 180%; aspect-ratio: 1; top: calc(var(--ah) - 365 * var(--f) - var(--aw) * .9); border-radius: 50%; pointer-events: none;
   background: radial-gradient(closest-side, #ffcf7a70, #ff9a3a38 28%, #ff7a2a14 55%, #0000); filter: brightness(var(--g, 1)); visibility: hidden; }
-.cl-lantern { position: absolute; top: 14.6%; width: 13%; aspect-ratio: 1; margin: -6.5% 0 0 -6.5%; border-radius: 50%; pointer-events: none; visibility: hidden;
+/* the hanging lanterns in the crown's corners, and the little lamps up the pillars (in picture pixels) */
+.cl-lantern { position: absolute; top: calc(263 * var(--f)); left: calc(38 * var(--f)); width: calc(138 * var(--f)); aspect-ratio: 1; margin: calc(-69 * var(--f)) 0 0 calc(-69 * var(--f));
+  border-radius: 50%; pointer-events: none; visibility: hidden;
   background: radial-gradient(closest-side, #fff1c4cc, #ffc4588a 35%, #ff9a3a2a 65%, #0000); mix-blend-mode: screen; }
-.cl-niche { position: absolute; width: 4.6%; aspect-ratio: 1; margin: -2.3% 0 0 -2.3%; border-radius: 50%; pointer-events: none; visibility: hidden;
-  background: radial-gradient(closest-side, #fffbe6 0 20%, #ffd067 36%, #ff9a3a77 60%, #0000); filter: brightness(var(--f, 1)); }
+.cl-lantern.is-r { left: calc(100% - 38 * var(--f)); }
+.cl-niche { position: absolute; width: calc(49 * var(--f)); aspect-ratio: 1; margin: calc(-24.5 * var(--f)) 0 0 calc(-24.5 * var(--f)); border-radius: 50%; pointer-events: none; visibility: hidden;
+  left: calc(98 * var(--f) + var(--nx) * (100% - 196 * var(--f))); top: calc(380 * var(--f) + var(--ny) * (100% - 440 * var(--f)));
+  background: radial-gradient(closest-side, #fffbe6 0 20%, #ffd067 36%, #ff9a3a77 60%, #0000); filter: brightness(var(--f2, 1)); }
 /* the marble ledge across the foot of the arch, warmed by the flame once it burns */
-.cl-ledge { position: absolute; left: 12.3%; right: 12.3%; top: 89.4%; height: 7.8%;
-  background: linear-gradient(#fffaf1, #efe6d6 30%, #ddd1bd 75%, #c9baa2); box-shadow: inset 0 calc(3 * var(--k)) 0 #d6a64b, 0 calc(-1.5 * var(--k)) 0 #3a1c08; }
+.cl-ledge { position: absolute; z-index: 2; left: calc(131 * var(--f)); right: calc(131 * var(--f)); bottom: calc(51 * var(--f)); height: calc(110 * var(--f));
+  background: linear-gradient(#fffaf1, #efe6d6 30%, #ddd1bd 75%, #c9baa2); box-shadow: inset 0 calc(7.5 * var(--f)) 0 #d6a64b, 0 calc(-3.8 * var(--f)) 0 #3a1c08; }
 .cl-ledge::after { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 120% at 50% 0, #ffb45a88, #ff9a3a22 55%, #0000); opacity: 0; transition: opacity 1.6s ease .3s; }
 .cl.is-lit .cl-ledge::after { opacity: 1; }
-.cl-lamp { position: absolute; left: 50%; bottom: 9.8%; width: 24%; margin-left: -12%; padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+/* the brass lamp stands on the ledge, its foot just behind the ledge's edge */
+.cl-lamp { position: absolute; z-index: 1; left: 50%; bottom: calc(154 * var(--f)); width: calc(190 * var(--f)); margin-left: calc(-95 * var(--f));
+  padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .cl-lamp:disabled { cursor: default; }
-.cl-lamp svg { display: block; width: 100%; height: auto; overflow: visible; }
+.cl-lamp-art { display: block; width: 100%; height: auto; filter: drop-shadow(0 calc(6 * var(--f)) calc(10 * var(--f)) #05031a99) drop-shadow(0 0 calc(var(--halo, 0) * 10px) #ffd27aaa); }
 .cl-lamp:focus-visible { outline: 2px solid #f6d38a; outline-offset: 4px; border-radius: 8px; }
-.cl-flame { position: absolute; left: 84.5%; bottom: 58%; width: 16%; aspect-ratio: .52; transform-origin: 50% 100%; visibility: hidden; pointer-events: none; }
-.cl-flame::before { content: ""; position: absolute; left: 50%; bottom: 20%; width: 520%; aspect-ratio: 1; margin-left: -260%; translate: 0 50%; border-radius: 50%;
-  background: radial-gradient(closest-side, #ffe3a066, #ffb45a2a 45%, #0000); }
-.cl-flame i { position: absolute; inset: 0; transform-origin: 50% 100%; border-radius: 50% 50% 50% 50% / 64% 64% 36% 36%;
-  background: radial-gradient(50% 58% at 50% 74%, #fffdf0 0 24%, #ffe680 40%, #ffae2e 64%, #ff6a1acc 80%, #ff6a1a00 82%); }
-.cl-hint { position: absolute; left: 12%; right: 12%; top: 73%; display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--k));
+/* each flame where its wick is (scripts/closing-lamp.py prints these) */
+.cl-flame { position: absolute; transform-origin: 50% 92%; visibility: hidden; pointer-events: none; }
+.cl-flame-l { left: 4.72%; top: 24%; width: 16.54%; height: 16%; }
+.cl-flame-r { left: 80.31%; top: 24%; width: 16.54%; height: 16%; }
+.cl-flame-c { left: 45.67%; top: 30.5%; width: 10.63%; height: 13.75%; }
+.cl-flame img { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 92%; }
+.cl-flame::before { content: ""; position: absolute; left: 50%; top: 55%; width: 420%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
+  background: radial-gradient(closest-side, #ffe3a055, #ffb45a22 45%, #0000); }
+.cl-hint { position: absolute; z-index: 3; left: 10%; right: 10%; bottom: calc(475 * var(--f)); display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--k));
   font-size: calc(16 * var(--k)); color: #fbe6bd; text-align: center; pointer-events: none; }
 .cl-hint i { flex: none; width: calc(12 * var(--k)); height: calc(12 * var(--k)); background: #f3c96a;
   clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); }
 .cl.is-lit .cl-hint { visibility: hidden; }
 
 /* the words, inside the arch above the lamp; nothing shows until the lamp is lit */
-.cl-body { position: absolute; left: 50%; width: calc(var(--aw) * .7); margin-left: calc(var(--aw) * -.35);
-  top: calc(var(--top) + var(--ah) * .15); height: calc(var(--ah) * .6);
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(9 * var(--k)); text-align: center; }
+.cl-body { position: absolute; left: 50%; width: calc(var(--aw) - 300 * var(--f)); margin-left: calc((var(--aw) - 300 * var(--f)) / -2);
+  top: calc(var(--top) + var(--bt)); height: calc(var(--ah) - var(--bt) - var(--bb));
+  display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; gap: calc(6 * var(--k)); text-align: center; }
 .cl:not(.is-lit) .cl-body [data-r] { visibility: hidden; }
 /* glints on the carving while it is still night */
 .cl-arch .iv-sparks { z-index: 1; pointer-events: none; }
 .cl.is-lit .cl-arch .iv-sparks { visibility: hidden; }
-.cl-line { font: 400 calc(27 * var(--k)) / 1.18 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #0b062a; }
+.cl-line { font: 400 calc(24 * var(--k)) / 1.18 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #0b062a; }
 .cl-line span { display: block; }
 .cl-count { display: flex; gap: calc(8 * var(--k)); margin-top: calc(4 * var(--k)); }
 .cl-count p { display: flex; flex-direction: column; align-items: center; gap: calc(5 * var(--k)); }
@@ -292,7 +305,10 @@
 .cl-side .shloka { margin: calc(2 * var(--k)) 0 0; font-size: calc(12 * var(--k)); line-height: 1.45; color: #ffd9a8; }
 
 @container (min-aspect-ratio: 1/1) {
-  .cl { --aw: calc(100cqh * 1064 / 1800); --top: 0px; }
+  .cl { --aw: calc(100cqh * 1064 / 1800); --ah: 100cqh; --f: calc(100cqh / 1800); --k: calc(var(--aw) / 421); --top: 0px;
+    --bt: calc(var(--ah) * .15); --bb: calc(var(--ah) * .27); }
+  .cl-body { width: calc(var(--aw) * .7); margin-left: calc(var(--aw) * -.35); justify-content: center; gap: calc(9 * var(--k)); }
+  .cl-line { font-size: calc(27 * var(--k)); }
   .cl-wing { display: block; margin-left: 0; left: calc(50% + (var(--o) - .5) * var(--aw)); --cx: calc(50% - var(--o) * 100%); }
   .cl-wing .cl-lantern { display: none; }
   /* the family's numbers and homes beside the arch, one side each */
