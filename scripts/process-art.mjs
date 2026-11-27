@@ -12,6 +12,10 @@ const PREVIEW = 'art/preview'
 const MAX = { default: 1400, wide: 2600 }
 const EDGE = /^(foliage-corner|flowers-|haldi-drape|mehendi-window)/ // meant to run off the picture
 const WIDE = /(-ground|-courtyard|-veranda|-stage|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon)/
+// backgrounds a phone shows larger than they were drawn (a wide strip shows only its middle there, at about
+// 1.5 times its pixels): written at twice their size and sharpened, so the ink lines stay crisp on the phone
+// instead of being stretched soft by the browser
+const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-ground|\w+-stage-art)$/
 
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)
@@ -90,9 +94,12 @@ async function one(file) {
   const box = WIDE.test(name)
     ? { left: 0, top: y0, width: W, height: y1 - y0 + 1 }
     : { left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 }
-  const write = (buf, as) => sharp(buf, { raw: { width: W, height: H, channels: 4 } })
-    .extract(box)
-    .resize({ width: WIDE.test(name) ? MAX.wide : MAX.default, height: 1800, fit: 'inside', withoutEnlargement: true })
+  const sharpOne = SHARP.test(name)
+  const write = (buf, as) => (sharpOne
+    ? sharp(buf, { raw: { width: W, height: H, channels: 4 } }).extract(box)
+      .resize({ width: Math.min(box.width * 2, 3200), kernel: 'lanczos3' }).sharpen({ sigma: 1.4 })
+    : sharp(buf, { raw: { width: W, height: H, channels: 4 } }).extract(box)
+      .resize({ width: WIDE.test(name) ? MAX.wide : MAX.default, height: 1800, fit: 'inside', withoutEnlargement: true }))
     .webp({ quality: 84, alphaQuality: 90 })
     .toFile(path.join(OUT, `${as}.webp`))
   const split = SPLIT[name]

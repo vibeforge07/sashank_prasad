@@ -6,10 +6,17 @@
 # On a phone the palace stands higher, above the couple's heads, so the carpet in front of it is longer:
 # carpet-tall keeps the carpet's top edge and its patterned border and stretches the plain red between.
 # Writes src/art/wedding-night.webp, src/art/carpet.webp and src/art/carpet-tall.webp.
-from PIL import Image
+from PIL import Image, ImageFilter
 import numpy as np
 
-day = Image.open('src/art/wedding-palace.webp').convert('RGBA')
+
+def crisp(arr):
+    # the carpet runs far wider on screen than it was drawn: twice the size and sharpened keeps its border crisp
+    im = Image.fromarray(arr.astype(np.uint8))
+    return im.resize((im.width * 2, im.height * 2), Image.LANCZOS).filter(ImageFilter.UnsharpMask(2.2, 90, 1))
+
+
+day =Image.open('src/art/wedding-palace.webp').convert('RGBA')
 a = np.asarray(day).astype(float)
 W, H = day.size
 
@@ -18,14 +25,14 @@ rgb = a[..., :3]
 red = ((rgb[..., 0] > 120) & (rgb[..., 1] < 70) & (rgb[..., 2] < 80)).mean(1)
 top = next(y for y in range(int(H * 0.6), H) if red[y] > 0.45)
 carpet = a[top:, :, :3]
-Image.fromarray(carpet.astype(np.uint8)).save('src/art/carpet.webp', quality=86, method=6)
+crisp(carpet).save('src/art/carpet.webp', quality=86, method=6)
 # the carpet's border is where the rows stop being plain red
 plain = [y for y in range(carpet.shape[0]) if abs(carpet[y, :, 1].mean() - carpet[5, :, 1].mean()) < 6]
 edge = max(y for y in plain if y < carpet.shape[0] * 0.8) + 1
 band = carpet[6:edge - 4]
 tall = np.concatenate([carpet[:6]] + [band if i % 2 == 0 else band[::-1] for i in range(int(np.ceil(190 / len(band))))] , 0)[:196]
 tall = np.concatenate([tall, carpet[edge - 4:]], 0)
-Image.fromarray(tall.astype(np.uint8)).save('src/art/carpet-tall.webp', quality=86, method=6)
+crisp(tall).save('src/art/carpet-tall.webp', quality=86, method=6)
 print('carpet-tall', tall.shape[1], 'x', tall.shape[0], ' border from row', edge)
 
 # night grade
