@@ -18,7 +18,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* ---- sections, one under the other ---- */
 .reel { height: 100svh; overflow: hidden auto; scroll-snap-type: y mandatory; overscroll-behavior: none; scrollbar-width: none; }
 .reel::-webkit-scrollbar { display: none; }
-.scene { position: relative; height: 100svh; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; contain: paint; }
+.scene { position: relative; height: 100svh; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; contain: paint;
+  /* scenes off the screen are not drawn at all, so a phone only works on the one in view */
+  content-visibility: auto; contain-intrinsic-size: auto 100svh; }
 .ghost { position: fixed; inset: 0; z-index: 30; pointer-events: none; }
 .stage { position: absolute; inset: 0; container-type: size; }
 /* 1 unit = 1/1080 of the film's width, or of its height on wide screens */
@@ -32,12 +34,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
-/* on a phone the two stages stand tall, cropped at the sides, instead of a thin strip,
-   and the words get a dark card so they stay readable over the lights */
-@container (max-aspect-ratio: 1/1) {
-  :is(#sangeet, #reception) .card { display: block; position: absolute; inset: calc(-34 * var(--u)) calc(-30 * var(--u)); z-index: -1; border-radius: calc(26 * var(--u)); background: #130f33e8; border: 1px solid #e0b45a; box-shadow: 0 10px 34px #0006; }
-}
-@media (max-aspect-ratio: 1/1) { .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { height: min(100%, 64cqh) !important; object-position: center bottom !important; mask-image: linear-gradient(#0000, #000 9%); } }
+/* on a phone the stages stand tall, cropped at the sides, instead of a thin strip; their tops fade
+   into the scene's own gradient, and the words sit on that gradient */
+@media (max-aspect-ratio: 1/1) { .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall'], [data-l='wedding-stage']) img {
+  height: min(100%, clamp(34cqh, 100cqh - var(--wb, 36cqh) - 2cqh, 64cqh)) !important; object-position: center bottom !important; mask-image: linear-gradient(#0000, #000 12%); } }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
@@ -88,7 +88,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .when { margin-top: calc(26 * var(--u)); font-size: calc(42 * var(--u)); }
 .when .date { font-size: calc(54 * var(--u)); font-weight: 500; }
 .venue { margin-top: calc(18 * var(--u)); font-size: calc(38 * var(--u)); }
-.pill { display: inline-block; margin-top: calc(18 * var(--u)); padding: calc(12 * var(--u)) calc(38 * var(--u)); font-size: calc(36 * var(--u)); border: 1px solid currentColor; border-radius: 99px; color: inherit; text-decoration: none; }
 .closing-line { font: 400 calc(74 * var(--u)) / 1.25 var(--display); color: var(--crimson); }
 .countdown { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 calc(54 * var(--u)); margin: calc(20 * var(--u)) 0; }
 .countdown b { display: block; font: 400 calc(70 * var(--u)) / 1.1 var(--display); color: var(--crimson); }
@@ -119,7 +118,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .closing-line { font-size: calc(62 * var(--u)); }
   /* the Mehendi carpet runs the whole width of the room */
   [data-l='mehendi-seat']::before { content: ''; position: absolute; z-index: -1; inset: 59% -100vw 0; border-top: calc(8 * var(--u)) solid #170603; background: linear-gradient(to top, #0000 calc(51.8 * var(--u)), #f0b23c 0 calc(55.2 * var(--u)), #0000 0 calc(65.6 * var(--u)), #f0b23c 0 calc(71.8 * var(--u)), #0000 0) #a62604; }
-  .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall']) img { object-position: center bottom !important; }
+  .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall'], [data-l='wedding-stage']) img { object-position: center bottom !important; }
 }
 
 /* ---- opening screen: a sindoor seal on cream paper, then the doors ---- */

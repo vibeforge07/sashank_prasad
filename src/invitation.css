@@ -1,7 +1,6 @@
 /* ---- the invitation card (motion: scenes/invitation.js; the same scene as the red-rose card site) ---- */
-/* the section is several screens tall; its picture stays pinned while the scroll turns the card */
-.scene.tall { overflow: clip; }
-.scene.tall > .stage { inset: auto; position: sticky; top: 0; height: 100svh; }
+/* while the card has pages left, the guest's swipe turns them (components/drive.js) instead of scrolling */
+.scene.grab { touch-action: none; }
 .inv { position: absolute; inset: 0; z-index: 20; overflow: hidden; --gold: #b4873c; }
 .inv-decor, .inv-petals { position: absolute; inset: 0; pointer-events: none; }
 .iv-toran { position: absolute; z-index: 3; top: -1px; left: 0; right: 0; height: min(15cqw, 15cqh, 120px); background: 50% 0 / auto 100% repeat-x; }
@@ -17,7 +16,7 @@
 .iv-m3 { --i: 2; --len: 38cqh; }
 @container (min-aspect-ratio: 1/1) { .iv-mala { display: block; } }
 .inv-petals { z-index: 9; overflow: hidden; }
-.inv-petals img { position: absolute; top: 0; width: 22px; height: auto; }
+.inv-petals img { position: absolute; top: 0; width: 22px; height: auto; will-change: transform; }
 .inv-ring { position: absolute; z-index: 1; left: 50%; top: 52%; width: min(120cqh, 110cqw); translate: -50% -50%; opacity: 0; pointer-events: none; }
 .inv-head { position: absolute; z-index: 4; left: 0; right: 0; top: calc(min(15cqw, 15cqh, 120px) + 7cqh); text-align: center; font: 400 clamp(30px, 7cqw, 60px) / 1.2 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #3d061299; }
 .inv-hint { position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(min(9cqh, 80px) + 54px); text-align: center; font-size: 17px; color: #fbe6bd; letter-spacing: .04em; }
@@ -25,12 +24,13 @@
 /* the envelope, 640 x 430 units, fitted to the screen with --fit */
 .env-stage { position: absolute; z-index: 5; left: 50%; top: 61%; width: 640px; height: 430px; margin: -215px 0 0 -320px; transform: scale(var(--fit, 1)); }
 .env { position: absolute; inset: 0; perspective: 2000px; }
-.env-back, .env-front, .env-flap { position: absolute; left: 0; right: 0; }
+.env-back, .env-front, .env-flap { position: absolute; left: 0; right: 0; will-change: transform; }
 .env-back { top: 0; bottom: 0; border-radius: 8px; background: linear-gradient(180deg, #d9c49a, #c9b081); box-shadow: 0 50px 90px #0f010499, inset 0 0 0 1px #966e2880; }
 .env-front { top: 0; bottom: 0; z-index: 3; border-radius: 0 0 8px 8px; clip-path: polygon(0 0, 50% 55%, 100% 0, 100% 100%, 0 100%); background: linear-gradient(165deg, #fbf3e1 0%, #f1e3c2 50%, #e4d0a6 100%); }
-.env-front::before { content: ''; position: absolute; inset: 0; background: url(./opening/paper.webp) 50% 50% / cover; opacity: .55; mix-blend-mode: multiply; }
+/* the paper grain is baked as a plain see-through picture: a blend mode costs a phone every frame */
+.env-front::before { content: ''; position: absolute; inset: 0; background: url(./opening/paper-shade.webp) 50% 50% / cover; opacity: .55; }
 .env-edge { position: absolute; inset: 12px; border: 1.5px solid var(--gold); border-radius: 4px; box-shadow: 0 0 0 4px #b4873c2e; }
-.env-flap { top: 0; height: 58%; z-index: 4; transform-origin: 50% 0; transform-style: preserve-3d; filter: drop-shadow(0 6px 8px #5a3c1440); }
+.env-flap { top: 0; height: 58%; z-index: 4; transform-origin: 50% 0; transform-style: preserve-3d; will-change: transform; }
 .env-flap-face, .env-flap-back { position: absolute; inset: 0; clip-path: polygon(0 0, 100% 0, 50% 100%); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .env-flap-face { background: linear-gradient(180deg, #fff8e8, #f0e1bf 70%, #e2cd9f); }
 .env-flap-face::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #ffffff59, #0000 40%), linear-gradient(0deg, #b4873c59, #0000 8%); }
@@ -41,9 +41,10 @@
 
 /* the card: one page is 300 x 420; the script turns, moves and grows the whole book */
 .book { position: absolute; left: 50%; top: 50%; z-index: 2; width: 300px; height: 420px; margin: -210px 0 0 -150px; transform-origin: 50% 50%; }
-.leaves { position: absolute; inset: 0; perspective: 1500px; filter: drop-shadow(0 26px 30px #0f01048c); }
+/* each page casts its own shadow (a filter over the whole turning book was redrawn every frame) */
+.leaves { position: absolute; inset: 0; perspective: 1500px; }
 .leaf { position: absolute; inset: 0; transform-origin: 0 50%; transform-style: preserve-3d; --sh: 0; }
-.leaf-face { position: absolute; inset: 0; overflow: hidden; border-radius: 2px 5px 5px 2px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.leaf-face { position: absolute; inset: 0; overflow: hidden; box-shadow: 0 16px 22px -6px #0f010459; border-radius: 2px 5px 5px 2px; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
 .leaf-back { transform: rotateY(180deg); border-radius: 5px 2px 2px 5px; }
 /* light falls across a page while it turns */
 .leaf-face::after { content: ''; position: absolute; inset: 0; z-index: 4; pointer-events: none; opacity: var(--sh); background: linear-gradient(90deg, #280a0080, #280a0014 45%, #fff0d240 80%, #0000); }
@@ -55,7 +56,7 @@
 
 /* a page of the card: cream card stock, a gold double frame with corner pieces */
 .cp { position: absolute; inset: 0; overflow: hidden; text-align: center; color: var(--ink); background: linear-gradient(160deg, #fffaf0, #f7ecd4 60%, #efdfbd); }
-.cp::before { content: ''; position: absolute; inset: 0; background: url(./opening/paper.webp) 50% 50% / cover; opacity: .45; mix-blend-mode: multiply; pointer-events: none; }
+.cp::before { content: ''; position: absolute; inset: 0; background: url(./opening/paper-shade.webp) 50% 50% / cover; opacity: .45; pointer-events: none; }
 .cp-frame { position: absolute; inset: 9px; border: 1.2px solid var(--gold); border-radius: 2px; box-shadow: 0 0 0 3px #b4873c1f, inset 0 0 0 4px #fffaeeb3, inset 0 0 0 5px #b4873c8c; pointer-events: none; }
 .cp-c { position: absolute; width: 22px; height: 22px; pointer-events: none; background: radial-gradient(circle at 0 0, #0000 0 38%, var(--gold) 40% 47%, #0000 49%), radial-gradient(circle at 30% 30%, var(--gold) 0 14%, #0000 16%); }
 .cp-c-tl { left: 5px; top: 5px; }
@@ -84,7 +85,7 @@
 
 /* the cover: crimson board, gold frame, the seal's ring on top */
 .cp-cover { color: #fff3dc; background: radial-gradient(110% 70% at 50% 40%, #b3173f, #7d0d27 65%, #560a1b); }
-.cp-cover::before { opacity: .14; mix-blend-mode: screen; }
+.cp-cover::before { background-image: url(./opening/paper-light.webp); opacity: .14; }
 .cp-cover .cp-frame { border-color: #d9b45f; box-shadow: 0 0 0 3px #d9b45f26, inset 0 0 0 4px #3c081299, inset 0 0 0 5px #d9b45fb3; }
 .cp-cover .cp-c { --gold: #e0bd72; }
 .cp-cover .cp-in { gap: 12px; }

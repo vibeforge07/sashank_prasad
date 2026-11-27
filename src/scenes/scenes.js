@@ -22,7 +22,10 @@ const DAY = 'linear-gradient(#b3cfc0 0%, #cfd6b4 34%, #f3cf9b 56%, #f6b183 78%)'
 const RIVER = 'linear-gradient(#77c2c9 0%, #b9d6bd 22%, #f2e1a6 48%, #f8c98f 74%)'
 const NIGHT = 'linear-gradient(#0b0d24 0%, #15133a 40%, #3a1b4d 72%, #63284f 92%)'
 const STAGE = 'linear-gradient(#120f33 0%, #2a1a63 45%, #43268c 78%)'
-const DUSK = 'linear-gradient(#0c1030 0%, #141a4a 48%, #1d2f6d 78%)'
+// the wedding stage: deep maroon above its red curtains
+// the reception hall: night blue into the hall's warm gold
+const RECEPTION = 'linear-gradient(#0e0b2a 0%, #241645 40%, #5a3238 75%, #8a5434 100%)'
+const WED = 'linear-gradient(#1c0306 0%, #3d0710 42%, #6a1a14 78%, #7d2813 100%)'
 
 // the boat floats on the river, not on the bank
 const BOAT_Y = 230
@@ -151,7 +154,7 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), ...['haldi-couple', 'haldi-arm', 'haldi-cuff'].map((id) => idle.breathe(q, id)), idle.haldi(q, 'haldi-arm')],
   },
   {
-    id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 215 }, leave: 'cut', hold: 4,
+    id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 150 }, below: true, leave: 'cut', hold: 4,
     layers: [
       ground('sangeet-stage', 1800, 2, 1500),
       person('sangeet-groom', 520, 800, -170, 90, 5), person('sangeet-bride', 560, 790, 150, 80, 6),
@@ -166,22 +169,23 @@ export const SCENES = [
     idle: (q) => [...petals(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
   },
   {
-    id: 'wedding', sky: DUSK, tone: 'wedding', stars: true, moon: { x: 350, y: 930, s: 90 }, text: { top: 180 }, leave: 'fade', hold: 5,
+    // the couple on their sofa on the wedding stage (the stage's own sofa is painted out, scripts/wedding-stage.py)
+    id: 'wedding', sky: WED, tone: 'wedding', text: { top: 130 }, below: true, leave: 'fade', hold: 5,
     layers: [
-      ...clouds(true), ground('wedding-ground', 1120, 2, 2000),
+      ground('wedding-stage', 1900, 2, 1700),
       L('wedding-sofa', 1120, 450, { y: 100, z: 4 }),
       person('wedding-groom', 400, 670, -125, 70, 5), person('wedding-bride', 450, 670, 150, 50, 6),
-      ...foliage(), ...flowers('flowers-yellow'),
+      ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
       slide(tl, q, 'wedding-bride', 'right', 0.8, 1)
       slide(tl, q, 'wedding-groom', 'left', 1.4, 0.9)
       lines(tl, root, 2.8)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.lean(q, 'wedding-groom', 0.7, 2), idle.lean(q, 'wedding-bride', -0.7, 2.2)],
+    idle: (q) => [...petals(q), idle.lean(q, 'wedding-groom', 0.7, 2), idle.lean(q, 'wedding-bride', -0.7, 2.2)],
   },
   {
-    id: 'reception', sky: STAGE, tone: 'stage', stars: true, text: { top: 250 }, leave: 'fade', hold: 4,
+    id: 'reception', sky: RECEPTION, tone: 'stage', stars: true, text: { top: 170 }, below: true, leave: 'fade', hold: 4,
     layers: [
       ground('reception-hall', 1900, 2, 1700),
       person('reception-groom', 380, 760, -170, 110, 5), person('reception-bride', 430, 745, 170, 100, 6),

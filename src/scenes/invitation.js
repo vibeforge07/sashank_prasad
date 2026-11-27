@@ -1,8 +1,8 @@
 import { gsap } from 'gsap'
 import { petals } from '../components/petals.js'
 
-// The invitation card, the same scene as the red-rose card site. This section is several screens tall
-// and its picture stays pinned; the scroll drives this timeline (see Scene.jsx, `scroll: true`):
+// The invitation card, the same scene as the red-rose card site. The guest's swipe drives this timeline
+// (components/drive.js), resting at every `rest` label:
 // the seal comes off, the flap opens, the card slides out lying on its side, the envelope drops away,
 // the card stands up, comes to the middle and grows to face you, and every page turns with the scroll.
 // One page = 300 x 420 envelope units; the envelope is 640 x 430 and is fitted to the screen with --fit.
@@ -30,8 +30,8 @@ export function playInvitation(tl, root) {
     : clamp(0.5, 4, Math.min((0.74 * H) / (PH * fit), (0.88 * W) / (PW * fit)))
   const off = env.offsetTop + env.offsetHeight / 2 - H / 2
 
-  tl.set(book, { rotation: -90, x: 0, y: 0, scale: 1, autoAlpha: 1, rotationX: 0 }, 0)
-  tl.set(leaves, { rotationY: 0, z: 0, autoAlpha: 1, '--sh': 0 }, 0)
+  tl.set(book, { rotation: -90, x: 0, y: 0, scale: 1, autoAlpha: 1, rotationX: 0, willChange: 'auto' }, 0)
+  tl.set(leaves, { rotationY: 0, z: 0, autoAlpha: 1, '--sh': 0, willChange: 'auto' }, 0)
   leaves.forEach((l, i) => tl.set(l, { zIndex: leaves.length - i + 1 }, 0))
   tl.set('.env-flap', { zIndex: 4 }, 0)
 
@@ -39,6 +39,12 @@ export function playInvitation(tl, root) {
   tl.to('.env-seal', { scale: 0.4, autoAlpha: 0, duration: 0.6, ease: 'power2.in' }, 0.3)
     .to('.env-flap', { rotationX: 180, duration: 1.1, ease: 'power2.inOut' }, 0.55)
     .set('.env-flap', { zIndex: 1 }, 1.1)
+    // while the card moves and grows, the phone slides one finished picture of it around instead of
+    // drawing it again every frame; once it stands still it is drawn again, sharp, at its full size,
+    // and from then on each page is its own picture for the turns
+    .set(book, { willChange: 'transform' }, 1.5)
+    .set(book, { willChange: 'auto' }, 4.45)
+    .set(leaves, { willChange: 'transform' }, 4.45)
     // the card slides out lying on its side...
     .to(book, { y: -235, duration: 1.4, ease: 'power2.out' }, 1.55)
     .to('.inv-head', { autoAlpha: 0, y: -40, duration: 0.6 }, 0.45)
@@ -46,10 +52,10 @@ export function playInvitation(tl, root) {
     // ...then stands up, comes to the middle and grows to face you
     .to(book, { rotation: 0, y: -off / fit, scale: S, duration: 1.5, ease: 'power2.inOut' }, 2.9)
     .fromTo('.inv-ring', { autoAlpha: 0, scale: 0.7 }, { autoAlpha: 0.32, scale: 1, duration: 1.6, ease: 'power2.out' }, 2.8)
-    .to({}, { duration: 0.6 })
+    .addLabel('rest-out', 4.5)
 
   leaves.forEach((leaf, i) => {
-    const t = tl.duration()
+    const t = Math.max(4.5, tl.duration())
     const turn = 1.3
     tl.set(leaf, { zIndex: 100 }, t)
       .to(leaf, { rotationY: -180, duration: turn, ease: 'power1.inOut' }, t)
@@ -72,7 +78,7 @@ export function playInvitation(tl, root) {
       petals(box, 9, { x, y: r.top + r.height * 0.25 })
       setTimeout(() => box.remove(), 5500)
     }, null, t + turn * 0.5)
-    tl.to({}, { duration: 1.1 })
+    tl.addLabel(`rest-${i}`, t + turn)
   })
 
   // the mandala behind the card turns slowly with the pages

@@ -1,7 +1,6 @@
 export default {
   lang: 'English',
   title: 'Shashank Weds Debashruti',
-  langs: { en: 'English', bn: 'Bengali', hi: 'Hindi' },
   gate: { line: 'The wedding of', date: '27 January 2027 · Jamshedpur', open: 'Open the invitation', seal: ['The', 'Wedding'], tap: 'Tap the seal to open', choose: 'Choose your language' },
   hero: { invocation: 'With the blessings of Lord Ganesha', groom: 'Shashank', and: 'Weds', bride: 'Debashruti', scroll: 'Scroll' },
   family: {
@@ -30,7 +29,6 @@ export default {
     wedding: { title: 'Wedding', tag: 'Seven steps, one fire, every day after', day: 'Wednesday', date: '27 January 2027', time: '5:30 PM onwards', venue: ["Baraat leaves from Hotel De'Hamray, Sakchi", 'Wedding at Telco Club,', 'Telco Colony, Jamshedpur'] },
     reception: { title: 'Bahubhat\n& Reception', tag: 'The first meal she serves in her new home', day: 'Thursday', date: '28 January 2027', time: '7:30 PM onwards', venue: ["Hotel De'Hamray", 'Sakchi, Jamshedpur'] },
   },
-  map: 'View on map',
   closing: {
     lines: ['Come as you are.', 'Stay till the last song.'],
     awaiting: 'Awaiting your presence',

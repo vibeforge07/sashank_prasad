@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { PETALS, petals } from './petals.js'
-import { EVENTS, WEDDING_AT, mapUrl } from '../content/events.js'
+import { EVENTS, WEDDING_AT } from '../content/events.js'
 import { SHLOKAS } from '../content/shlokas.js'
 import { artUrl } from '../art/index.js'
 import ring from '../opening/ring.webp'
@@ -140,7 +140,6 @@ export function EventWords({ c, id, lang }) {
       {e.time && <p data-t="3.8">{e.time}</p>}
     </div>
     {e.venue.length > 0 && <p className="venue" data-t="4.6">{e.venue.map((v) => <span key={v}>{v}</span>)}</p>}
-    {meta.map && <a className="pill" data-t="5.4" href={mapUrl(meta.map)} target="_blank" rel="noreferrer">{c.map}</a>}
     <Shloka id={id} t="6" lang={lang} />
   </>
 }

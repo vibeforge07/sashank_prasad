@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { petals } from './components/petals.js'
 import Scene from './components/Scene.jsx'
 import Gate from './components/Gate.jsx'
 import { Hero, Family, EventWords, Closing } from './components/Words.jsx'
@@ -10,7 +11,20 @@ import bn from './content/bn.js'
 
 const TEXT = { en, hi, bn }
 const LANGS = ['en', 'bn', 'hi']
-const song = Object.values(import.meta.glob('./audio/*.mp3', { eager: true, query: '?url', import: 'default' }))[0]
+// every language is named in its own script, whichever language the card is in
+const NATIVE = { en: 'English', bn: 'বাংলা', hi: 'हिन्दी' }
+const SONGS = Object.fromEntries(
+  Object.entries(import.meta.glob('./audio/*.mp3', { eager: true, query: '?url', import: 'default' }))
+    .map(([path, url]) => [path.match(/\/([^/]+)\.mp3$/)?.[1], url])
+)
+
+function fadeIn(a) {
+  gsap.killTweensOf(a)
+  try { a.volume = 0 } catch { /* read-only on some mobile browsers */ }
+  return a.play().then(() => {
+    gsap.to(a, { volume: 1, duration: 1.5, ease: 'power1.out', overwrite: true })
+  })
+}
 
 function firstLang() {
   const asked = new URLSearchParams(window.location.search).get('lang')
@@ -29,6 +43,7 @@ const words = (id, c, lang) => {
 export default function App() {
   const [lang, setLang] = useState(firstLang)
   const [open, setOpen] = useState(false)
+  const [started, setStarted] = useState(false)
   const [gone, setGone] = useState(false)
   const [auto, setAuto] = useState(true)
   const [sound, setSound] = useState(true)
@@ -38,6 +53,8 @@ export default function App() {
   const audio = useRef(null)
   const jumping = useRef(false)
   const c = TEXT[lang]
+  const song = SONGS[lang] ?? Object.values(SONGS)[0]
+  const prevSong = useRef(song)
 
   useEffect(() => {
     document.documentElement.lang = lang
@@ -49,10 +66,10 @@ export default function App() {
   useEffect(() => {
     if (!open) return
     const io = new IntersectionObserver((es) => es.forEach((e) => {
-      const i = scenes.current.findIndex((s) => s.watch === e.target)
+      const i = scenes.current.findIndex((s) => s.el === e.target)
       if (e.isIntersecting) { scenes.current[i].enter(); setAt(i) } else scenes.current[i].exit()
     }), { root: scroller.current, threshold: 0.55 })
-    scenes.current.forEach((s) => io.observe(s.watch))
+    scenes.current.forEach((s) => io.observe(s.el))
     return () => io.disconnect()
   }, [open])
 
@@ -79,14 +96,10 @@ export default function App() {
     if (!open || !auto) return
     const s = scenes.current[at]
     let timer
-    // the invitation card turns with the scroll: autoplay scrolls through it slowly, then moves on
+    // the invitation card: autoplay opens it and turns its pages at their own pace, then moves on
     if (s.scroll) {
-      const sc = scroller.current
-      const end = s.el.offsetTop + s.el.offsetHeight - sc.clientHeight
-      const screens = (end - sc.scrollTop) / sc.clientHeight
-      const tw = gsap.to(sc, { scrollTop: end, duration: Math.max(1, screens * 4.4), ease: 'none', delay: 0.6,
-        onComplete: () => { timer = setTimeout(() => go(at + 1), s.hold * 1000) } })
-      return () => { tw.kill(); clearTimeout(timer) }
+      const stop = s.run(() => { timer = setTimeout(() => go(at + 1), s.hold * 1000) })
+      return () => { stop(); clearTimeout(timer) }
     }
     const hold = () => { timer = setTimeout(() => (at < SCENES.length - 1 ? go(at + 1) : setAuto(false)), s.hold * 1000) }
     // the wedding date is revealed by the guest's own finger: wait for it before moving on
@@ -109,19 +122,52 @@ export default function App() {
     return () => { el.removeEventListener('wheel', stop); el.removeEventListener('touchmove', stop); window.removeEventListener('keydown', key) }
   }, [open])
 
+  const startSound = () => {
+    setStarted(true)
+    const a = audio.current
+    if (!a || !sound || !song) return
+    prevSong.current = song
+    fadeIn(a).catch(() => setSound(false))
+  }
+
   useEffect(() => {
     const a = audio.current
-    if (!a || !open) return
-    if (sound) a.play().catch(() => setSound(false))
-    else a.pause()
-    const hide = () => (document.hidden ? a.pause() : sound && a.play().catch(() => {}))
+    if (!a || !started || !song) return
+    const changed = prevSong.current !== song
+    prevSong.current = song
+    if (changed) a.load()
+    if (sound) {
+      if (a.paused || changed) fadeIn(a).catch(() => setSound(false))
+    } else {
+      gsap.killTweensOf(a)
+      a.pause()
+    }
+    const hide = () => {
+      if (document.hidden) a.pause()
+      else if (sound) {
+        try { a.volume = 1 } catch { /* read-only on some mobile browsers */ }
+        a.play().catch(() => {})
+      }
+    }
     document.addEventListener('visibilitychange', hide)
     return () => document.removeEventListener('visibilitychange', hide)
-  }, [sound, open])
+  }, [sound, started, song])
 
   if (import.meta.env.DEV) window.__inv = { scenes: scenes.current, scroller, go }
 
-  const skip = (e) => { if (!e.target.closest('a,button')) scenes.current[at]?.finish() }
+  // a tap anywhere finishes the scene's entrance and lets a handful of flowers fly from the finger
+  const bursts = useRef(0)
+  const skip = (e) => {
+    if (e.target.closest('a,button,.scratch')) return
+    scenes.current[at]?.finish()
+    if (bursts.current > 4 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const box = document.createElement('div')
+    box.className = 'g-petals sc-petals'
+    document.body.appendChild(box)
+    petals(box, 9, { x: e.clientX, y: e.clientY })
+    bursts.current += 1
+    setTimeout(() => { box.remove(); bursts.current -= 1 }, 5200)
+  }
   const replay = () => { scenes.current.forEach((s) => s.reset()); go(0); setAuto(true) }
 
   return (
@@ -135,15 +181,15 @@ export default function App() {
       </main>
 
       {!gone && (
-        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, c.langs[l]])}
+        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, NATIVE[l]])}
           names={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`}
-          onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
+          onTap={startSound} onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
       )}
 
       {open && (
         <nav className="bar">
           <div className="langs small" role="group">
-            {LANGS.map((l) => <button key={l} lang={lang} aria-pressed={l === lang} onClick={() => setLang(l)}>{c.langs[l]}</button>)}
+            {LANGS.map((l) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{NATIVE[l]}</button>)}
           </div>
           {song && <button className="round" aria-label={c.ui.sound} aria-pressed={sound} onClick={() => setSound(!sound)}><i className={sound ? 'i-sound' : 'i-mute'} /></button>}
           <button className="round" aria-label={auto ? c.ui.pause : c.ui.play}

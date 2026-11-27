@@ -10,7 +10,7 @@ const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matche
 
 // The cover: a sindoor seal on cream paper. One tap and the sindoor spreads
 // over the whole screen, the red page lifts away, and the doors open on the wedding.
-export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone }) {
+export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, onGone }) {
   const root = useRef(null)
   const busy = useRef(false)
   const q = (s) => root.current.querySelector(s)
@@ -41,6 +41,7 @@ export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone })
   const open = () => {
     if (busy.current) return
     busy.current = true
+    onTap?.()
     if (still()) { onOpen(); onGone(); return }
     const seal = q('.g-seal').getBoundingClientRect()
     const cx = seal.left + seal.width / 2
@@ -102,7 +103,7 @@ export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone })
           <h1 className="g-names">{names}</h1>
           <p className="g-date">{c.gate.date}</p>
           <div className="g-langs" role="group" aria-label={c.gate.choose}>
-            {langs.map(([l, label]) => <button key={l} lang={lang} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
+            {langs.map(([l, label]) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
           </div>
           <button className="g-hint" onClick={open}>{c.gate.tap}</button>
         </div>
