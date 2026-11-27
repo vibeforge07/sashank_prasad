@@ -4,7 +4,7 @@ import { artUrl } from '../art/index.js'
 import ring from '../opening/ring.webp'
 import sindoor from '../opening/sindoor.webp'
 import paper from '../opening/paper.webp'
-import { petals } from './petals.js'
+import { shower } from './petals.js'
 
 const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -48,8 +48,7 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
     const cy = seal.top + seal.height / 2
     const far = Math.max(Math.hypot(cx, cy), Math.hypot(innerWidth - cx, cy), Math.hypot(cx, innerHeight - cy), Math.hypot(innerWidth - cx, innerHeight - cy))
     const cover = (far * 2.15) / q('.g-flood').offsetWidth
-    const box = q('.g-petals')
-    petals(box, 34, { x: cx, y: cy })
+    shower(cx, cy, 22)
 
     const tl = gsap.timeline()
     tl.to('.g-seal', { scale: 0.94, duration: 0.12, yoyo: true, repeat: 1 }, 0)
@@ -69,7 +68,6 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
     tl.to('.g-door-l', { rotationY: -104, duration: 1.5, ease: 'power2.inOut' }, 3.4)
     tl.to('.g-door-r', { rotationY: 104, duration: 1.5, ease: 'power2.inOut' }, 3.4)
     tl.fromTo('.g-light', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 3.45)
-    tl.call(() => petals(box, 26), null, 3.5)
     tl.to('.g-doors', { autoAlpha: 0, duration: 0.4 }, 4.75)
     tl.call(() => onGone(), null, 8)
   }
@@ -108,7 +106,6 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
           <button className="g-hint" onClick={open}>{c.gate.tap}</button>
         </div>
       </div>
-      <div className="g-petals" aria-hidden="true" />
     </div>
   )
 }

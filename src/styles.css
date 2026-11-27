@@ -188,8 +188,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-panel + .g-panel { top: 54%; height: 39%; }
 .g-knock { position: absolute; top: 47%; width: 36px; height: 36px; border-radius: 50%; border: 5px solid #d4ae55; box-shadow: 0 0 0 2px #5e4313, inset 0 0 0 2px #5e4313; }
 .g-door-l .g-knock { right: 18px; } .g-door-r .g-knock { left: 18px; }
-.g-petals { position: absolute; inset: 0; z-index: 9; pointer-events: none; }
-.g-petals img { position: absolute; left: 0; top: 0; height: auto; will-change: transform; }
+/* the petals a tap sends up (components/petals.js): one canvas over everything, even the gate */
+.tap-petals { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 60; pointer-events: none; }
 
 @media (min-aspect-ratio: 1/1) {
   .gate { --seal: min(44svh, 560px); }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { petals } from './components/petals.js'
+import { shower } from './components/petals.js'
 import Scene from './components/Scene.jsx'
 import Gate from './components/Gate.jsx'
 import { Hero, Family, DatePage, EventWords, Closing } from './components/Words.jsx'
@@ -156,18 +156,11 @@ export default function App() {
 
   if (import.meta.env.DEV) window.__inv = { scenes: scenes.current, scroller, go }
 
-  // a tap anywhere finishes the scene's entrance and lets a handful of flowers fly from the finger
-  const bursts = useRef(0)
+  // a tap anywhere finishes the scene's entrance, and a few petals float up from the finger and drift slowly down
   const skip = (e) => {
     if (e.target.closest('a,button,.scratch')) return
     scenes.current[at]?.finish()
-    if (bursts.current > 4 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const box = document.createElement('div')
-    box.className = 'g-petals sc-petals'
-    document.body.appendChild(box)
-    petals(box, 9, { x: e.clientX, y: e.clientY })
-    bursts.current += 1
-    setTimeout(() => { box.remove(); bursts.current -= 1 }, 5200)
+    shower(e.clientX, e.clientY, 12)
   }
   const replay = () => { scenes.current.forEach((s) => s.reset()); go(0); setAuto(true) }
 

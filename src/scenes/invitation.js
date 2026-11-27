@@ -1,5 +1,4 @@
 import { gsap } from 'gsap'
-import { petals } from '../components/petals.js'
 
 // The invitation card, the same scene as the red-rose card site. The guest's swipe drives this timeline
 // (components/drive.js), resting at every `rest` label:
@@ -76,17 +75,6 @@ export function playInvitation(tl, root) {
     if (wide && i === 0) tl.to(book, { x: (PW / 2) * S, duration: turn, ease: 'power1.inOut' }, t)
     // phone: a turned page leaves the screen
     if (!wide) tl.to(leaf, { autoAlpha: 0, duration: turn * 0.3 }, t + turn * 0.7)
-    // a few petals fall from the spine as each page goes over (only going forward)
-    tl.call(() => {
-      if (tl.reversed() || root.dataset.back === '1') return
-      const r = book.getBoundingClientRect()
-      const x = wide ? r.left + r.width / 2 : r.left
-      const box = document.createElement('div')
-      box.className = 'g-petals sc-petals'
-      document.body.appendChild(box)
-      petals(box, 9, { x, y: r.top + r.height * 0.25 })
-      setTimeout(() => box.remove(), 5500)
-    }, null, t + turn * 0.5)
     tl.addLabel(`rest-${i}`, t + turn)
   })
 
@@ -95,12 +83,11 @@ export function playInvitation(tl, root) {
   tl.to('.inv-hint', { autoAlpha: 0, duration: 0.4 }, tl.duration() - 0.6)
 }
 
-// petals keep falling for as long as the card is on screen, and the room breathes: the light swells and
+// the room breathes while the card is on screen: the light swells and
 // eases, the glints twinkle, the drapes and strands sway, the elephants breathe
 export function idleInvitation(q) {
-  const box = q('inv-petals')
   const room = q('iv-decor')
-  if (!box || !room) return []
+  if (!room) return []
   const $ = (s) => [...room.querySelectorAll(s)]
   const loop = { yoyo: true, repeat: -1, ease: 'sine.inOut' }
   const air = [
@@ -111,12 +98,5 @@ export function idleInvitation(q) {
     ...$('.iv-mala img').map((m, i) => gsap.fromTo(m, { rotation: -1.6 }, { rotation: 1.6, duration: 2.3 + (i % 3) * 0.4, delay: (i * 0.29) % 1.2, ...loop })),
     ...$('.iv-ele').map((e, i) => gsap.fromTo(e, { scaleY: 1 }, { scaleY: 1.018, duration: 2.2 + i * 0.35, ...loop })),
   ]
-  return [...air, ...[...box.children].flatMap((p, i) => {
-    const x = ((i * 37) % 100) / 100
-    return [
-      gsap.fromTo(p, { left: `${x * 100}%`, y: '-8vh', x: 0, rotation: i * 40 },
-        { y: '108vh', x: (i % 2 ? 1 : -1) * (30 + (i % 5) * 12), rotation: `+=${(i % 2 ? 1 : -1) * 300}`, duration: 8 + (i % 5) * 1.3, delay: i * 0.7, repeat: -1, ease: 'none' }),
-      gsap.fromTo(p, { rotationX: 0 }, { rotationX: 70, duration: 0.7 + (i % 3) * 0.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
-    ]
-  })]
+  return air
 }
