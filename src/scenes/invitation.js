@@ -36,6 +36,15 @@ export function playInvitation(tl, root) {
   tl.set('.env-flap', { zIndex: 4 }, 0)
 
   tl.to({}, { duration: 0.3 })
+  // the room wakes as the seal breaks: the light swells and settles behind the card, the glints brighten,
+  // the drapes draw apart and the elephants step back to give the card its room
+  tl.fromTo('.iv-glow', { autoAlpha: 0.6, scale: 0.85 }, { autoAlpha: 1, scale: 1.25, duration: 0.7, ease: 'power2.out' }, 0.3)
+    .to('.iv-glow', { autoAlpha: 0.8, scale: 1.05, duration: 1.8, ease: 'sine.inOut' }, 1.0)
+    .fromTo('.iv-sparks', { autoAlpha: 0.6 }, { autoAlpha: 1, duration: 0.8 }, 0.3)
+    .fromTo('.iv-drape-l', { xPercent: 0 }, { xPercent: -30, duration: 2.4, ease: 'power2.inOut' }, 0.5)
+    .fromTo('.iv-drape-r', { xPercent: 0 }, { xPercent: 30, duration: 2.4, ease: 'power2.inOut' }, 0.5)
+    .fromTo('.iv-ele-l', { xPercent: 0 }, { xPercent: -10, duration: 1.6, ease: 'power2.inOut' }, 2.7)
+    .fromTo('.iv-ele-r', { xPercent: 0 }, { xPercent: 10, duration: 1.6, ease: 'power2.inOut' }, 2.7)
   tl.to('.env-seal', { scale: 0.4, autoAlpha: 0, duration: 0.6, ease: 'power2.in' }, 0.3)
     .to('.env-flap', { rotationX: 180, duration: 1.1, ease: 'power2.inOut' }, 0.55)
     .set('.env-flap', { zIndex: 1 }, 1.1)
@@ -51,7 +60,7 @@ export function playInvitation(tl, root) {
     .to(['.env-back', '.env-front', '.env-flap'], { y: 560, autoAlpha: 0, duration: 1.2, ease: 'power2.in' }, 2.75)
     // ...then stands up, comes to the middle and grows to face you
     .to(book, { rotation: 0, y: -off / fit, scale: S, duration: 1.5, ease: 'power2.inOut' }, 2.9)
-    .fromTo('.inv-ring', { autoAlpha: 0, scale: 0.7 }, { autoAlpha: 0.32, scale: 1, duration: 1.6, ease: 'power2.out' }, 2.8)
+    .fromTo('.inv-ring', { autoAlpha: 0.14, scale: 0.8 }, { autoAlpha: 0.32, scale: 1, duration: 1.6, ease: 'power2.out' }, 2.8)
     .addLabel('rest-out', 4.5)
 
   leaves.forEach((leaf, i) => {
@@ -86,16 +95,28 @@ export function playInvitation(tl, root) {
   tl.to('.inv-hint', { autoAlpha: 0, duration: 0.4 }, tl.duration() - 0.6)
 }
 
-// petals keep falling for as long as the card is on screen
+// petals keep falling for as long as the card is on screen, and the room breathes: the light swells and
+// eases, the glints twinkle, the drapes and strands sway, the elephants breathe
 export function idleInvitation(q) {
   const box = q('inv-petals')
-  if (!box) return []
-  return [...box.children].flatMap((p, i) => {
+  const room = q('iv-decor')
+  if (!box || !room) return []
+  const $ = (s) => [...room.querySelectorAll(s)]
+  const loop = { yoyo: true, repeat: -1, ease: 'sine.inOut' }
+  const air = [
+    gsap.fromTo(room.querySelector('.iv-glow i'), { scale: 0.95, opacity: 1 }, { scale: 1.07, opacity: 0.75, duration: 3.4, ...loop }),
+    ...$('.iv-spark').map((s, i) => gsap.fromTo(s, { scale: 0.3, opacity: 0.15, rotation: 0 },
+      { scale: 1, opacity: 1, rotation: 45, duration: 1.3 + (i % 4) * 0.35, delay: (i * 0.37) % 2.2, ...loop })),
+    ...$('.iv-drape').map((d, i) => gsap.fromTo(d, { rotation: i ? 1.3 : -1.3 }, { rotation: i ? -1.1 : 1.1, duration: 3.8 + i * 0.6, ...loop })),
+    ...$('.iv-mala img').map((m, i) => gsap.fromTo(m, { rotation: -1.6 }, { rotation: 1.6, duration: 2.3 + (i % 3) * 0.4, delay: (i * 0.29) % 1.2, ...loop })),
+    ...$('.iv-ele').map((e, i) => gsap.fromTo(e, { scaleY: 1 }, { scaleY: 1.018, duration: 2.2 + i * 0.35, ...loop })),
+  ]
+  return [...air, ...[...box.children].flatMap((p, i) => {
     const x = ((i * 37) % 100) / 100
     return [
       gsap.fromTo(p, { left: `${x * 100}%`, y: '-8vh', x: 0, rotation: i * 40 },
         { y: '108vh', x: (i % 2 ? 1 : -1) * (30 + (i % 5) * 12), rotation: `+=${(i % 2 ? 1 : -1) * 300}`, duration: 8 + (i % 5) * 1.3, delay: i * 0.7, repeat: -1, ease: 'none' }),
       gsap.fromTo(p, { rotationX: 0 }, { rotationX: 70, duration: 0.7 + (i % 3) * 0.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
     ]
-  })
+  })]
 }

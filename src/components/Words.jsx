@@ -41,17 +41,81 @@ function useWide() {
   return wide
 }
 
+// gold glints over the crimson: [left %, top %, size], each twinkles on its own beat (scenes/invitation.js)
+const SPARKS = [[7, 30, 1], [17, 54, 0.7], [26, 21, 0.8], [11, 74, 0.9], [33, 41, 0.6], [44, 17, 1], [57, 27, 0.7], [67, 15, 0.9],
+  [75, 45, 0.8], [87, 25, 1], [93, 57, 0.7], [81, 71, 0.9], [63, 79, 0.6], [23, 87, 0.8], [47, 89, 0.7], [71, 59, 0.6]]
+const clamp1 = (v) => Math.max(-1, Math.min(1, v))
+
 export function Family({ c, lang }) {
   const f = c.family
   const wide = useWide()
+  const inv = useRef(null)
+  // the couple's picture on the cover, once art/raw/couple-photo.png has been through `npm run art`
+  const photo = artUrl('couple-photo')
+
+  // the room answers the guest: the layers drift apart with the mouse (or the tilt of an Android phone),
+  // and a touch sets the marigold strands and their bells swinging
+  useEffect(() => {
+    const el = inv.current
+    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const live = () => el.closest('.scene')?.classList.contains('is-live')
+    const movers = [['.iv-far', 10], ['.iv-mid', 18], ['.iv-near', 26], ['.iv-glow', -12]].map(([s, d]) => {
+      const t = el.querySelector(s)
+      return [gsap.quickTo(t, 'x', { duration: 1, ease: 'power3' }), gsap.quickTo(t, 'y', { duration: 1, ease: 'power3' }), d]
+    })
+    const look = (px, py) => movers.forEach(([mx, my, d]) => { mx(-px * d); my(-py * d * 0.6) })
+    const onMove = (e) => {
+      if (e.pointerType !== 'mouse') return
+      const r = el.getBoundingClientRect()
+      look(((e.clientX - r.left) / r.width) * 2 - 1, ((e.clientY - r.top) / r.height) * 2 - 1)
+    }
+    const onTilt = (e) => { if (e.gamma != null && live()) look(clamp1(e.gamma / 25), clamp1((e.beta - 40) / 25)) }
+    // a strand swings away from the touch (its idle sway runs on the picture inside, this on its holder)
+    const malas = [...el.querySelectorAll('.iv-mala')]
+    let down = null
+    const onDown = (e) => {
+      down = { x: e.clientX, y: e.clientY, t: e.timeStamp }
+      malas.forEach((m) => {
+        const r = m.getBoundingClientRect()
+        if (!r.width) return
+        const mid = r.left + r.width / 2
+        const k = (mid > e.clientX ? -1 : 1) * 6 * Math.max(0.3, 1 - Math.abs(e.clientX - mid) / window.innerWidth)
+        gsap.killTweensOf(m)
+        gsap.timeline().to(m, { rotation: k, duration: 0.2, ease: 'power2.out' })
+          .to(m, { rotation: 0, duration: 2.6, ease: 'elastic.out(1, 0.25)' })
+      })
+    }
+    // a plain tap (not a swipe) throws a few petals from where the finger was
+    const onUp = (e) => {
+      if (!down || e.timeStamp - down.t > 300 || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 10) return
+      down = null
+      const box = document.createElement('div')
+      box.className = 'g-petals sc-petals'
+      document.body.appendChild(box)
+      petals(box, 7, { x: e.clientX, y: e.clientY })
+      setTimeout(() => box.remove(), 5500)
+    }
+    el.addEventListener('pointermove', onMove)
+    el.addEventListener('pointerdown', onDown)
+    el.addEventListener('pointerup', onUp)
+    window.addEventListener('deviceorientation', onTilt)
+    return () => {
+      el.removeEventListener('pointermove', onMove)
+      el.removeEventListener('pointerdown', onDown)
+      el.removeEventListener('pointerup', onUp)
+      window.removeEventListener('deviceorientation', onTilt)
+    }
+  }, [])
   const frame = <><i className="cp-frame" /><i className="cp-c cp-c-tl" /><i className="cp-c cp-c-tr" /><i className="cp-c cp-c-bl" /><i className="cp-c cp-c-br" /></>
   const kin = (rows) => rows.map(([k, v]) => <p className="kin" key={k}><em>{k}</em><span>{v}</span></p>)
   const family = (name, rows) => <div className="cp"><div className="cp-in"><i className="cp-orn" /><h3 className="nm">{name}</h3>{kin(rows)}<i className="cp-orn" /></div>{frame}</div>
   const pages = {
     cover: (
-      <div className="cp cp-cover">
+      <div className={`cp cp-cover${photo ? ' has-photo' : ''}`}>
         <div className="cp-in">
-          <img className="cv-ring" src={ring} alt="" />
+          {photo
+            ? <div className="cv-photo"><img src={photo} alt={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`} /></div>
+            : <img className="cv-ring" src={ring} alt="" />}
           <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
           <p className="cv-names"><span>{c.hero.groom}</span><small>{c.hero.and}</small><span>{c.hero.bride}</span></p>
           <p className="cv-date">{c.gate.date}</p>
@@ -90,11 +154,24 @@ export function Family({ c, lang }) {
   // phone: one page per leaf with plain card on its back, so every page gets the whole screen
   const order = wide ? [['cover', 'arch'], ['request', 'groom']] : [['cover'], ['arch'], ['request'], ['groom']]
   return (
-    <div className="inv">
-      <div className="inv-decor" aria-hidden="true">
-        <img className="iv-pais iv-pais-l" src={artUrl('gate-paisley')} alt="" />
-        <img className="iv-pais iv-pais-r" src={artUrl('gate-paisley')} alt="" />
-        {['l', 'r'].flatMap((s) => [1, 2, 3].map((n) => <img key={s + n} className={`iv-mala iv-mala-${s} iv-m${n}`} src={artUrl('gate-mala')} alt="" />))}
+    <div className="inv" ref={inv}>
+      {/* back to front: the warm light and the glints, the paisleys, the drapes and strands, the elephants */}
+      <div className="inv-decor" data-l="iv-decor" aria-hidden="true">
+        <div className="iv-glow"><i /></div>
+        <div className="iv-sparks">
+          {SPARKS.map(([x, y, s]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': s }} />)}
+        </div>
+        <div className="iv-far">
+          <img className="iv-pais iv-pais-l" src={artUrl('gate-paisley')} alt="" />
+          <img className="iv-pais iv-pais-r" src={artUrl('gate-paisley')} alt="" />
+        </div>
+        <div className="iv-mid">
+          {['l', 'r'].map((s) => <div key={s} className={`iv-drape iv-drape-${s}`}><img src={artUrl('haldi-drape')} alt="" /></div>)}
+          {['l', 'r'].flatMap((s) => [1, 2, 3].map((n) => <span key={s + n} className={`iv-mala iv-mala-${s} iv-m${n}`}><img src={artUrl('gate-mala')} alt="" /></span>))}
+        </div>
+        <div className="iv-near">
+          {['l', 'r'].map((s) => <div key={s} className={`iv-ele iv-ele-${s}`}><img src={artUrl('gate-elephant')} alt="" /></div>)}
+        </div>
         <div className="iv-toran" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
         <div className="iv-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
       </div>

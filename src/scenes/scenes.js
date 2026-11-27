@@ -59,7 +59,7 @@ export const SCENES = [
   {
     // the invitation card itself: envelope, seal, cover, pages (scenes/invitation.js),
     // on the crimson of the opening seal, under the same toran and marigold strands
-    id: 'family', own: true, scroll: true, sky: 'radial-gradient(110% 80% at 50% 45%, #a8183c 0%, #911033 55%, #6f0a26 100%)', tone: 'day', text: { top: 0 }, leave: 'cut', hold: 2,
+    id: 'family', own: true, scroll: true, sky: 'radial-gradient(120% 90% at 50% 58%, #b11d43 0%, #8c1031 42%, #5e0a22 78%, #3d0517 100%)', tone: 'day', text: { top: 0 }, leave: 'cut', hold: 2,
     layers: [],
     play: (tl, q, root) => playInvitation(tl, root),
     idle: (q) => idleInvitation(q),

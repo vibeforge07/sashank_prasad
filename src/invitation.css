@@ -5,19 +5,57 @@
 .inv-decor, .inv-petals { position: absolute; inset: 0; pointer-events: none; }
 .iv-toran { position: absolute; z-index: 3; top: -1px; left: 0; right: 0; height: min(15cqw, 15cqh, 120px); background: 50% 0 / auto 100% repeat-x; }
 .iv-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9cqh, 80px); background: 50% 100% / auto 100% repeat-x; }
+/* the room behind the envelope, back to front (motion: scenes/invitation.js, the parallax and the touch: Family in Words.jsx):
+   a warm light where the envelope lies, gold glints, the paisleys, the drapes and marigold strands, the elephants */
+.iv-glow { position: absolute; z-index: 0; left: 50%; top: 61%; --gw: min(170cqw, 125cqh); width: var(--gw); height: var(--gw); margin: calc(var(--gw) / -2) 0 0 calc(var(--gw) / -2); opacity: .6; }
+.iv-glow i { position: absolute; inset: 0; border-radius: 50%; background: radial-gradient(closest-side, #ffcf7a99, #f6ad4f4d 30%, #dc6a3a1f 58%, #0000); }
+.iv-sparks, .iv-far, .iv-mid, .iv-near { position: absolute; inset: 0; }
+.iv-sparks { z-index: 1; }
+.iv-spark { position: absolute; width: calc(24px * var(--s)); height: calc(24px * var(--s)); margin: calc(-12px * var(--s)) 0 0 calc(-12px * var(--s));
+  clip-path: polygon(50% 0, 57% 43%, 100% 50%, 57% 57%, 50% 100%, 43% 57%, 0 50%, 43% 43%); background: radial-gradient(closest-side, #fffbe8, #f7d58a 55%, #d9a443); opacity: .6; }
+.iv-far { z-index: 1; }
+.iv-mid, .iv-near { z-index: 2; }
 .iv-pais { position: absolute; top: 14cqh; width: min(40cqw, 46cqh); opacity: .55; }
 .iv-pais-l { left: 0; }
 .iv-pais-r { right: 0; scale: -1 1; }
-.iv-mala { position: absolute; z-index: 2; display: none; height: 62cqh; top: calc(var(--len) - 62cqh); width: auto; }
-.iv-mala-l { left: calc(var(--i) * 6cqh + .6cqw); }
-.iv-mala-r { right: calc(var(--i) * 6cqh + .6cqw); }
-.iv-m1 { --i: 0; --len: 54cqh; }
-.iv-m2 { --i: 1; --len: 46cqh; }
-.iv-m3 { --i: 2; --len: 38cqh; }
-@container (min-aspect-ratio: 1/1) { .iv-mala { display: block; } }
+/* the drapes hang from behind the toran and swing from the top; the right one is the same cloth turned over */
+.iv-drape { position: absolute; top: -2cqh; height: 46cqh; aspect-ratio: 454 / 1800; transform-origin: 50% 0; }
+.iv-drape img { display: block; width: 100%; height: 100%; }
+.iv-drape-l { left: calc(-4.5cqh); }
+.iv-drape-r { right: calc(-4.5cqh); }
+.iv-drape-r img { scale: -1 1; }
+/* a marigold strand: the picture is 62cqh long and only its lower --len shows, so it swings from the screen's top edge */
+.iv-mala { position: absolute; z-index: 2; height: 62cqh; top: calc(var(--len) - 62cqh); transform-origin: 50% calc(62cqh - var(--len)); }
+.iv-mala img { display: block; height: 100%; width: auto; transform-origin: inherit; }
+.iv-mala-l { left: calc(var(--i) * var(--gap) + .6cqw); }
+.iv-mala-r { right: calc(var(--i) * var(--gap) + .6cqw); }
+.iv-mala { --gap: 4.6cqh; }
+.iv-m1 { --i: 0; --len: 31cqh; }
+.iv-m2 { --i: 1; --len: 13cqh; }
+.iv-m3 { --i: 2; --len: 38cqh; display: none; }
+/* the elephants stand on the flower strip at the two bottom corners, facing the card */
+.iv-ele { position: absolute; bottom: calc(min(9cqh, 80px) * .42); width: min(31cqw, 15cqh); transform-origin: 50% 100%; }
+.iv-ele img { display: block; width: 100%; height: auto; }
+.iv-ele-l { left: -4cqw; }
+.iv-ele-r { right: -4cqw; }
+.iv-ele-r img { scale: -1 1; }
+@container (min-aspect-ratio: 1/1) {
+  .iv-drape { height: 72cqh; }
+  .iv-drape-l { left: -1cqh; }
+  .iv-drape-r { right: -1cqh; }
+  .iv-mala { --gap: 6cqh; }
+  .iv-mala-l { left: calc(var(--i) * var(--gap) + 16cqh); }
+  .iv-mala-r { right: calc(var(--i) * var(--gap) + 16cqh); }
+  .iv-m1 { --len: 54cqh; }
+  .iv-m2 { --len: 46cqh; }
+  .iv-m3 { display: block; }
+  .iv-ele { width: min(22cqw, 34cqh); }
+  .iv-ele-l { left: 1cqw; }
+  .iv-ele-r { right: 1cqw; }
+}
 .inv-petals { z-index: 9; overflow: hidden; }
 .inv-petals img { position: absolute; top: 0; width: 22px; height: auto; will-change: transform; }
-.inv-ring { position: absolute; z-index: 1; left: 50%; top: 52%; width: min(120cqh, 110cqw); translate: -50% -50%; opacity: 0; pointer-events: none; }
+.inv-ring { position: absolute; z-index: 1; left: 50%; top: 52%; width: min(120cqh, 110cqw); translate: -50% -50%; opacity: .14; pointer-events: none; }
 .inv-head { position: absolute; z-index: 4; left: 0; right: 0; top: calc(min(15cqw, 15cqh, 120px) + 7cqh); text-align: center; font: 400 clamp(30px, 7cqw, 60px) / 1.2 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #3d061299; }
 .inv-hint { position: absolute; z-index: 4; left: 0; right: 0; bottom: calc(min(9cqh, 80px) + 54px); text-align: center; font-size: 17px; color: #fbe6bd; letter-spacing: .04em; }
 
@@ -97,6 +135,11 @@
 .cv-names small { display: block; font: italic 14px / 1.5 var(--body); color: #f6d38a; }
 :lang(bn) .cv-names small, :lang(hi) .cv-names small { font-style: normal; }
 .cv-date { font-size: 12.5px; color: #f9e3b4; letter-spacing: .04em; }
+/* the couple's picture in a gold arch, once art/raw/couple-photo.png has been through npm run art; until then the ring */
+.cv-photo { width: 140px; height: 176px; flex: none; padding: 4px; border-radius: 70px 70px 6px 6px; background: linear-gradient(160deg, #f6dc98, #c8963f 40%, #8a6326 70%, #f0d189); box-shadow: 0 8px 18px #2a030c80; }
+.cv-photo img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 22%; border-radius: 66px 66px 3px 3px; box-shadow: 0 0 0 1.5px #fff3dc; }
+.has-photo .cp-in { gap: 8px; }
+.has-photo .cv-title { font-size: 26px; }
 
 /* ---- the wedding date under gold foil, and the calendar it opens ---- */
 .words .scratch { position: relative; display: inline-block; min-width: calc(520 * var(--u)); padding: calc(16 * var(--u)) calc(44 * var(--u)); border-radius: calc(14 * var(--u)); }
