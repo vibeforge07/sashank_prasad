@@ -34,10 +34,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
-/* on a phone the stages stand tall, cropped at the sides, instead of a thin strip; their tops fade
-   into the scene's own gradient, and the words sit on that gradient */
-@media (max-aspect-ratio: 1/1) { .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall'], [data-l='wedding-stage']) img {
-  height: min(100%, clamp(34cqh, 100cqh - var(--wb, 36cqh) - 2cqh, 64cqh)) !important; object-position: center bottom !important; mask-image: linear-gradient(#0000, #000 12%); } }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
@@ -107,6 +103,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* Sangeet: the flower strands hang a little higher, the words sit a little lower */
   #sangeet [data-l='sangeet-hanging'] { margin-top: calc(-70 * var(--u)); }
   #sangeet .words { --top: 280 !important; }
+  #sangeet [data-l='sangeet-arches'] { margin-bottom: calc(-160 * var(--u)); }
+  /* Wedding: no sky left between the words and the palace, so the moon and clouds go up to the corners */
+  #wedding .moon { bottom: auto !important; left: auto !important; top: calc(40 * var(--u)); right: calc(70 * var(--u)); }
+  #wedding [data-l='cloud-l'] { bottom: auto !important; top: calc(30 * var(--u)); }
+  #wedding [data-l='cloud-r'] { bottom: auto !important; top: calc(150 * var(--u)); }
 }
 
 /* ---- wide screens: the words on a card at one side, the picture larger beside it ---- */
@@ -121,7 +122,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .name { font-size: calc(118 * var(--u)); }
   .k-frame img { border-inline: calc(8 * var(--u)) solid #a8672a; }
   .closing-line { font-size: calc(62 * var(--u)); }
-  .strip.k-ground:is([data-l='sangeet-stage'], [data-l='reception-hall'], [data-l='wedding-stage']) img { object-position: center bottom !important; }
   /* the Mehendi carpet runs the whole width of the room */
   [data-l='mehendi-seat']::before { content: ''; position: absolute; z-index: -1; inset: 59% -100vw 0; border-top: calc(8 * var(--u)) solid #170603; background: linear-gradient(to top, #0000 calc(51.8 * var(--u)), #f0b23c 0 calc(55.2 * var(--u)), #0000 0 calc(65.6 * var(--u)), #f0b23c 0 calc(71.8 * var(--u)), #0000 0) #a62604; }
 }
@@ -216,6 +216,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
 .i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
 /* first page: the tall backdrop on phones, the wide one on laptops */
-@container (min-aspect-ratio: 1/1) { #hero [data-l$='-t'] { display: none; } }
-@container (max-aspect-ratio: 1/1) { #hero [data-l$='-w'] { display: none; } }
+@container (min-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-t'] { display: none; } }
+@container (max-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-w'] { display: none; } }
 #hero [data-l^='scene-'] img { max-height: none !important; } /* the road must stay where the tram and taxi ride */
