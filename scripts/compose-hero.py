@@ -1,7 +1,7 @@
 # Builds the first-page backdrop as one picture: hills, Howrah Bridge, the Tata Park diamond,
 # a far-bank road with tram rails, then the river, the railing and the floor.
 # python3 scripts/compose-hero.py   ->  art/raw/hero-wide.png, art/raw/hero-tall.png, plus the road lines in art/hero-lines.json
-# Sources: art/raw/city-kolkata.png (keyed), art/raw/diamond-park.png (full painting),
+# Sources: art/raw/city-kolkata.png (keyed), art/raw/diamond-park.png (full painting, also the street lamp),
 #          src/art/jamshedpur-hills.webp, src/art/hero-ground.webp
 import json
 import numpy as np
@@ -64,6 +64,49 @@ def sky_out(path):
     alpha = nd.gaussian_filter(land.astype(np.float32), 0.7)
     out = np.dstack([a, np.clip(alpha, 0, 1) * 255]).astype(np.uint8)
     return Image.fromarray(out, 'RGBA')
+
+
+def lamp():
+    """the street lamp from the Tata Park painting, cut along its own black outline"""
+    d = np.asarray(Image.open('art/raw/diamond-park.png').convert('RGB')).astype(np.int32)
+    x0, y0, x1, y1 = 60, 420, 210, 950
+    c = d[y0:y1, x0:x1]
+    ink = nd.binary_dilation(c.mean(2) < 75, iterations=1)
+    lab, _ = nd.label(~ink)
+    ids = set(np.unique(lab[:, 126 - x0 - 6:126 - x0 + 7])) - {0}
+    ids -= set(np.unique(lab[0])) | set(np.unique(lab[:, 0])) | set(np.unique(lab[:, -1]))
+    keep = np.zeros(lab.shape, bool)
+    for i in ids:
+        m = lab == i
+        xs = np.nonzero(m)[1]
+        if xs.max() - xs.min() < 95 and m.sum() > 20:
+            keep |= m
+    m = nd.binary_fill_holes(keep | (nd.binary_dilation(keep, iterations=6) & ink))
+    ys, xs = np.nonzero(m)
+    out = np.dstack([c, nd.gaussian_filter(m.astype(np.float32), 0.6) * 255]).astype(np.uint8)
+    return Image.fromarray(out, 'RGBA').crop((xs.min(), ys.min(), xs.max() + 1, ys.max() - 8))
+
+
+def tree_band(hl, seed_row):
+    """only the row of round trees along the bottom of the hills layer (each tree is closed by its outline)"""
+    a = np.asarray(hl).astype(np.float32)
+    ink = (a[..., :3].mean(2) < 70) & (a[..., 3] > 0)
+    lab, _ = nd.label(~ink & (a[..., 3] > 0))
+    ids = set(np.unique(lab[seed_row])) - {0}
+    m = np.isin(lab, list(ids))
+    m = nd.binary_fill_holes(m | (nd.binary_dilation(m, iterations=5) & ink))
+    out = a.copy()
+    out[..., 3] *= nd.gaussian_filter(m.astype(np.float32), 0.6)
+    return Image.fromarray(out.astype(np.uint8), 'RGBA')
+
+
+def hfade(im, x_end, px):
+    """keep the picture up to x_end, melting away over px to its right"""
+    a = arr(im)
+    w = a.shape[1]
+    x = np.arange(w)
+    a[..., 3] *= np.clip((x_end - x) / px, 0, 1)[None, :]
+    return Image.fromarray(a.astype(np.uint8), 'RGBA')
 
 
 def ndimage_soft(mask):
@@ -151,17 +194,24 @@ def build(kind):
         hs = 1.0
         hy = yroad - hills.height * hs + 40
         base.alpha_composite(sun(60), (int(W * 0.58), int(yroad - hills.height * 0.7)))
+        hl = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         left = hills.crop((0, 0, W - hills.width + 60, hills.height)).transpose(Image.FLIP_LEFT_RIGHT)
-        paste(base, left, 0, hy, 1)
-        paste(base, fade(hills, 'l', 60), W - hills.width, hy, 1)
-        # Kolkata: the bridge tower stands between the words and the couple, its span runs off to the left
-        bs = 0.86
-        paste(base, fade(br, 'l', 60), W * 0.40 - br.width * bs, yroad - br.height * bs + 22, bs, flip=True)
+        paste(hl, left, 0, hy, 1)
+        paste(hl, fade(hills, 'l', 60), W - hills.width, hy, 1)
+        base.alpha_composite(hl)
+        # Kolkata: a smaller bridge tower stands between the words and the couple, its span runs off to the left
+        bs = 0.68
+        right = W * 0.37
+        paste(base, br, right - br.width * bs, yroad - br.height * bs + 22, bs, flip=True)
+        # the bridge's own bushes end where its painting ended: the row of trees from the hills grows back
+        # over its foot, so the cut never shows
+        base.alpha_composite(hfade(tree_band(hl, yroad + 20), right + 260, 160))
         # Jamshedpur: the diamond on the right
         crop = dia.crop((int(dia.width * 0.2), 0, int(dia.width * 0.86), int(dia.height * 0.84)))
         crop = fade(crop, 'l', 70)
         ds = 0.64
         paste(base, crop, W - crop.width * ds + 20, yroad - crop.height * ds + 24, ds)
+        lamps = [(0.405, 0.5), (0.52, 0.5)]
     else:
         W = 1296
         gs = 1.0
@@ -175,17 +225,33 @@ def build(kind):
         base = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         yroad = land
         hs = 1.05
-        hc = hills.crop((int(hills.width * 0.36), 0, int(hills.width * 0.36) + int(W / hs), hills.height))
+        # the steel works in the middle, between the couple: hills and mirrored hills side by side
+        strip = Image.new('RGBA', (hills.width * 2, hills.height), (0, 0, 0, 0))
+        strip.alpha_composite(hills, (0, 0))
+        strip.alpha_composite(fade(hills.transpose(Image.FLIP_LEFT_RIGHT), 'l', 60), (hills.width - 60, 0))
+        x0 = int(hills.width * 0.783 - W * 0.5 / hs)  # the works' middle chimney lands in the middle
+        hc = strip.crop((x0, 0, x0 + int(W / hs), hills.height))
         base.alpha_composite(sun(58), (int(W * 0.5 - 116), int(yroad - hills.height * hs * 0.8)))
-        paste(base, hc, 0, yroad - hills.height * hs + 40, hs)
-        bs = 1.02
-        paste(base, br, -70, yroad - br.height * bs + 26, bs)
+        hl = Image.new('RGBA', (W, H), (0, 0, 0, 0))
+        paste(hl, hc, 0, yroad - hills.height * hs + 40, hs)
+        base.alpha_composite(hl)
+        # the tower at the left edge, beside the groom; its span is cut short behind him
+        bs = 0.72
+        span = fade(br.crop((0, 0, int(br.width * 0.62), br.height)), 'r', 120)
+        paste(base, span, -30, yroad - br.height * bs + 26, bs)
+        base.alpha_composite(hfade(tree_band(hl, yroad + 20), span.width * bs + 60, 140))
         crop = dia.crop((int(dia.width * 0.2), 0, int(dia.width * 0.86), int(dia.height * 0.84)))
         crop = fade(crop, 'l', 70)
-        ds = 0.86
-        paste(base, crop, W - crop.width * ds + 150, yroad - crop.height * ds + 30, ds)
+        ds = 0.6
+        paste(base, crop, W - crop.width * ds + 110, yroad - crop.height * ds + 30, ds)
+        lamps = [(0.875, 0.56)]  # the bridge brings its own lamp on the left
     rd, lines = road(W, R)
     base.alpha_composite(rd, (0, yroad))
+    # street lamps on the grass verge, where the couple and the words leave them in sight
+    lp = lamp()
+    for fx, sc in lamps:
+        l = lp.resize((round(lp.width * sc), round(lp.height * sc)), Image.LANCZOS)
+        base.alpha_composite(l, (round(W * fx - l.width / 2), round(yroad + R * 0.13 - l.height)))
     g = gb.resize((W, gh), Image.LANCZOS) if gb.width != W else gb
     base.alpha_composite(g, (0, yroad + R - 6))
     base = base.crop((0, 0, W, min(H, yroad + R - 6 + gh)))
