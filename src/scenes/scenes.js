@@ -214,7 +214,7 @@ export const SCENES = [
       // the bride's Kolkata and the groom's Jamshedpur on the skyline behind the stage, the red carpet with its alpana
       // laptops: the skyline spans the whole width; phones: lifted so Howrah Bridge shows above the stage
       L('city-w', 2200, 605, { art: 'wedding-city-art', y: 300, z: 2, full: true }),
-      L('city-t', 1300, 358, { art: 'wedding-city-art', y: 720, z: 2 }),
+      L('city-t', 1300, 358, { art: 'wedding-city-art', y: 680, z: 2 }),
       L('wedding-floor', 2200, 330, { z: 2, full: true, kind: 'ground' }),
       L('wedding-stage-small', 1000, 621, { y: 330, z: 3 }),
       L('wedding-hanging', 1100, 350, { full: true, ay: 't', y: -24, z: 4 }),
