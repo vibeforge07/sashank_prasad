@@ -50,7 +50,7 @@ export function Family({ c, lang }) {
   const f = c.family
   const wide = useWide()
   const inv = useRef(null)
-  // the couple's picture on the cover, once art/raw/couple-photo.png has been through `npm run art`
+  // the couple's picture inside the card arch, once art/raw/couple-photo.png has been through `npm run art`
   const photo = artUrl('couple-photo')
 
   // the room answers the guest: the layers drift apart with the mouse (or the tilt of an Android phone),
@@ -97,11 +97,9 @@ export function Family({ c, lang }) {
   const family = (name, rows) => <div className="cp"><div className="cp-in"><i className="cp-orn" /><h3 className="nm">{name}</h3>{kin(rows)}<i className="cp-orn" /></div>{frame}</div>
   const pages = {
     cover: (
-      <div className={`cp cp-cover${photo ? ' has-photo' : ''}`}>
+      <div className="cp cp-cover">
         <div className="cp-in">
-          {photo
-            ? <div className="cv-photo"><img src={photo} alt={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`} /></div>
-            : <img className="cv-ring" src={ring} alt="" />}
+          <img className="cv-ring" src={ring} alt="" />
           <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
           <p className="cv-names"><span>{c.hero.groom}</span><small>{c.hero.and}</small><span>{c.hero.bride}</span></p>
           <p className="cv-date">{c.gate.date}</p>
@@ -113,7 +111,11 @@ export function Family({ c, lang }) {
       <div className="cp">
         <div className="cp-in">
           <p className="cp-word">{c.hero.invocation}</p>
-          <div className="arch"><img className="arch-g" src={artUrl('hero-groom')} alt="" /><img className="arch-b" src={artUrl('hero-bride')} alt="" /></div>
+          <div className="arch">
+            {photo
+              ? <img className="arch-photo" src={photo} alt={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`} />
+              : <><img className="arch-g" src={artUrl('hero-groom')} alt="" /><img className="arch-b" src={artUrl('hero-bride')} alt="" /></>}
+          </div>
           <p className="cp-pair">{c.hero.groom} <i>{c.hero.and}</i> {c.hero.bride}</p>
         </div>
         {frame}
@@ -386,19 +388,20 @@ export function DatePage({ c, lang }) {
   return (
     <div className={`dt${all ? ' is-open' : ''}`}>
       <div className="dt-decor" data-l="dt-decor" aria-hidden="true">
+        {/* indigo velvet with gold butis, a carved jharokha around the whole page (tall on phones, wide on
+            laptops) and a marble ledge of lit diyas along its foot, after the client's reference film */}
+        <i className="dt-velvet" style={{ backgroundImage: `url(${artUrl('date-velvet-tile')})` }} />
         <i className="dt-glow" />
         <div className="iv-sparks">
           {SPARKS.map(([x, y, s]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': s }} />)}
         </div>
-        {['l', 'r'].map((s) => <div key={s} className={`dt-lamp dt-lamp-${s}`}><img src={artUrl('reception-lanterns')} alt="" /></div>)}
-        {['l', 'r'].map((s) => <div key={s} className={`dt-stand dt-stand-${s}`}><img src={artUrl('sangeet-candles')} alt="" /></div>)}
-        <div className="iv-toran" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
-        <div className="iv-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
+        <img className="dt-arch" src={artUrl(wide ? 'date-arch-wide' : 'date-arch-tall')} alt="" draggable="false" />
+        <i className="dt-ledge" style={{ backgroundImage: `url(${artUrl('date-ledge')})` }} />
       </div>
       <div className="dt-body">
         <div className="dt-main">
           <h2 className="dt-title">{d.title}</h2>
-          <i className="dt-orn" />
+          <img className="dt-orn" src={artUrl('date-divider')} alt="" draggable="false" />
           <p className="dt-hint"><i />{c.ui.scratch}<i /></p>
           <div className={`dt-tiles scratch${all ? ' done' : ''}`} ref={row}>
             {[day, month, year].map((v, i) => (
@@ -414,6 +417,7 @@ export function DatePage({ c, lang }) {
         </div>
         <div className="dt-cal" ref={cal} aria-hidden={!all}>
           <div className="dt-cal-in">
+            {['tl', 'tr', 'bl', 'br'].map((p) => <img key={p} className={`dt-cn dt-cn-${p}`} src={artUrl('date-corner')} alt="" draggable="false" />)}
             <p className="dt-mh">{month} {year}</p>
             <div className="dt-g">
               {names.map((n, i) => <b key={'h' + i}>{n}</b>)}

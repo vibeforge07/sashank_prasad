@@ -118,6 +118,7 @@
 .arch { position: relative; width: 196px; height: 236px; flex: none; border-radius: 98px 98px 4px 4px; background: linear-gradient(160deg, #f3d995, #b4873c 45%, #8a6326 70%, #e9cd88); box-shadow: 0 10px 18px #5a320f4d; }
 .arch::before { content: ''; position: absolute; inset: 6px; border-radius: 92px 92px 2px 2px; background: linear-gradient(#0000 80%, #e8c99a 80%), linear-gradient(#a9cbe0, #d9e2dc 62%, #f3dcb6); }
 .arch img { position: absolute; bottom: 10px; height: 84%; width: auto; }
+.arch .arch-photo { inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: cover; object-position: 50% 25%; border-radius: 92px 92px 2px 2px; box-shadow: 0 0 0 1.5px #fff3dc; }
 .arch-g { left: 12px; }
 .arch-b { right: 10px; }
 
@@ -147,26 +148,16 @@
 .dt { position: absolute; inset: 0; z-index: 20; overflow: hidden; color: var(--cream); --k: min(100cqw / 390, 100cqh / 844); --gold: #e2bd6e; }
 .dt-decor { position: absolute; inset: 0; pointer-events: none; }
 .dt-glow { position: absolute; z-index: 0; left: 50%; top: 46%; --gw: min(160cqw, 120cqh); width: var(--gw); height: var(--gw); margin: calc(var(--gw) / -2) 0 0 calc(var(--gw) / -2); border-radius: 50%; background: radial-gradient(closest-side, #ffcf7a40, #e0954a1f 40%, #0000); }
-/* lanterns hang from the toran at the two top corners; on wide screens lamp stands rise beside the words */
-.dt-lamp { position: absolute; z-index: 2; top: calc(min(15cqw, 15cqh, 120px) * .35); width: min(24cqw, 17cqh); transform-origin: 50% 0; }
-.dt-lamp img, .dt-stand img { display: block; width: 100%; height: auto; }
-.dt-lamp-l { left: 1cqw; }
-.dt-lamp-r { right: 1cqw; }
-.dt-lamp-r img, .dt-stand-r img { scale: -1 1; }
-.dt-stand { position: absolute; z-index: 2; display: none; bottom: calc(min(9cqh, 80px) * .5); height: 62cqh; aspect-ratio: 472 / 1800; }
-.dt-stand img { height: 100%; }
-.dt-stand-l { left: 15cqw; }
-.dt-stand-r { right: 15cqw; }
-
-.dt-body { position: absolute; z-index: 5; left: 0; right: 0; top: calc(min(15cqw, 15cqh, 120px) + 20 * var(--k)); bottom: calc(min(9cqh, 80px) + 56 * var(--k));
+/* indigo velvet with gold butis; a carved jharokha frames the whole page, its opening holds the words;
+   a marble ledge of lit diyas runs along its foot */
+.dt-velvet { position: absolute; inset: 0; z-index: 0; background: 50% 50% / calc(64 * var(--k)) auto repeat; opacity: .55; }
+.dt-arch { position: absolute; z-index: 1; inset: 0; width: 100%; height: 100%; object-fit: fill; filter: drop-shadow(0 0 calc(18 * var(--k)) #05031acc); }
+.dt-ledge { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: calc(100cqw * 532 / 1914); background: 50% 100% / auto 100% repeat-x; }
+.dt-body { position: absolute; z-index: 5; left: 15cqw; right: 15cqw; top: 19cqh; bottom: calc(100cqw * 532 / 1914 + 2cqh);
   display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
 .dt-main { display: flex; flex-direction: column; align-items: center; }
 .dt-title { font: 400 calc(44 * var(--k)) / 1.15 var(--display); color: #f6d38a; text-shadow: 0 2px 14px #0b062a; }
-.dt-orn { display: block; width: calc(170 * var(--k)); height: calc(14 * var(--k)); margin: calc(8 * var(--k)) 0 calc(10 * var(--k));
-  background: radial-gradient(circle, var(--gold) 0 calc(3.4 * var(--k)), #0000 calc(4 * var(--k))) 50% 50% / calc(14 * var(--k)) 100% no-repeat,
-    radial-gradient(circle, var(--gold) 0 calc(1.8 * var(--k)), #0000 calc(2.3 * var(--k))) 32% 50% / calc(10 * var(--k)) 100% no-repeat,
-    radial-gradient(circle, var(--gold) 0 calc(1.8 * var(--k)), #0000 calc(2.3 * var(--k))) 68% 50% / calc(10 * var(--k)) 100% no-repeat,
-    linear-gradient(90deg, #0000, var(--gold) 22% 78%, #0000) 50% 50% / 100% 1px no-repeat; }
+.dt-orn { display: block; width: calc(210 * var(--k)); height: auto; margin: calc(6 * var(--k)) 0 calc(10 * var(--k)); filter: drop-shadow(0 2px 6px #0b062a); }
 .dt-hint { display: flex; align-items: center; gap: calc(10 * var(--k)); font-size: calc(17 * var(--k)); color: #fbe6bd; }
 .dt-hint i { flex: none; width: calc(12 * var(--k)); height: calc(12 * var(--k)); clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); background: #f3c96a; }
 
@@ -189,8 +180,14 @@
 /* January, opening under the tiles (beside them on wide screens) once all three are scratched */
 .dt-cal { position: relative; overflow: hidden; height: 0; visibility: hidden; }
 .dt.is-open .dt-cal { height: auto; visibility: visible; }
-.dt-cal-in { width: calc(300 * var(--k)); margin: calc(18 * var(--k)) auto 0; padding: calc(14 * var(--k)) calc(16 * var(--k)); border-radius: calc(14 * var(--k));
+.dt-cal-in { position: relative; width: calc(300 * var(--k)); margin: calc(18 * var(--k)) auto 0; padding: calc(14 * var(--k)) calc(16 * var(--k)); border-radius: calc(14 * var(--k));
   background: #120c34d9; box-shadow: inset 0 0 0 1px #e0b45a, inset 0 0 0 calc(5 * var(--k)) #120c3400, inset 0 0 0 calc(6 * var(--k)) #e0b45a55, 0 12px 30px #05031a99; }
+/* gold corner ornaments, one picture turned for each corner */
+.dt-cn { position: absolute; width: calc(48 * var(--k)); height: auto; pointer-events: none; }
+.dt-cn-tl { top: calc(3 * var(--k)); left: calc(3 * var(--k)); }
+.dt-cn-tr { top: calc(3 * var(--k)); right: calc(3 * var(--k)); scale: -1 1; }
+.dt-cn-bl { bottom: calc(3 * var(--k)); left: calc(3 * var(--k)); scale: 1 -1; }
+.dt-cn-br { bottom: calc(3 * var(--k)); right: calc(3 * var(--k)); scale: -1 -1; }
 .dt-mh { font: 400 calc(22 * var(--k)) / 1.3 var(--display); color: #f6d38a; }
 .dt-g { display: grid; grid-template-columns: repeat(7, 1fr); row-gap: calc(2 * var(--k)); margin-top: calc(6 * var(--k)); font-size: calc(15 * var(--k)); line-height: 1.75; }
 .dt-g b { font-weight: 400; opacity: .65; font-size: .86em; }
@@ -212,10 +209,8 @@
   .dt-cal { height: auto; width: 0; }
   .dt.is-open .dt-cal { width: auto; }
   .dt-cal-in { margin: 0 0 0 calc(56 * var(--k)); }
-  .dt-lamp { width: 22cqh; }
-  .dt-lamp-l { left: 3cqw; }
-  .dt-lamp-r { right: 3cqw; }
-  .dt-stand { display: block; }
+  .dt-body { left: 11cqw; right: 11cqw; top: 15cqh; bottom: 17cqh; }
+  .dt-ledge { height: 17cqh; }
 }
 
 /* ---- the last page: a carved arch on a blue night, a lamp to light (Words.jsx Closing, scenes/closing.js) ---- */
