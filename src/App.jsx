@@ -20,10 +20,10 @@ function firstLang() {
 }
 
 const words = (id, c, lang) => {
-  if (id === 'hero') return <Hero c={c} />
-  if (id === 'family') return <Family c={c} />
+  if (id === 'hero') return <Hero c={c} lang={lang} />
+  if (id === 'family') return <Family c={c} lang={lang} />
   if (id === 'closing') return <Closing c={c} lang={lang} />
-  return <EventWords c={c} id={id} />
+  return <EventWords c={c} id={id} lang={lang} />
 }
 
 export default function App() {
@@ -41,6 +41,7 @@ export default function App() {
 
   useEffect(() => {
     document.documentElement.lang = lang
+    document.title = TEXT[lang].title
     try { localStorage.setItem('lang', lang) } catch { /* private window */ }
   }, [lang])
 
@@ -123,7 +124,7 @@ export default function App() {
       </main>
 
       {!gone && (
-        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, TEXT[l].lang])}
+        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, c.langs[l]])}
           names={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`}
           onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
       )}
@@ -131,7 +132,7 @@ export default function App() {
       {open && (
         <nav className="bar">
           <div className="langs small" role="group">
-            {LANGS.map((l) => <button key={l} lang={l} aria-label={TEXT[l].lang} aria-pressed={l === lang} onClick={() => setLang(l)}>{{ en: 'EN', bn: 'বাং', hi: 'हिं' }[l]}</button>)}
+            {LANGS.map((l) => <button key={l} lang={lang} aria-pressed={l === lang} onClick={() => setLang(l)}>{c.langs[l]}</button>)}
           </div>
           {song && <button className="round" aria-label={c.ui.sound} aria-pressed={sound} onClick={() => setSound(!sound)}><i className={sound ? 'i-sound' : 'i-mute'} /></button>}
           <button className="round" aria-label={auto ? c.ui.pause : c.ui.play}

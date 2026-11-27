@@ -121,7 +121,7 @@ export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone })
           <h1 className="g-names">{names}</h1>
           <p className="g-date">{c.gate.date}</p>
           <div className="g-langs" role="group" aria-label={c.gate.choose}>
-            {langs.map(([l, label]) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
+            {langs.map(([l, label]) => <button key={l} lang={lang} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
           </div>
           <button className="g-hint" onClick={open}>{c.gate.tap}</button>
         </div>
