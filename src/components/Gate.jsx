@@ -108,7 +108,7 @@ export default function Gate({ c, lang, langs, names, setLang, onOpen, onGone })
       <div className="g-page" style={{ backgroundImage: `url(${paper})` }}>
         <img className="g-pais g-pais-l" src={artUrl('gate-paisley')} alt="" />
         <img className="g-pais g-pais-r" src={artUrl('gate-paisley')} alt="" />
-        {['l', 'r'].flatMap((s) => [3, 1, 2].map((n) => <img key={s + n} className={`g-mala g-mala-${s} g-m${n}`} src={artUrl('gate-mala')} alt="" />))}
+        {['l', 'r'].flatMap((s) => [1, 2, 3, 4, 5, 6].map((n) => <img key={s + n} className={`g-mala g-mala-${s} g-m${n}`} src={artUrl('gate-mala')} alt="" />))}
         <div className="g-garland" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
         <div className="g-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
         <img className="g-bed g-bed-l" src={artUrl('gate-elephant')} alt="" />

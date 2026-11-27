@@ -33,10 +33,10 @@ export const SCENES = [
       ...clouds(),
       // one painted far bank (Howrah Bridge, the steel works, the Tata Park diamond, a road with tram rails),
       // a wide picture for laptops and a tall one for phones; the tram and the taxi drive along its road
-      L('scene-w', 2200, 1376, { art: 'hero-wide', z: 2, full: true, kind: 'ground' }),
+      L('scene-w', 2200, 1103, { art: 'hero-wide', z: 2, full: true, kind: 'ground', tall: 0.88 }),
       L('scene-t', 1300, 1765, { art: 'hero-tall', z: 2, full: true, kind: 'ground' }),
-      L('tram-w', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 2200, at: 0.2729, rw: 0.108 } }),
-      L('taxi-w', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 2200, at: 0.2519, rw: 0.076 } }),
+      L('tram-w', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 2200, tall: 1.7552, at: 0.236, rw: 0.095 } }),
+      L('taxi-w', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 2200, tall: 1.7552, at: 0.2177, rw: 0.066 } }),
       L('tram-t', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 1300, at: 0.4317, rw: 0.2 } }),
       L('taxi-t', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 1300, at: 0.3889, rw: 0.135 } }),
       person('hero-groom', 470, 960, -230, 110, 7), person('hero-bride', 520, 960, 210, 110, 8),

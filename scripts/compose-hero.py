@@ -138,25 +138,30 @@ def build(kind):
     dia = sky_out('art/raw/diamond-park.png')
     br = bridge()
     if kind == 'wide':
+        # flat enough (about 1:2) to fit a laptop screen without cutting the tops off
         W = 2640
-        ground_s = W / gb.width
-        gh = round(gb.height * ground_s)
-        R = 150
-        land = 860
+        gb = gb.resize((W, round(gb.height * W / gb.width)), Image.LANCZOS)
+        gb = gb.crop((0, 60, W, 620))  # a little less river on top, a little less floor at the bottom
+        gh = gb.height
+        R = 130
+        land = 640
         H = land + R + gh
         base = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         yroad = land
-        hs = W / hills.width
-        base.alpha_composite(fade(sun(70), 'l', 1), (int(W * 0.56), int(yroad - hills.height * hs * 0.62)))
-        paste(base, hills, 0, yroad - hills.height * hs + 40, hs)
-        # Kolkata: the bridge tower stands between the words and the couple, its span runs off the left edge
-        bs = 1.2
-        paste(base, fade(br, 'l', 60), W * 0.49 - br.width * bs, yroad - br.height * bs + 26, bs, flip=True)
+        hs = 1.0
+        hy = yroad - hills.height * hs + 40
+        base.alpha_composite(sun(60), (int(W * 0.58), int(yroad - hills.height * 0.7)))
+        left = hills.crop((0, 0, W - hills.width + 60, hills.height)).transpose(Image.FLIP_LEFT_RIGHT)
+        paste(base, left, 0, hy, 1)
+        paste(base, fade(hills, 'l', 60), W - hills.width, hy, 1)
+        # Kolkata: the bridge tower stands between the words and the couple, its span runs off to the left
+        bs = 0.86
+        paste(base, fade(br, 'l', 60), W * 0.40 - br.width * bs, yroad - br.height * bs + 22, bs, flip=True)
         # Jamshedpur: the diamond on the right
         crop = dia.crop((int(dia.width * 0.2), 0, int(dia.width * 0.86), int(dia.height * 0.84)))
-        crop = fade(crop, 'l', 80)
-        ds = 0.82
-        paste(base, crop, W - crop.width * ds + 30, yroad - crop.height * ds + 30, ds)
+        crop = fade(crop, 'l', 70)
+        ds = 0.64
+        paste(base, crop, W - crop.width * ds + 20, yroad - crop.height * ds + 24, ds)
     else:
         W = 1296
         gs = 1.0
