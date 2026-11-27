@@ -30,13 +30,65 @@ export function Hero({ c, lang }) {
 }
 
 
-// The invitation card, as in a real one: an envelope with a sindoor seal, the card slides out,
-// its cover opens like a book on the couple, then a page turns to the two families.
-// All motion is in scenes/invitation.js; this is only the paper.
+// The invitation card, as in a real one (the same scene as the red-rose card site): the section pins
+// while the guest scrolls; the seal comes off, the flap opens, the card slides out lying on its side,
+// stands up and comes to face you, and every page turns with the scroll. Motion: scenes/invitation.js.
+const isWide = () => window.innerWidth >= window.innerHeight
+
+function useWide() {
+  const [wide, setWide] = useState(isWide)
+  useEffect(() => { const on = () => setWide(isWide()); window.addEventListener('resize', on); return () => window.removeEventListener('resize', on) }, [])
+  return wide
+}
+
 export function Family({ c, lang }) {
   const f = c.family
+  const wide = useWide()
+  const frame = <><i className="cp-frame" /><i className="cp-c cp-c-tl" /><i className="cp-c cp-c-tr" /><i className="cp-c cp-c-bl" /><i className="cp-c cp-c-br" /></>
   const kin = (rows) => rows.map(([k, v]) => <p className="kin" key={k}><em>{k}</em><span>{v}</span></p>)
-  const fam = (name, rows) => <div className="pg-in"><i className="orn" /><h3 className="nm">{name}</h3>{kin(rows)}<i className="orn" /></div>
+  const family = (name, rows) => <div className="cp"><div className="cp-in"><i className="cp-orn" /><h3 className="nm">{name}</h3>{kin(rows)}<i className="cp-orn" /></div>{frame}</div>
+  const pages = {
+    cover: (
+      <div className="cp cp-cover">
+        <div className="cp-in">
+          <img className="cv-ring" src={ring} alt="" />
+          <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
+          <p className="cv-names"><span>{c.hero.groom}</span><small>{c.hero.and}</small><span>{c.hero.bride}</span></p>
+          <p className="cv-date">{c.gate.date}</p>
+        </div>
+        {frame}
+      </div>
+    ),
+    arch: (
+      <div className="cp">
+        <div className="cp-in">
+          <p className="cp-word">{c.hero.invocation}</p>
+          <div className="arch"><img className="arch-g" src={artUrl('hero-groom')} alt="" /><img className="arch-b" src={artUrl('hero-bride')} alt="" /></div>
+          <p className="cp-pair">{c.hero.groom} <i>{c.hero.and}</i> {c.hero.bride}</p>
+        </div>
+        {frame}
+      </div>
+    ),
+    request: (
+      <div className="cp">
+        <div className="cp-in">
+          <Shloka id="family" lang={lang} />
+          <i className="cp-orn" />
+          <p className="req">{f.request.map((l) => <span key={l}>{l}</span>)}</p>
+          <h3 className="nm">{f.groom}</h3>
+          <p className="amp2">{f.and}</p>
+          <h3 className="nm">{f.bride}</h3>
+          <i className="cp-orn" />
+        </div>
+        {frame}
+      </div>
+    ),
+    groom: family(f.groom, f.groomLines),
+    bride: family(f.bride, f.brideLines),
+  }
+  // desktop: a leaf carries a right page on its front and the next left page on its back;
+  // phone: one page per leaf with plain card on its back, so every page gets the whole screen
+  const order = wide ? [['cover', 'arch'], ['request', 'groom']] : [['cover'], ['arch'], ['request'], ['groom']]
   return (
     <div className="inv">
       <div className="inv-decor" aria-hidden="true">
@@ -46,52 +98,31 @@ export function Family({ c, lang }) {
         <div className="iv-toran" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
         <div className="iv-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
       </div>
+      <img className="inv-ring" src={ring} alt="" aria-hidden="true" />
       <div className="inv-petals" data-l="inv-petals" aria-hidden="true">
-        {Array.from({ length: 14 }, (_, i) => <img key={i} src={PETALS[i % PETALS.length]} alt="" />)}
+        {Array.from({ length: 12 }, (_, i) => <img key={i} src={PETALS[i % PETALS.length]} alt="" />)}
       </div>
-      <div className="inv-stage">
-        <div className="env env-b"><i /></div>
-        <div className="book">
-          <div className="pg pg-base">{fam(f.bride, f.brideLines)}</div>
-          <div className="leaf leaf-a">
-            <div className="face front pg">
-              <div className="pg-in">
-                <Shloka id="family" lang={lang} />
-                <p className="req">{f.request.map((l) => <span key={l}>{l}</span>)}</p>
-                <h3 className="nm">{f.groom}</h3>
-                <p className="amp2">{f.and}</p>
-                <h3 className="nm">{f.bride}</h3>
-              </div>
-            </div>
-            <div className="face back pg">{fam(f.groom, f.groomLines)}</div>
-          </div>
-          <div className="leaf leaf-cover">
-            <div className="face front cover">
-              <img className="cv-ring" src={ring} alt="" />
-              <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
-              <p className="cv-names"><span>{c.hero.groom}</span><small>{c.hero.and}</small><span>{c.hero.bride}</span></p>
-              <p className="cv-date">{c.gate.date}</p>
-            </div>
-            <div className="face back pg">
-              <div className="pg-in">
-                <p className="inv-word">{c.hero.invocation}</p>
-                <div className="arch">
-                  <img className="arch-g" src={artUrl('hero-groom')} alt="" />
-                  <img className="arch-b" src={artUrl('hero-bride')} alt="" />
+      <h2 className="inv-head">{f.title}</h2>
+      <div className="env-stage">
+        <div className="env">
+          <div className="env-back" />
+          <div className={`book${wide ? ' book-wide' : ''}`}>
+            <div className="leaves">
+              {order.map(([front, back], i) => (
+                <div className="leaf" key={front} style={{ zIndex: order.length - i + 1 }}>
+                  <div className="leaf-face leaf-front">{pages[front]}</div>
+                  <div className="leaf-face leaf-back">{back ? pages[back] : <div className="cp cp-blank">{frame}</div>}</div>
                 </div>
-                <i className="orn" />
-              </div>
+              ))}
+              <div className="leaf leaf-base" style={{ zIndex: 0 }}><div className="leaf-face leaf-front">{pages.bride}</div></div>
             </div>
           </div>
-        </div>
-        <div className="env env-fl"><i className="flap" /></div>
-        <div className="env env-f">
-          <i className="pocket" />
-          <svg className="folds" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M0 100 L50 58 L100 100 M0 0 L50 58 L100 0" /></svg>
-          <div className="seal"><img src={sindoor} alt="" /><img className="seal-ring" src={ring} alt="" /></div>
-          <div className="burst">{Array.from({ length: 10 }, (_, i) => <img key={i} src={PETALS[(i * 3) % PETALS.length]} alt="" />)}</div>
+          <div className="env-front"><span className="env-edge" /></div>
+          <div className="env-flap"><div className="env-flap-face" /><div className="env-flap-back" /></div>
+          <div className="env-seal"><img src={sindoor} alt="" /><img className="seal-ring" src={ring} alt="" /></div>
         </div>
       </div>
+      <p className="inv-hint">{c.hero.scroll}</p>
     </div>
   )
 }

@@ -1,74 +1,83 @@
 import { gsap } from 'gsap'
+import { petals } from '../components/petals.js'
 
-// The invitation scene, like a card arriving by hand: the envelope comes up, the sindoor seal
-// breaks into petals, the flap opens, the envelope drops away and leaves the card, the cover
-// opens like a book on the couple, and one page turns to the two families.
-// Only the paper moves; the camera never zooms.
-//
-// The book is two pages wide. xPercent -25 puts its right page in the middle of the screen,
-// +25 its left page, 0 the whole spread. A phone shows one page at a time, so there the book
-// slides from page to page; a wide screen shows the spread.
+// The invitation card, the same scene as the red-rose card site. This section is several screens tall
+// and its picture stays pinned; the scroll drives this timeline (see Scene.jsx, `scroll: true`):
+// the seal comes off, the flap opens, the card slides out lying on its side, the envelope drops away,
+// the card stands up, comes to the middle and grows to face you, and every page turns with the scroll.
+// One page = 300 x 420 envelope units; the envelope is 640 x 430 and is fitted to the screen with --fit.
+
+const PW = 300
+const PH = 420
+const clamp = (a, b, v) => Math.min(b, Math.max(a, v))
 
 export function playInvitation(tl, root) {
   const $ = (s) => root.querySelector(s)
   const $$ = (s) => [...root.querySelectorAll(s)]
-  const wide = root.clientWidth >= root.clientHeight
-  const env = $$('.env')
+  const stage = $('.stage')
+  const W = stage.clientWidth
+  const H = stage.clientHeight
   const book = $('.book')
-  const cover = $('.leaf-cover')
-  const leaf = $('.leaf-a')
-  const flap = $('.env-fl')
-  const seal = $('.seal')
-  const burst = $$('.burst img')
+  const wide = book.classList.contains('book-wide')
+  const leaves = $$('.leaf:not(.leaf-base)')
+  const env = $('.env-stage')
 
-  tl.set(book, { xPercent: -25, yPercent: 5 }, 0)
-  tl.set(flap, { zIndex: 4 }, 0)
-  tl.set(leaf, { zIndex: 2 }, 0)
+  const fit = clamp(0.42, 1.15, Math.min((W - 32) / 640, (H * 0.5) / 430))
+  env.style.setProperty('--fit', fit.toFixed(3))
+  // the card's size once it is out and facing you, and how far the envelope's centre sits below the middle
+  const S = wide
+    ? clamp(0.5, 3, Math.min((0.8 * H) / (PH * fit), (0.86 * W) / (2 * PW * fit)))
+    : clamp(0.5, 4, Math.min((0.74 * H) / (PH * fit), (0.88 * W) / (PW * fit)))
+  const off = env.offsetTop + env.offsetHeight / 2 - H / 2
 
-  // the envelope arrives with the card inside
-  tl.fromTo($('.inv-stage'), { yPercent: 160 }, { yPercent: 0, duration: 1.1, ease: 'power3.out' }, 0.1)
-  tl.fromTo($$('.iv-pais, .iv-mala'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 1.2, stagger: 0.08 }, 0)
+  tl.set(book, { rotation: -90, x: 0, y: 0, scale: 1, autoAlpha: 1, rotationX: 0 }, 0)
+  tl.set(leaves, { rotationY: 0, z: 0, autoAlpha: 1, '--sh': 0 }, 0)
+  leaves.forEach((l, i) => tl.set(l, { zIndex: leaves.length - i + 1 }, 0))
+  tl.set('.env-flap', { zIndex: 4 }, 0)
 
-  // the seal is pressed and breaks into petals
-  tl.fromTo(seal, { scale: 1 }, { scale: 0.88, duration: 0.14, yoyo: true, repeat: 1, ease: 'power1.inOut' }, 1.35)
-  tl.fromTo(seal, { autoAlpha: 1 }, { autoAlpha: 0, scale: 1.25, duration: 0.35, ease: 'power1.in' }, 1.65)
-  tl.fromTo(burst, { x: 0, y: 0, autoAlpha: 1, scale: 0.4, rotation: 0 }, {
-    x: (i) => Math.cos((i / burst.length) * 6.283 + 0.4) * (60 + (i % 3) * 26),
-    y: (i) => Math.sin((i / burst.length) * 6.283 + 0.4) * (46 + (i % 4) * 18) + 70,
-    rotation: (i) => (i % 2 ? 1 : -1) * (120 + i * 20),
-    scale: 1, autoAlpha: 0, duration: 1.3, ease: 'power2.out', stagger: 0.02,
-  }, 1.65)
+  tl.to({}, { duration: 0.3 })
+  tl.to('.env-seal', { scale: 0.4, autoAlpha: 0, duration: 0.6, ease: 'power2.in' }, 0.3)
+    .to('.env-flap', { rotationX: 180, duration: 1.1, ease: 'power2.inOut' }, 0.55)
+    .set('.env-flap', { zIndex: 1 }, 1.1)
+    // the card slides out lying on its side...
+    .to(book, { y: -235, duration: 1.4, ease: 'power2.out' }, 1.55)
+    .to('.inv-head', { autoAlpha: 0, y: -40, duration: 0.6 }, 0.45)
+    .to(['.env-back', '.env-front', '.env-flap'], { y: 560, autoAlpha: 0, duration: 1.2, ease: 'power2.in' }, 2.75)
+    // ...then stands up, comes to the middle and grows to face you
+    .to(book, { rotation: 0, y: -off / fit, scale: S, duration: 1.5, ease: 'power2.inOut' }, 2.9)
+    .fromTo('.inv-ring', { autoAlpha: 0, scale: 0.7 }, { autoAlpha: 0.32, scale: 1, duration: 1.6, ease: 'power2.out' }, 2.8)
+    .to({}, { duration: 0.6 })
 
-  // the flap opens and folds behind the card
-  tl.fromTo($('.flap'), { rotationX: 0 }, { rotationX: 180, duration: 0.9, ease: 'power2.inOut' }, 1.95)
-  tl.set(flap, { zIndex: 0 }, 2.4)
+  leaves.forEach((leaf, i) => {
+    const t = tl.duration()
+    const turn = 1.3
+    tl.set(leaf, { zIndex: 100 }, t)
+      .to(leaf, { rotationY: -180, duration: turn, ease: 'power1.inOut' }, t)
+      // the page lifts off the stack while it turns, and the light falls across it
+      .to(leaf, { z: 40, '--sh': 1, duration: turn / 2, ease: 'power1.out' }, t)
+      .to(leaf, { z: 0, '--sh': 0, duration: turn / 2, ease: 'power1.in' }, t + turn / 2)
+      .set(leaf, { zIndex: 10 + i }, t + turn)
+    // desktop: the opening cover slides the book over, so the open spread sits in the middle
+    if (wide && i === 0) tl.to(book, { x: (PW / 2) * S, duration: turn, ease: 'power1.inOut' }, t)
+    // phone: a turned page leaves the screen
+    if (!wide) tl.to(leaf, { autoAlpha: 0, duration: turn * 0.3 }, t + turn * 0.7)
+    // a few petals fall from the spine as each page goes over (only going forward)
+    tl.call(() => {
+      if (tl.reversed() || root.dataset.back === '1') return
+      const r = book.getBoundingClientRect()
+      const x = wide ? r.left + r.width / 2 : r.left
+      const box = document.createElement('div')
+      box.className = 'g-petals sc-petals'
+      document.body.appendChild(box)
+      petals(box, 9, { x, y: r.top + r.height * 0.25 })
+      setTimeout(() => box.remove(), 5500)
+    }, null, t + turn * 0.5)
+    tl.to({}, { duration: 1.1 })
+  })
 
-  // the envelope drops away and the card is pulled out of it
-  tl.fromTo(env, { yPercent: 0, autoAlpha: 1 }, { yPercent: 150, duration: 1.3, ease: 'power2.in' }, 2.95)
-  tl.set(env, { autoAlpha: 0 }, 4.25) // the open flap would still peep up from below
-  tl.to(book, { yPercent: -4, duration: 0.9, ease: 'power2.out' }, 2.95)
-  tl.to(book, { yPercent: 0, duration: 0.6, ease: 'power1.inOut' }, 3.85)
-
-  // the cover opens on the couple
-  const open = 4.5
-  tl.fromTo(cover, { rotationY: 0 }, { rotationY: -180, duration: 1.6, ease: 'power2.inOut' }, open)
-  if (wide) {
-    tl.to(book, { xPercent: 0, duration: 1.6, ease: 'power2.inOut' }, open)
-    // time to read the spread, then the page turns to the families
-    const turn = open + 1.6 + 4.2
-    tl.set(leaf, { zIndex: 5 }, turn)
-    tl.fromTo(leaf, { rotationY: 0 }, { rotationY: -180, duration: 1.6, ease: 'power2.inOut' }, turn)
-    return
-  }
-  tl.to(book, { xPercent: 25, duration: 1.6, ease: 'power2.inOut' }, open)
-  let t = open + 1.6 + 2.2
-  tl.to(book, { xPercent: -25, duration: 1, ease: 'power2.inOut' }, t)
-  t += 1 + 3.8
-  tl.set(leaf, { zIndex: 5 }, t)
-  tl.fromTo(leaf, { rotationY: 0 }, { rotationY: -180, duration: 1.6, ease: 'power2.inOut' }, t)
-  tl.to(book, { xPercent: 25, duration: 1.6, ease: 'power2.inOut' }, t)
-  t += 1.6 + 4.2
-  tl.to(book, { xPercent: -25, duration: 1, ease: 'power2.inOut' }, t)
+  // the mandala behind the card turns slowly with the pages
+  tl.fromTo('.inv-ring', { rotation: -30 }, { rotation: 60, duration: tl.duration(), ease: 'none' }, 0)
+  tl.to('.inv-hint', { autoAlpha: 0, duration: 0.4 }, tl.duration() - 0.6)
 }
 
 // petals keep falling for as long as the card is on screen
@@ -79,7 +88,7 @@ export function idleInvitation(q) {
     const x = ((i * 37) % 100) / 100
     return [
       gsap.fromTo(p, { left: `${x * 100}%`, y: '-8vh', x: 0, rotation: i * 40 },
-        { y: '108vh', x: (i % 2 ? 1 : -1) * (30 + (i % 5) * 12), rotation: `+=${(i % 2 ? 1 : -1) * 300}`, duration: 7 + (i % 5) * 1.3, delay: i * 0.55, repeat: -1, ease: 'none' }),
+        { y: '108vh', x: (i % 2 ? 1 : -1) * (30 + (i % 5) * 12), rotation: `+=${(i % 2 ? 1 : -1) * 300}`, duration: 8 + (i % 5) * 1.3, delay: i * 0.7, repeat: -1, ease: 'none' }),
       gsap.fromTo(p, { rotationX: 0 }, { rotationX: 70, duration: 0.7 + (i % 3) * 0.2, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
     ]
   })

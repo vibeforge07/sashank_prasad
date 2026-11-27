@@ -49,10 +49,10 @@ export default function App() {
   useEffect(() => {
     if (!open) return
     const io = new IntersectionObserver((es) => es.forEach((e) => {
-      const i = scenes.current.findIndex((s) => s.el === e.target)
+      const i = scenes.current.findIndex((s) => s.watch === e.target)
       if (e.isIntersecting) { scenes.current[i].enter(); setAt(i) } else scenes.current[i].exit()
     }), { root: scroller.current, threshold: 0.55 })
-    scenes.current.forEach((s) => io.observe(s.el))
+    scenes.current.forEach((s) => io.observe(s.watch))
     return () => io.disconnect()
   }, [open])
 
@@ -79,6 +79,15 @@ export default function App() {
     if (!open || !auto) return
     const s = scenes.current[at]
     let timer
+    // the invitation card turns with the scroll: autoplay scrolls through it slowly, then moves on
+    if (s.scroll) {
+      const sc = scroller.current
+      const end = s.el.offsetTop + s.el.offsetHeight - sc.clientHeight
+      const screens = (end - sc.scrollTop) / sc.clientHeight
+      const tw = gsap.to(sc, { scrollTop: end, duration: Math.max(1, screens * 4.4), ease: 'none', delay: 0.6,
+        onComplete: () => { timer = setTimeout(() => go(at + 1), s.hold * 1000) } })
+      return () => { tw.kill(); clearTimeout(timer) }
+    }
     const hold = () => { timer = setTimeout(() => (at < SCENES.length - 1 ? go(at + 1) : setAuto(false)), s.hold * 1000) }
     // the wedding date is revealed by the guest's own finger: wait for it before moving on
     const wait = () => (s.el.querySelector('.scratch:not(.done)') ? s.el.addEventListener('scratched', hold, { once: true }) : hold())
