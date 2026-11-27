@@ -51,7 +51,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 @container (max-aspect-ratio: 1/1) { #sangeet [data-l='sangeet-music'] { display: none; } }
 /* the Sangeet garden and the Wedding skyline: one way for laptops (-w), another for phones (-t) */
 @container (min-aspect-ratio: 1/1) { :is(#sangeet, #wedding) [data-l$='-t'] { display: none; } }
-@container (max-aspect-ratio: 1/1) { :is(#sangeet, #wedding) [data-l$='-w'] { display: none; } }
+@container (max-aspect-ratio: 1/1) {
+  :is(#sangeet, #wedding) [data-l$='-w'] { display: none; }
+  /* phones: the moon moves up and out past the words, clear of the lifted skyline */
+  #wedding .moon { bottom: calc(1330 * var(--u)) !important; left: calc(50% + 330 * var(--u)) !important; }
+}
+.layer .base { position: absolute; left: 0; right: 0; top: calc(100% - 1px); height: 100cqh; }
 .moon { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #fffbe8; box-shadow: 0 0 calc(60 * var(--u)) calc(18 * var(--u)) #fff2c488; }
 
 /* shown until the real picture for a layer arrives */
@@ -112,6 +117,12 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   #wedding [data-l='wedding-hanging'] { margin-top: calc(-70 * var(--u)); }
   #wedding .words { --top: 290 !important; }
   #wedding :is(.moon, [data-l^='cloud-']) { display: none; }
+  /* the garden and the skyline need room between the words and the stage: the stage and the people stand a
+     little smaller here, and the backdrop sits just under the words */
+  #sangeet :is([data-l='sangeet-stage-small'], [data-l='sangeet-groom'], [data-l='sangeet-bride'], [data-l^='candle-']),
+  #wedding :is([data-l='wedding-stage-small'], [data-l='wedding-sofa'], [data-l='wedding-couple'], [data-l^='banana-']) { --u: calc(100cqh / 2010 * .84); }
+  #sangeet [data-l='garden-t'] { bottom: calc(470 * var(--u)) !important; }
+  #wedding [data-l='city-t'] { bottom: calc(720 * var(--u)) !important; }
 }
 
 /* ---- wide screens: the words on a card at one side, the picture larger beside it ---- */

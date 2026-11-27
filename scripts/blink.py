@@ -10,12 +10,21 @@ import numpy as np
 from PIL import Image, ImageDraw
 from scipy import ndimage
 
-EYES = {  # figure: one list of eye centres per person
+EYES = {  # figure: one list of eye centres per person; (x, y, r) looks only r px around the centre (close-set eyes, glasses);
+         # ('box', x0, y0, x1, y1) is an eye too small to find (behind a lens), given by hand
     'wedding-couple': [[(355, 232), (404, 221)], [(944, 252), (1010, 260)]],
     'sangeet-groom': [[(425, 200), (470, 185)]],
     'reception-groom': [[(242, 115), (292, 105)]],
     'reception-bride': [[(262, 112), (325, 125)]],
     'tilak-elder': [[(490, 190)]],
+    'hero-groom': [[(238, 128), (288, 122, 18)]],
+    'hero-bride': [[(247, 122), (320, 135)]],
+    'briddhi-family': [[(236, 168, 20), ('box', 264, 155, 274, 165)], [(452, 196, 20), (494, 179, 20)], [(1095, 174, 22), (1145, 181, 22)]],
+    'tilak-groom': [[(357, 120), (410, 130)]],
+    'mehendi-couple': [[(473, 205, 24), (540, 180, 22)], [(903, 218), (970, 228)]],
+    'aibur-family': [[(383, 184, 18), (430, 178, 18)], [(650, 203, 24), (712, 210, 24)], [(964, 118, 18), (1016, 146, 18)], [(1113, 366, 16), (1155, 396, 16)]],
+    'haldi-couple': [[(460, 158, 26), (520, 138, 24)], [(928, 203), (993, 215)]],
+    'sangeet-bride': [[(458, 233), (522, 248)]],
 }
 SS = 4  # drawn this many times larger, then shrunk, for smooth edges
 LASH = (44, 26, 20)
@@ -71,8 +80,8 @@ def build(name, centres, out_name):
     W, H = fig.size
     big = Image.new('RGBA', (W * SS, H * SS), (0, 0, 0, 0))
     d = ImageDraw.Draw(big)
-    for cx, cy in centres:
-        x0, y0, x1, y1 = find_eye(a, cx, cy)
+    for c in centres:
+        x0, y0, x1, y1 = c[1:] if c[0] == 'box' else find_eye(a, *c)
         w, h = x1 - x0, y1 - y0
         pad = max(2, round(h * 0.1))
         skin = skin_near(a, (x0, y0, x1, y1), pad)
@@ -94,6 +103,10 @@ def build(name, centres, out_name):
 
 
 if __name__ == '__main__':
+    import sys
+    only = sys.argv[1:]
     for n, people in EYES.items():
+        if only and n not in only:
+            continue
         for k, c in enumerate(people):
             build(n, c, f'{n}-blink' + (str(k + 1) if k else ''))

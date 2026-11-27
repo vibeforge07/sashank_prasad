@@ -7,7 +7,7 @@ import { artUrl } from '../art/index.js'
 //   w,h size of the picture
 const u = (n) => `calc(${n} * var(--u))`
 
-export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall, repeat }) {
+export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall, repeat, base }) {
   const name = art || id
   const url = artUrl(name)
   // a backdrop drawn so its two ends meet: it repeats across the whole width at its own height,
@@ -43,13 +43,15 @@ export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b',
   }
   const look = { transform: flip ? 'scaleX(-1)' : undefined, objectFit: fit, maxHeight: full && kind === 'ground' ? u(h * 1.25) : undefined, objectPosition: `${side} ${ay === 'b' ? 'bottom' : 'top'}` }
   // closed eyes for a blink (scripts/blink.py), one picture per person, laid exactly over the figure
-  const lids = kind === 'person' ? [artUrl(`${name}-blink`), artUrl(`${name}-blink2`)].filter(Boolean) : []
+  const lids = kind === 'person' ? ['', 2, 3, 4].map((n) => artUrl(`${name}-blink${n}`)).filter(Boolean) : []
   return (
     <div className={`layer k-${kind}${full ? ' strip' : ''} at-${ay}`} data-l={id} style={style}>
       <div className="layer-in">
         {url
           ? <img src={url} alt="" draggable="false" decoding="async" loading="lazy" style={look} />
           : <span className="todo"><i>{name}</i></span>}
+        {/* a backdrop lifted above the stage: its ground carries on down behind the stage, in its own bottom colour */}
+        {url && base && <i className="base" style={{ background: base }} />}
         {url && lids.map((l) => <img key={l} className="blink" src={l} alt="" draggable="false" decoding="async" loading="lazy" style={look} />)}
       </div>
     </div>

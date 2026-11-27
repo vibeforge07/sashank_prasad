@@ -174,9 +174,10 @@ export const SCENES = [
     layers: [
       // a garden of fairy-lit trees behind the stage, the dance floor in front of it, and on laptops the dhol and
       // harmonium beside the groom
-      // laptops: the garden repeats across the whole width; phones: one garden, lifted so its lit trees show above the stage
+      // laptops: the garden repeats across the whole width; phones: the whole garden, as wide as the screen,
+      // lifted so its lit trees show above the stage, its lawn carrying on down behind it
       L('garden-w', 1500, 645, { art: 'sangeet-garden', y: 150, z: 1, repeat: true }),
-      L('garden-t', 1300, 559, { art: 'sangeet-garden', y: 640, z: 1 }),
+      L('garden-t', 1080, 464, { art: 'sangeet-garden', y: 820, z: 1, full: true, base: '#8c8401' }),
       L('sangeet-floor', 2200, 267, { z: 1, full: true, kind: 'ground' }),
       L('sangeet-music', 420, 189, { y: 40, x: -720, z: 4 }),
       L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
@@ -212,9 +213,10 @@ export const SCENES = [
       L('cloud-l', 380, 167, { art: 'cloud-night', ax: 'l', x: -150, y: 1250, z: 1 }),
       L('cloud-r', 440, 193, { art: 'cloud-night', ax: 'r', x: -190, y: 1080, z: 1, flip: true }),
       // the bride's Kolkata and the groom's Jamshedpur on the skyline behind the stage, the red carpet with its alpana
-      // laptops: the skyline spans the whole width; phones: lifted so Howrah Bridge shows above the stage
+      // laptops: the skyline spans the whole width; phones: the whole skyline, as wide as the screen, lifted above
+      // the stage so Howrah Bridge to the Diamond all show, its garden carrying on down behind the stage
       L('city-w', 2200, 605, { art: 'wedding-city-art', y: 300, z: 2, full: true }),
-      L('city-t', 1300, 358, { art: 'wedding-city-art', y: 680, z: 2 }),
+      L('city-t', 1080, 297, { art: 'wedding-city-art', y: 900, z: 2, full: true, base: '#143310' }),
       L('wedding-floor', 2200, 330, { z: 2, full: true, kind: 'ground' }),
       L('wedding-stage-small', 1000, 621, { y: 330, z: 3 }),
       L('wedding-hanging', 1100, 350, { full: true, ay: 't', y: -24, z: 4 }),
