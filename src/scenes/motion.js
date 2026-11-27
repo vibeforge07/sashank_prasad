@@ -41,5 +41,19 @@ export const idle = {
   sway: (q, id, deg = 1.5, dur = 2.6, origin = '50% 0%') => gsap.fromTo(inner(q, id), { rotation: -deg }, { rotation: deg, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: origin }),
   breathe: (q, id, dur = 1.8, amount = 0.008) => gsap.fromTo(inner(q, id), { scaleY: 1 }, { scaleY: 1 + amount, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 100%' }),
   lean: (q, id, deg = 1.2, dur = 1.6) => gsap.fromTo(inner(q, id), { rotation: -deg * 0.4 }, { rotation: deg, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 100%' }),
+  // the groom's hand at Haldi: rubs her cheek twice, lifts back into his sleeve, waits, comes back.
+  // The forearm pivots at his cuff (757, 362 in the 1400 x 948 picture); moves are in % of the picture.
+  haldi: (q, id) => {
+    const img = q(id)?.querySelector('img')
+    if (!img) return null
+    const t = gsap.timeline({ repeat: -1, repeatDelay: 0.4, defaults: { transformOrigin: '54.07% 38.19%' } })
+    t.to(img, { rotation: -1.6, duration: 0.32, ease: 'sine.inOut' })
+      .to(img, { rotation: 0.6, duration: 0.32, ease: 'sine.inOut' })
+      .to(img, { rotation: -1.6, duration: 0.32, ease: 'sine.inOut' })
+      .to(img, { rotation: 0, duration: 0.3, ease: 'sine.inOut' })
+      .to(img, { rotation: 4, xPercent: -2.1, yPercent: 2.8, duration: 0.75, ease: 'power2.inOut' }, '+=0.3')
+      .to(img, { rotation: 0, xPercent: 0, yPercent: 0, duration: 0.75, ease: 'power2.inOut' }, '+=0.9')
+    return t
+  },
   hinge: (q, id, from, to, dur, origin) => gsap.fromTo(inner(q, id), { rotation: from }, { rotation: to, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: origin }),
 }
