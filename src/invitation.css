@@ -1,0 +1,108 @@
+/* ---- the invitation card: envelope, seal, cover, pages (motion in scenes/invitation.js) ---- */
+/* --pw / --ph: one page of the card. A phone sees one page, a wide screen the open spread. */
+.inv { position: absolute; inset: 0; z-index: 20; --pw: min(84cqw, 62cqh * .72); --ph: calc(var(--pw) / .72); --gold: #e0b45a; }
+@container (min-aspect-ratio: 1/1) { .inv { --pw: min(74cqh * .72, 31cqw); } }
+.inv-decor, .inv-petals { position: absolute; inset: 0; pointer-events: none; }
+.inv-decor { z-index: 0; }
+.iv-toran { position: absolute; z-index: 3; top: -1px; left: 0; right: 0; height: min(15cqw, 15cqh, 120px); background: 50% 0 / auto 100% repeat-x; }
+.iv-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9cqh, 80px); background: 50% 100% / auto 100% repeat-x; }
+.iv-pais { position: absolute; top: 14cqh; width: min(40cqw, 46cqh); opacity: .55; }
+.iv-pais-l { left: 0; }
+.iv-pais-r { right: 0; scale: -1 1; }
+.iv-mala { position: absolute; z-index: 2; display: none; height: 62cqh; top: calc(var(--len) - 62cqh); width: auto; }
+.iv-mala-l { left: calc(var(--i) * 6cqh + .6cqw); }
+.iv-mala-r { right: calc(var(--i) * 6cqh + .6cqw); }
+.iv-m1 { --i: 0; --len: 54cqh; }
+.iv-m2 { --i: 1; --len: 46cqh; }
+.iv-m3 { --i: 2; --len: 38cqh; }
+@container (min-aspect-ratio: 1/1) { .iv-mala { display: block; } }
+.inv-petals { z-index: 9; overflow: hidden; }
+.inv-petals img { position: absolute; top: 0; width: calc(var(--pw) * .07); height: auto; }
+
+/* everything is placed around the middle of the screen; the stage is the size of one page */
+.inv-stage { position: absolute; z-index: 5; left: 50%; top: calc(50% - 2cqh); width: var(--pw); height: var(--ph); margin: calc(var(--ph) / -2) 0 0 calc(var(--pw) / -2); }
+@container (min-aspect-ratio: 1/1) { .inv-stage { top: calc(50% + 3cqh); } }
+
+/* the envelope, one size bigger than the card, in three layers so the card can sit inside it */
+.env { position: absolute; left: -5%; top: -2.5%; width: 110%; height: 105%; pointer-events: none; }
+.env-b { z-index: 1; }
+.env-fl { z-index: 4; perspective: calc(var(--pw) * 3); }
+.env-f { z-index: 3; filter: drop-shadow(0 calc(var(--pw) * .03) calc(var(--pw) * .05) #3a061866); }
+.env-b i { position: absolute; inset: 0; border-radius: calc(var(--pw) * .02); background: linear-gradient(#cdb07a, #e6d2a4 45%); }
+.pocket, .flap { position: absolute; background: url(./opening/paper.webp) 50% 50% / cover, #f6e8c8; }
+.pocket { inset: 0; border-radius: calc(var(--pw) * .02); clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%); }
+.folds { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.folds path { fill: none; stroke: #b98a46; stroke-width: 1.4; vector-effect: non-scaling-stroke; opacity: .6; }
+.flap { left: 0; right: 0; top: 0; height: 58%; transform-origin: 50% 0; clip-path: polygon(0 0, 100% 0, 50% 100%); background-color: #f1dfb8; }
+.flap::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#0000 60%, #7a4a1a1f); }
+.seal { position: absolute; left: 50%; top: 58%; width: calc(var(--pw) * .3); aspect-ratio: 1; margin: calc(var(--pw) * -.15); display: grid; place-items: center; }
+.seal > img { grid-area: 1 / 1; width: 62%; height: auto; }
+.seal .seal-ring { width: 100%; }
+.burst { position: absolute; left: 50%; top: 58%; width: 0; height: 0; }
+.burst img { position: absolute; width: calc(var(--pw) * .08); height: auto; margin: calc(var(--pw) * -.04); opacity: 0; }
+
+/* the book: two pages wide, centred on the stage's page; leaves turn on the spine */
+.book { position: absolute; z-index: 2; top: 0; left: -50%; width: 200%; height: 100%; perspective: calc(var(--pw) * 5); }
+.pg-base, .leaf { position: absolute; left: 50%; top: 0; width: 50%; height: 100%; }
+.pg-base { z-index: 1; }
+.leaf { transform-style: preserve-3d; transform-origin: 0 50%; }
+.leaf-a { z-index: 2; }
+.leaf-cover { z-index: 3; }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.face.back { transform: rotateY(180deg); }
+.pg { border-radius: 0 calc(var(--pw) * .02) calc(var(--pw) * .02) 0; color: var(--ink); text-align: center;
+  background: linear-gradient(90deg, #0000001c, #0000 9%), url(./opening/paper.webp) 50% 50% / cover, #fbf1dc;
+  box-shadow: inset 0 0 0 calc(var(--pw) * .03) #0000, inset 0 0 0 calc(var(--pw) * .034) var(--gold), 0 calc(var(--pw) * .02) calc(var(--pw) * .05) #2a03104d; }
+.face.back.pg { border-radius: calc(var(--pw) * .02) 0 0 calc(var(--pw) * .02); background: linear-gradient(270deg, #0000001c, #0000 9%), url(./opening/paper.webp) 50% 50% / cover, #fbf1dc; }
+.pg-in { position: absolute; inset: calc(var(--pw) * .08) calc(var(--pw) * .09); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--pw) * .024); line-height: 1.3; }
+.pg-in span { display: block; white-space: pre-line; }
+.inv .shloka { font-size: calc(var(--pw) * .04); margin: 0; color: #8a4a33; }
+.inv .req { font-size: calc(var(--pw) * .052); }
+.inv .nm { font: 400 calc(var(--pw) * .08) / 1.15 var(--display); color: var(--crimson); text-wrap: balance; }
+.inv .amp2 { font-size: calc(var(--pw) * .045); letter-spacing: .12em; color: #8a4a33; }
+:lang(bn) .inv .amp2, :lang(hi) .inv .amp2 { letter-spacing: 0; font-size: calc(var(--pw) * .055); }
+.inv .kin { font-size: calc(var(--pw) * .048); margin: 0; }
+.inv .kin em { display: block; font-size: .88em; color: #8a4a33; }
+.orn { display: block; width: 46%; height: calc(var(--pw) * .03); flex: none;
+  background: radial-gradient(circle, var(--gold) 0 34%, #0000 40%) 50% 50% / calc(var(--pw) * .03) 100% no-repeat, linear-gradient(var(--gold), var(--gold)) 50% 50% / 100% 1px no-repeat; }
+
+/* the cover: crimson board, gold border, the seal ring on top */
+.cover { border-radius: 0 calc(var(--pw) * .02) calc(var(--pw) * .02) 0; color: var(--cream); text-align: center; padding: calc(var(--pw) * .1);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: calc(var(--pw) * .04);
+  background: radial-gradient(90% 60% at 50% 35%, #c21f48, #9a1034 70%, #7d0a29);
+  box-shadow: inset 0 0 0 calc(var(--pw) * .028) #0000, inset 0 0 0 calc(var(--pw) * .033) var(--gold), inset 0 0 0 calc(var(--pw) * .045) #0000, inset 0 0 0 calc(var(--pw) * .048) #e0b45a99, 0 calc(var(--pw) * .03) calc(var(--pw) * .06) #2a031066; }
+.cv-ring { width: 40%; height: auto; }
+.cv-title { font: 400 calc(var(--pw) * .12) / 1.1 var(--display); color: #f6d38a; }
+:lang(en) .cv-title { font-size: calc(var(--pw) * .1); }
+.cv-names { font: 400 calc(var(--pw) * .07) / 1.25 var(--display); }
+.cv-names span { display: block; }
+.cv-names small { display: block; font: italic calc(var(--pw) * .05) / 1.4 var(--body); color: #f6d38a; }
+:lang(bn) .cv-names small, :lang(hi) .cv-names small { font-style: normal; }
+.cv-date { font-size: calc(var(--pw) * .046); color: #f9e3b4; }
+
+/* the couple under an arch, on the back of the cover */
+.inv-word { font-size: calc(var(--pw) * .05); color: var(--crimson); }
+.arch { position: relative; width: 76%; aspect-ratio: .8; flex: none; overflow: hidden; border-radius: 50% 50% 2% 2% / 36% 36% 2% 2%;
+  background: linear-gradient(#0000 80%, #e8c99a 80%), linear-gradient(#a9cbe0, #d9e2dc 62%, #f3dcb6);
+  box-shadow: inset 0 0 0 calc(var(--pw) * .012) var(--gold), 0 0 0 calc(var(--pw) * .01) #fbf1dc, 0 0 0 calc(var(--pw) * .014) #c9953f; }
+.arch img { position: absolute; bottom: 3%; height: 86%; width: auto; }
+.arch-g { left: 3%; }
+.arch-b { right: 1%; }
+
+/* ---- the wedding date under gold foil, and the calendar it opens ---- */
+.words .scratch { position: relative; display: inline-block; min-width: calc(520 * var(--u)); padding: calc(16 * var(--u)) calc(44 * var(--u)); border-radius: calc(14 * var(--u)); }
+.scratch canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.scratch .sc-date { display: inline-block; }
+.scratch.done { background: #b3123f; color: #fff4dc; box-shadow: 0 0 0 1px #e0b45a, 0 6px 22px #0006; }
+.scratch.done canvas { pointer-events: none; }
+.sc-petals { position: fixed; z-index: 40; }
+.cal { height: 0; overflow: hidden; visibility: hidden; }
+.cal-h { margin-top: calc(14 * var(--u)); font-size: calc(34 * var(--u)); }
+.cal-g { display: grid; grid-template-columns: repeat(7, calc(68 * var(--u))); justify-content: center; row-gap: calc(4 * var(--u)); margin-top: calc(6 * var(--u)); font-size: calc(36 * var(--u)); line-height: 1.5; }
+.cal-h { font-size: calc(40 * var(--u)); }
+@container (min-aspect-ratio: 1/1) { .cal-g { grid-template-columns: repeat(7, calc(52 * var(--u))); font-size: calc(28 * var(--u)); } .cal-h { font-size: calc(34 * var(--u)); } }
+.cal-g b { font-weight: 400; opacity: .7; }
+.cal-g i { position: relative; font-style: normal; }
+.cal-g i.on { color: #ffd27a; font-weight: 600; }
+.cal-g svg { position: absolute; left: 50%; top: 50%; width: 150%; translate: -50% -50%; overflow: visible; }
+.cal-g ellipse { fill: none; stroke: #ff6f8e; stroke-width: 2.4; stroke-dasharray: 1; stroke-dashoffset: 1; }

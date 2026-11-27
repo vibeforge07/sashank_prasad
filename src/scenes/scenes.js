@@ -1,4 +1,5 @@
 import { slide, rise, lines, idle } from './motion.js'
+import { playInvitation, idleInvitation } from './invitation.js'
 
 // Each scene: sky, layers, where its text sits, the intro timeline and the idle motion.
 // `leave` is how autoplay goes to the next scene: a hard cut or a cross-fade, as in the film.
@@ -51,21 +52,12 @@ export const SCENES = [
       idle.drive(q, 'taxi-w', 11, 1.5), idle.drive(q, 'tram-w', 30, 0), idle.drive(q, 'taxi-t', 8, 1.5), idle.drive(q, 'tram-t', 20, 0)],
   },
   {
-    id: 'family', card: 'right', sky: RIVER, tone: 'day', text: { top: 100 }, leave: 'cut', hold: 5,
-    layers: [
-      L('sunrise', 1500, 620, { y: 300, z: 1, full: true, kind: 'ground', fit: 'cover' }),
-      ...clouds(), ground('river-ground', 690, 3),
-      L('river-boat', 260, 120, { x: 250, y: BOAT_Y, z: 4 }),
-      L('foliage-l', 480, 480, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -70, z: 8, kind: 'plant' }),
-      ...flowers('flowers-lotus'),
-    ],
-    play(tl, q, root) {
-      slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.1, 0.9)
-      slide(tl, q, 'foliage-l', 'up', 0.3, 1.2)
-      slide(tl, q, 'river-props', 'left', 0.75, 0.9)
-      lines(tl, root, 1.9, { step: 0.5 })
-    },
-    idle: (q) => [...cloudIdle(q), ...petals(q), idle.sway(q, 'foliage-l', 1.2, 3.2, '0% 0%'), idle.drift(q, 'river-boat', 60, 8)],
+    // the invitation card itself: envelope, seal, cover, pages (scenes/invitation.js),
+    // on the crimson of the opening seal, under the same toran and marigold strands
+    id: 'family', own: true, sky: 'radial-gradient(110% 80% at 50% 45%, #a8183c 0%, #911033 55%, #6f0a26 100%)', tone: 'day', text: { top: 0 }, leave: 'cut', hold: 7,
+    layers: [],
+    play: (tl, q, root) => playInvitation(tl, root),
+    idle: (q) => idleInvitation(q),
   },
   {
     id: 'briddhi', sky: RIVER, tone: 'day', text: { top: 220 }, leave: 'cut', hold: 4,
@@ -142,7 +134,8 @@ export const SCENES = [
       L('sunrise', 1500, 620, { y: 400, z: 1, full: true, kind: 'ground', fit: 'cover' }),
       ...clouds(), L('hero-ground', 2200, 880, { z: 2, full: true, kind: 'ground', fit: 'cover' }),
       L('haldi-backdrop', 1020, 800, { y: 190, z: 3 }),
-      person('haldi-couple', 1000, 677, 20, 70, 5),
+      // the groom's forearm is its own picture so his hand can put haldi on her cheek; the cuff sits over its root
+      person('haldi-couple', 1000, 677, 20, 70, 5), person('haldi-arm', 1000, 677, 20, 70, 6), person('haldi-cuff', 1000, 677, 20, 70, 6),
       L('drape-l', 260, 1500, { art: 'haldi-drape', ax: 'l', x: -40, ay: 't', y: -20, z: 7 }),
       L('drape-r', 260, 1500, { art: 'haldi-drape', ax: 'r', x: -40, ay: 't', y: -20, z: 7, flip: true }),
       ...foliage(), ...flowers('flowers-yellow'),
@@ -152,10 +145,10 @@ export const SCENES = [
       slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['foliage-l', 'foliage-r'], 'up', 0.4, 1.2)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.4, 1)
-      slide(tl, q, 'haldi-couple', 'right', 1, 1.2)
+      for (const id of ['haldi-couple', 'haldi-arm', 'haldi-cuff']) slide(tl, q, id, 'right', 1, 1.2)
       lines(tl, root, 2.6)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), idle.breathe(q, 'haldi-couple')],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...leaves(q), ...['haldi-couple', 'haldi-arm', 'haldi-cuff'].map((id) => idle.breathe(q, id)), idle.haldi(q, 'haldi-arm')],
   },
   {
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 215 }, leave: 'cut', hold: 4,
