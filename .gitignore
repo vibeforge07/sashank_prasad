@@ -6,3 +6,4 @@ dist/
 .claude/
 *.log
 src/content/contact.js
+__pycache__/
