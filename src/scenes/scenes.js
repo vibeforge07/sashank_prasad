@@ -157,11 +157,11 @@ export const SCENES = [
   },
   {
     // the reference film's Sangeet: a purple night, strands of flowers and lights hanging from the top,
-    // three flower-lit arches on a stage, candle stands at the sides, the couple dancing in front
+    // the client's lavender-and-gold stage (redrawn in the site's style), candle stands at the sides, the couple dancing in front
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 250 }, leave: 'cut', hold: 4,
     layers: [
       L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
-      L('sangeet-arches', 1750, 1080, { y: 0, z: 2 }),
+      L('sangeet-stage-art', 1750, 1002, { y: 0, z: 2 }),
       L('candle-l', 200, 763, { art: 'sangeet-candles', ax: 'l', x: 6, y: 70, z: 4 }),
       L('candle-r', 200, 763, { art: 'sangeet-candles', ax: 'r', x: 6, y: 70, z: 4, flip: true }),
       person('sangeet-groom', 520, 800, -170, 150, 5), person('sangeet-bride', 560, 790, 150, 140, 6),
@@ -179,17 +179,14 @@ export const SCENES = [
     idle: (q) => [...petals(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
   },
   {
-    // the reference film's Wedding: a moonlit night, the terracotta palace and the white temple lit up
-    // behind their hedges (scripts/wedding-night.py), the couple side by side on a sofa on the carpet
+    // the reference film's Wedding: a moonlit night, the client's maroon-and-gold stage (redrawn in the site's style)
+    // on the carpet, the couple side by side on their sofa on the stage
     id: 'wedding', sky: WED, tone: 'wedding', stars: true, moon: { x: 230, y: 1130, s: 120 }, text: { top: 150 }, leave: 'fade', hold: 5,
     layers: [
       L('cloud-l', 380, 167, { art: 'cloud-night', ax: 'l', x: -150, y: 1250, z: 1 }),
       L('cloud-r', 440, 193, { art: 'cloud-night', ax: 'r', x: -190, y: 1080, z: 1, flip: true }),
-      // laptops (-w): the palace low behind the couple; phones (-t): higher, above their heads, on a longer carpet
-      L('night-w', 3400, 647, { art: 'wedding-night', y: 200, z: 3, full: true, kind: 'ground' }),
-      L('carpet-w', 3400, 255, { art: 'carpet', z: 2, full: true, kind: 'ground' }),
-      L('night-t', 3400, 647, { art: 'wedding-night', y: 540, z: 3, full: true, kind: 'ground' }),
-      L('carpet-t', 3400, 580, { art: 'carpet-tall', z: 2, full: true, kind: 'ground' }),
+      L('carpet', 3400, 255, { z: 2, full: true, kind: 'ground' }),
+      L('wedding-stage-art', 1800, 1017, { y: 0, z: 3 }),
       L('wedding-sofa', 1180, 475, { y: 70, z: 5 }),
       person('wedding-couple', 1020, 737, 0, 95, 6),
       ...flowers('flowers-yellow'),
@@ -202,11 +199,11 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), idle.breathe(q, 'wedding-couple')],
   },
   {
-    // the Reception in the same hand: a palace arch at night with lanterns hanging inside it,
-    // the couple under it on the carpet, the feast in front
+    // the Reception in the same hand: the client's reception stage (redrawn in the site's style) under the night,
+    // lanterns hanging at its sides, the couple in front of it on the carpet, the feast in front
     id: 'reception', sky: RECEPTION, tone: 'stage', stars: true, text: { top: 170 }, leave: 'fade', hold: 4,
     layers: [
-      L('reception-arch', 2600, 867, { y: 150, z: 2 }),
+      L('reception-stage-art', 1900, 1275, { y: 0, z: 2 }),
       L('carpet', 3400, 255, { z: 3, full: true, kind: 'ground' }),
       L('lantern-l', 300, 417, { art: 'reception-lanterns', x: -410, y: 590, z: 3 }),
       L('lantern-r', 300, 417, { art: 'reception-lanterns', x: 410, y: 590, z: 3, flip: true }),

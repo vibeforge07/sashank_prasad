@@ -104,8 +104,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* Sangeet: the flower strands hang a little higher, the words sit a little lower */
   #sangeet [data-l='sangeet-hanging'] { margin-top: calc(-70 * var(--u)); }
   #sangeet .words { --top: 280 !important; }
-  #sangeet [data-l='sangeet-arches'] { margin-bottom: calc(-160 * var(--u)); }
-  /* Wedding: no sky left between the words and the palace, so the moon and clouds go up to the corners */
+  #sangeet [data-l='sangeet-stage-art'] { margin-bottom: calc(-160 * var(--u)); }
+  /* Reception: the stage sits lower, so its chandelier stays clear of the address */
+  #reception [data-l='reception-stage-art'] { margin-bottom: calc(-150 * var(--u)); }
+  /* Wedding: no sky left between the words and the stage, so the moon and clouds go up to the corners */
   #wedding .moon { bottom: auto !important; left: auto !important; top: calc(40 * var(--u)); right: calc(70 * var(--u)); }
   #wedding [data-l='cloud-l'] { bottom: auto !important; top: calc(30 * var(--u)); }
   #wedding [data-l='cloud-r'] { bottom: auto !important; top: calc(150 * var(--u)); }
@@ -217,8 +219,16 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
 .i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
 /* first page: the tall backdrop on phones, the wide one on laptops */
-@container (min-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-t'] { display: none; } }
-@container (max-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-w'] { display: none; } }
+@container (min-aspect-ratio: 1/1) { #hero [data-l$='-t'] { display: none; } }
+@container (max-aspect-ratio: 1/1) { #hero [data-l$='-w'] { display: none; } }
+/* the client's stages are whole paintings with square edges: their sides and top fade into the night,
+   so on a laptop no box shows around them (on a phone the sides are off the screen anyway) */
+[data-l$='-stage-art'] {
+  -webkit-mask-image: linear-gradient(90deg, #0000, #000 11%, #000 89%, #0000), linear-gradient(#0000, #000 8%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, #0000, #000 11%, #000 89%, #0000), linear-gradient(#0000, #000 8%);
+  mask-composite: intersect;
+}
 /* tall phones have sky to spare between the names and the city: the city, the couple and the tram come up
    (at most 400 units), and the floor picture fills in below them */
 @container (max-aspect-ratio: 53/100) { #hero .world { --lift: min(400 * var(--u), max(0px, (100cqh - 1920 * var(--u)) * 0.6)); } }
