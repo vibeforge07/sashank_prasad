@@ -51,24 +51,6 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
     return () => { off(); ctx.revert() }
   }, [scene, lang, size]) // a new language swaps the words, so the text tweens are rebuilt
 
-  // on a phone a stage picture fills the screen only below the words (`below`, see styles.css):
-  // --wb is where the words end, counting the wedding calendar as already open so nothing jumps
-  useLayoutEffect(() => {
-    if (!scene.below) return
-    const el = root.current
-    const w = el.querySelector('.words')
-    const set = () => {
-      const cal = w.querySelector('.cal')
-      const extra = cal ? cal.scrollHeight - cal.offsetHeight : 0
-      el.style.setProperty('--wb', `${Math.round(w.offsetTop + w.offsetHeight + extra)}px`)
-    }
-    const ro = new ResizeObserver(set)
-    ro.observe(w)
-    ro.observe(el)
-    set()
-    return () => ro.disconnect()
-  }, [scene, lang])
-
   useImperativeHandle(ref, () => ({
     el: root.current,
     leave: scene.leave,
