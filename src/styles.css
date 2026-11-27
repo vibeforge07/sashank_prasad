@@ -35,6 +35,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* on wide screens the ground stretches sideways only: keep its horizon, lose some floor */
 .strip.k-ground img { object-fit: cover !important; object-position: center top !important; }
 .strip.at-t img { top: 0; }
+/* the wedding carpet keeps its alpana and loses the plantains drawn at its two far ends */
+#wedding [data-l='wedding-floor'] img { object-position: center bottom !important; }
 .k-frame img { position: static; height: 100% !important; object-fit: fill !important; }
 .stars { position: absolute; inset: 0 0 45% 0; opacity: .8; background:
   radial-gradient(1.4px 1.4px at 12% 18%, #fff, #0000), radial-gradient(1px 1px at 28% 42%, #fff, #0000),
@@ -42,6 +44,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   radial-gradient(1.5px 1.5px at 71% 21%, #fff, #0000), radial-gradient(1px 1px at 83% 48%, #fff, #0000),
   radial-gradient(1.2px 1.2px at 93% 10%, #fff, #0000), radial-gradient(1px 1px at 36% 66%, #fff, #0000);
   background-size: 310px 340px; }
+/* a layer of gold sparkles over the night skies, finer than the stars */
+.sparkle { position: absolute; inset: 0 0 35% 0; opacity: .55; background: 50% 0 / min(70cqw, 520px) auto repeat;
+  mask: linear-gradient(#000 60%, #0000); }
+/* the dhol and harmonium need the room a laptop gives beside the dancers */
+@container (max-aspect-ratio: 1/1) { #sangeet [data-l='sangeet-music'] { display: none; } }
 .moon { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #fffbe8; box-shadow: 0 0 calc(60 * var(--u)) calc(18 * var(--u)) #fff2c488; }
 
 /* shown until the real picture for a layer arrives */
@@ -97,8 +104,6 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* Sangeet: the flower strands hang a little higher, the words sit a little lower */
   #sangeet [data-l='sangeet-hanging'] { margin-top: calc(-70 * var(--u)); }
   #sangeet .words { --top: 280 !important; }
-  /* Reception: the stage sits lower, so its chandelier stays clear of the address */
-  #reception [data-l='reception-stage-art'] { margin-bottom: calc(-150 * var(--u)); }
   /* Wedding: the toran hangs a little higher and the words sit a little lower, so the bells stay clear of
      them; no sky is left for the moon and clouds */
   #wedding [data-l='wedding-hanging'] { margin-top: calc(-70 * var(--u)); }

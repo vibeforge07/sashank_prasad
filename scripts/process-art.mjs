@@ -10,9 +10,9 @@ const OUT = 'src/art'
 const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
-const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape)/ // meant to run off the picture
+const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape|date-arch|date-corner|\w+-tile)/ // meant to run off the picture
 // (a small stage stands on its own, so it is not a strip)
-const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon)/
+const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon|-floor|-garden|-wall|-ledge|-city-art|date-arch-wide)/
 // backgrounds a phone shows larger than they were drawn (a wide strip shows only its middle there, at about
 // 1.5 times its pixels): written at twice their size and sharpened, so the ink lines stay crisp on the phone
 // instead of being stretched soft by the browser
@@ -20,6 +20,9 @@ const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-
 
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)
+// a repeating tile keeps its whole frame (trimming it would break the repeat)
+const TILE = /-tile$/
+
 const SPLIT = {
   'haldi-groom': { part: 'haldi-arm', keep: [0.564, 0, 1, 0.467], cut: [0.587, 0, 1, 0.467] },
 }
@@ -92,7 +95,7 @@ async function one(file) {
   } else if (!bad && !EDGE.test(name)) {
     if (x0 < 2 || x1 > W - 3 || y0 < 2 || y1 > H - 3) bad = 'CHECK, touches the picture edge, probably cut off'
   }
-  const box = WIDE.test(name)
+  const box = TILE.test(name) ? { left: 0, top: 0, width: W, height: H } : WIDE.test(name)
     ? { left: 0, top: y0, width: W, height: y1 - y0 + 1 }
     : { left: x0, top: y0, width: x1 - x0 + 1, height: y1 - y0 + 1 }
   const sharpOne = SHARP.test(name)

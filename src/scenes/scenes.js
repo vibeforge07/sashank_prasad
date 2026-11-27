@@ -172,6 +172,11 @@ export const SCENES = [
     // at the bottom, candle stands at the sides, the couple dancing in front
     id: 'sangeet', sky: STAGE, tone: 'stage', stars: true, text: { top: 250 }, leave: 'cut', hold: 4,
     layers: [
+      // a garden of fairy-lit trees behind the stage, the dance floor in front of it, and on laptops the dhol and
+      // harmonium beside the groom
+      L('sangeet-garden', 1500, 645, { y: 150, z: 1 }),
+      L('sangeet-floor', 2200, 267, { z: 1, full: true, kind: 'ground' }),
+      L('sangeet-music', 420, 189, { y: 40, x: -720, z: 4 }),
       L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
       L('sangeet-stage-small', 1250, 668, { y: 330, z: 2 }),
       L('drape-l', 330, 790, { art: 'sangeet-drape', ax: 'l', x: -60, ay: 't', y: -10, z: 2 }),
@@ -183,6 +188,7 @@ export const SCENES = [
     ],
     play(tl, q, root) {
       slide(tl, q, 'sangeet-hanging', 'up', 0, 1.1)
+      slide(tl, q, 'sangeet-music', 'left', 0.6, 1.1)
       slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
       slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['candle-l'], 'left', 0.1, 1.1)
@@ -202,7 +208,9 @@ export const SCENES = [
     layers: [
       L('cloud-l', 380, 167, { art: 'cloud-night', ax: 'l', x: -150, y: 1250, z: 1 }),
       L('cloud-r', 440, 193, { art: 'cloud-night', ax: 'r', x: -190, y: 1080, z: 1, flip: true }),
-      L('carpet', 3400, 255, { z: 2, full: true, kind: 'ground' }),
+      // the bride's Kolkata and the groom's Jamshedpur on the skyline behind the stage, the red carpet with its alpana
+      L('wedding-city-art', 1800, 495, { y: 200, z: 2 }),
+      L('wedding-floor', 2200, 330, { z: 2, full: true, kind: 'ground' }),
       L('wedding-stage-small', 1000, 621, { y: 330, z: 3 }),
       L('wedding-hanging', 1100, 350, { full: true, ay: 't', y: -24, z: 4 }),
       L('drape-l', 330, 842, { art: 'wedding-drape', ax: 'l', x: -60, ay: 't', y: -10, z: 3 }),
@@ -226,27 +234,35 @@ export const SCENES = [
     idle: (q) => [...cloudIdle(q), ...petals(q), ...drapes(q), idle.sway(q, 'banana-l', 1, 3.4, '50% 100%'), idle.sway(q, 'banana-r', 1, 3.8, '50% 100%'), idle.breathe(q, 'wedding-couple')],
   },
   {
-    // the Reception in the same hand: the client's reception stage (redrawn in the site's style) under the night,
-    // lanterns hanging at its sides, the couple in front of it on the carpet, the feast in front
-    id: 'reception', sky: RECEPTION, tone: 'stage', stars: true, text: { top: 170 }, leave: 'fade', hold: 4,
+    // the Reception laid out like Sangeet and Wedding, inside the hotel's hall: the client's reception stage drawn
+    // small, the couple in front of it on the marble floor, the feast in front
+    id: 'reception', sky: RECEPTION, tone: 'stage', stars: true, text: { top: 250 }, leave: 'fade', hold: 4,
     layers: [
-      L('reception-stage-art', 1900, 1275, { y: 0, z: 2 }),
-      L('carpet', 3400, 255, { z: 3, full: true, kind: 'ground' }),
-      L('lantern-l', 300, 417, { art: 'reception-lanterns', x: -410, y: 590, z: 3 }),
-      L('lantern-r', 300, 417, { art: 'reception-lanterns', x: 410, y: 590, z: 3, flip: true }),
+      // the hall's back wall, jasmine strands across the top, the client's stage drawn small on the marble floor,
+      // a silk canopy with lanterns framing it, and flower urns at its two sides
+      L('reception-wall', 2200, 705, { y: 150, z: 1, full: true, kind: 'ground' }),
+      L('reception-hanging', 1300, 410, { full: true, ay: 't', y: -12, z: 3 }),
+      L('reception-floor', 2200, 259, { z: 2, full: true, kind: 'ground' }),
+      L('reception-stage-small', 900, 533, { y: 150, z: 3 }),
+      L('reception-drape', 1700, 848, { y: 110, z: 4 }),
+      L('urn-l', 260, 404, { art: 'reception-urn', x: -440, y: 100, z: 5 }),
+      L('urn-r', 260, 404, { art: 'reception-urn', x: 440, y: 100, z: 5, flip: true }),
       person('reception-groom', 380, 760, -170, 110, 5), person('reception-bride', 354, 760, 170, 110, 6),
       L('reception-table', 620, 300, { y: 40, z: 7 }),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.3, 1)
-      slide(tl, q, ['lantern-l', 'lantern-r'], 'down', 0.4, 1.2)
+      slide(tl, q, 'reception-hanging', 'up', 0, 1.1)
+      slide(tl, q, 'reception-drape', 'up', 0.2, 1.2)
+      slide(tl, q, 'urn-l', 'left', 0.4, 1.1)
+      slide(tl, q, 'urn-r', 'right', 0.4, 1.1)
       slide(tl, q, 'reception-bride', 'right', 0.8, 1.1)
       slide(tl, q, 'reception-groom', 'left', 1, 1.1)
       slide(tl, q, 'reception-table', 'down', 1.6, 0.9)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...petals(q), idle.sway(q, 'lantern-l', 1.6, 3.1, '50% 0%'), idle.sway(q, 'lantern-r', 1.6, 2.7, '50% 0%'), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
+    idle: (q) => [...petals(q), idle.breathe(q, 'reception-groom'), idle.lean(q, 'reception-bride', -0.7, 2)],
   },
   {
     // the last page, after the client's reference film: a carved arch on a blue night and a lamp to light with a tap,
