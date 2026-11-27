@@ -6,8 +6,8 @@ import { playInvitation, idleInvitation } from './invitation.js'
 
 const L = (id, w, h, o = {}) => ({ id, w, h, ...o })
 const clouds = (night) => [
-  L('cloud-l', 300, 190, { art: night ? 'cloud-night' : 'cloud-gold', ax: 'l', x: -150, ay: 't', y: 380, z: 2 }),
-  L('cloud-r', 360, 225, { art: night ? 'cloud-night' : 'cloud-gold', ax: 'r', x: -260, ay: 't', y: 640, z: 2, flip: true }),
+  L('cloud-l', 300, 190, { art: night ? 'cloud-night' : 'cloud-white', ax: 'l', x: -150, ay: 't', y: 380, z: 2 }),
+  L('cloud-r', 360, 225, { art: night ? 'cloud-night' : 'cloud-white', ax: 'r', x: -260, ay: 't', y: 640, z: 2, flip: true }),
 ]
 const cloudIdle = (q) => [idle.drift(q, 'cloud-l', 26, 9), idle.drift(q, 'cloud-r', 34, 11)].filter(Boolean)
 const foliage = (z = 8) => [L('foliage-l', 430, 430, { art: 'foliage-corner', ax: 'l', x: -70, ay: 't', y: -60, z, kind: 'plant' }), L('foliage-r', 430, 430, { art: 'foliage-corner', ax: 'r', x: -70, ay: 't', y: -60, z, flip: true, kind: 'plant' })]
@@ -39,6 +39,8 @@ export const SCENES = [
       // a wide picture for laptops and a tall one for phones; the tram and the taxi drive along its road
       L('scene-w', 2200, 1103, { art: 'hero-wide', z: 2, full: true, kind: 'ground', tall: 0.88 }),
       L('scene-t', 1300, 1765, { art: 'hero-tall', z: 2, full: true, kind: 'ground' }),
+      // tall phones lift the scene up to the words (styles.css, --lift); this floor fills in below it
+      L('floor-t', 1300, 401, { art: 'hero-floor', z: 2, full: true, kind: 'ground' }),
       L('tram-w', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 2200, tall: 1.7552, at: 0.236, rw: 0.095 } }),
       L('taxi-w', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 2200, tall: 1.7552, at: 0.2177, rw: 0.066 } }),
       L('tram-t', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 1300, at: 0.4317, rw: 0.2 } }),

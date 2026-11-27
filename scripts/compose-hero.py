@@ -193,7 +193,8 @@ def build(kind):
         yroad = land
         hs = 1.0
         hy = yroad - hills.height * hs + 40
-        base.alpha_composite(sun(60), (int(W * 0.58), int(yroad - hills.height * 0.7)))
+        # the sun rises in open sky between the bridge and the chimneys, clear of their smoke
+        base.alpha_composite(sun(60), (int(W * 0.52 - 120), int(hy + 34)))
         hl = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         left = hills.crop((0, 0, W - hills.width + 60, hills.height)).transpose(Image.FLIP_LEFT_RIGHT)
         paste(hl, left, 0, hy, 1)
@@ -231,7 +232,6 @@ def build(kind):
         strip.alpha_composite(fade(hills.transpose(Image.FLIP_LEFT_RIGHT), 'l', 60), (hills.width - 60, 0))
         x0 = int(hills.width * 0.783 - W * 0.5 / hs)  # the works' middle chimney lands in the middle
         hc = strip.crop((x0, 0, x0 + int(W / hs), hills.height))
-        base.alpha_composite(sun(58), (int(W * 0.5 - 116), int(yroad - hills.height * hs * 0.8)))
         hl = Image.new('RGBA', (W, H), (0, 0, 0, 0))
         paste(hl, hc, 0, yroad - hills.height * hs + 40, hs)
         base.alpha_composite(hl)
@@ -244,6 +244,11 @@ def build(kind):
         crop = fade(crop, 'l', 70)
         ds = 0.6
         paste(base, crop, W - crop.width * ds + 110, yroad - crop.height * ds + 30, ds)
+        # the sun rises in open sky above the diamond, clear of the chimneys' smoke; behind the hills and the diamond
+        sky_sun = Image.new('RGBA', base.size, (0, 0, 0, 0))
+        sky_sun.alpha_composite(sun(58), (int(W * 0.80 - 116), int(yroad - crop.height * ds + 30 - 190)))
+        sky_sun.alpha_composite(base)
+        base = sky_sun
         lamps = [(0.875, 0.56)]  # the bridge brings its own lamp on the left
     rd, lines = road(W, R)
     base.alpha_composite(rd, (0, yroad))

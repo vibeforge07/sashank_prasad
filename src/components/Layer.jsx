@@ -35,12 +35,16 @@ export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b',
     const tile = { background: `url(${url}) 50% 0 / ${kind === 'wall' ? 'auto 100%' : `${u(w)} auto`} repeat-x` }
     return <div className={`layer k-${kind}`} data-l={id} style={{ ...style, height: kind === 'wall' ? '100cqh' : u(h) }}><div className="layer-in" style={tile} /></div>
   }
+  const look = { transform: flip ? 'scaleX(-1)' : undefined, objectFit: fit, maxHeight: full && kind === 'ground' ? u(h * 1.25) : undefined, objectPosition: `${side} ${ay === 'b' ? 'bottom' : 'top'}` }
+  // closed eyes for a blink (scripts/blink.py), one picture per person, laid exactly over the figure
+  const lids = kind === 'person' ? [artUrl(`${name}-blink`), artUrl(`${name}-blink2`)].filter(Boolean) : []
   return (
     <div className={`layer k-${kind}${full ? ' strip' : ''} at-${ay}`} data-l={id} style={style}>
       <div className="layer-in">
         {url
-          ? <img src={url} alt="" draggable="false" decoding="async" loading="lazy" style={{ transform: flip ? 'scaleX(-1)' : undefined, objectFit: fit, maxHeight: full && kind === 'ground' ? u(h * 1.25) : undefined, objectPosition: `${side} ${ay === 'b' ? 'bottom' : 'top'}` }} />
+          ? <img src={url} alt="" draggable="false" decoding="async" loading="lazy" style={look} />
           : <span className="todo"><i>{name}</i></span>}
+        {url && lids.map((l) => <img key={l} className="blink" src={l} alt="" draggable="false" decoding="async" loading="lazy" style={look} />)}
       </div>
     </div>
   )

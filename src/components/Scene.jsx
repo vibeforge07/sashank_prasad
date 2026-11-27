@@ -4,6 +4,15 @@ import Layer from './Layer.jsx'
 import { makeQ } from '../scenes/motion.js'
 import { drive } from './drive.js'
 
+// every few seconds each person shuts their eyes for a moment (the closed lids are drawn over the figure),
+// each on their own beat, now and then twice in a row
+const blinks = (root) => [...root.querySelectorAll('.blink')].map((el, i) => {
+  const t = gsap.timeline({ repeat: -1, repeatDelay: 2.4 + (i % 3) * 1.1, delay: 0.8 + i * 1.3 })
+  t.set(el, { visibility: 'visible' }).set(el, { visibility: 'hidden' }, 0.13)
+  if (i % 2) t.set(el, { visibility: 'visible' }, 0.4).set(el, { visibility: 'hidden' }, 0.52)
+  return t
+})
+
 const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // Holds one scene's timeline and idle loops. App decides which scene is on screen.
@@ -42,7 +51,7 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
       t.progress(still() ? 1 : progress)
       if (live.current && progress < 1 && !scene.scroll) t.play()
       tl.current = t
-      idles.current = still() ? [] : scene.idle(makeQ(root.current)).filter(Boolean)
+      idles.current = still() ? [] : [...scene.idle(makeQ(root.current)).filter(Boolean), ...blinks(root.current)]
       if (!live.current) idles.current.forEach((i) => i.pause())
     }, root)
     // the card turns with the guest's own swipe (components/drive.js)

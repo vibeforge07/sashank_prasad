@@ -27,7 +27,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .world { --u: min(100cqw / 1080, 100cqh / 1800); position: absolute; inset: 0; --dx: 0px; }
 
 .layer { position: absolute; pointer-events: none; }
-.layer-in { width: 100%; height: 100%; }
+.layer-in { width: 100%; height: 100%; position: relative; }
+.layer img.blink { position: absolute; inset: 0; visibility: hidden; }
 .layer img { width: 100%; height: 100%; display: block; user-select: none; }
 .strip img { position: absolute; height: auto !important; }
 .strip.at-b img { bottom: 0; }
@@ -218,4 +219,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 /* first page: the tall backdrop on phones, the wide one on laptops */
 @container (min-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-t'] { display: none; } }
 @container (max-aspect-ratio: 1/1) { :is(#hero, #wedding) [data-l$='-w'] { display: none; } }
+/* tall phones have sky to spare between the names and the city: the city, the couple and the tram come up
+   (at most 400 units), and the floor picture fills in below them */
+@container (max-aspect-ratio: 53/100) { #hero .world { --lift: min(400 * var(--u), max(0px, (100cqh - 1920 * var(--u)) * 0.6)); } }
+#hero :is([data-l='scene-t'], [data-l='tram-t'], [data-l='taxi-t'], [data-l^='hero-']) { margin-bottom: var(--lift, 0px); }
+#hero [data-l='floor-t'] { bottom: var(--lift, 0px) !important; translate: 0 100%; }
 #hero [data-l^='scene-'] img { max-height: none !important; } /* the road must stay where the tram and taxi ride */
