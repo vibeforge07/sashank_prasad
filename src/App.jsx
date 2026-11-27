@@ -79,16 +79,18 @@ export default function App() {
     if (!open || !auto) return
     const s = scenes.current[at]
     let timer
-    const wait = () => { timer = setTimeout(() => (at < SCENES.length - 1 ? go(at + 1) : setAuto(false)), s.hold * 1000) }
+    const hold = () => { timer = setTimeout(() => (at < SCENES.length - 1 ? go(at + 1) : setAuto(false)), s.hold * 1000) }
+    // the wedding date is revealed by the guest's own finger: wait for it before moving on
+    const wait = () => (s.el.querySelector('.scratch:not(.done)') ? s.el.addEventListener('scratched', hold, { once: true }) : hold())
     if (s.progress() >= 1) wait()
     else s.done(wait)
-    return () => { clearTimeout(timer); s.done(null) }
+    return () => { clearTimeout(timer); s.done(null); s.el.removeEventListener('scratched', hold) }
   }, [open, auto, at, go, lang])
 
   // the guest's own scroll always wins over autoplay
   useEffect(() => {
     if (!open) return
-    const stop = (e) => { if (!e.target.closest?.('.bar')) setAuto(false) }
+    const stop = (e) => { if (!e.target.closest?.('.bar, .scratch')) setAuto(false) }
     const key = (e) => { if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' '].includes(e.key) && !e.target.closest?.('button,a')) setAuto(false) }
     const el = scroller.current
     el.addEventListener('wheel', stop, { passive: true })

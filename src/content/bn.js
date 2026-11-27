@@ -40,5 +40,5 @@ export default {
     units: ['দিন', 'ঘণ্টা', 'মিনিট'],
     until: 'বিয়ের বাকি',
   },
-  ui: { play: 'চালান', pause: 'থামান', sound: 'গান', replay: 'আবার দেখুন' },
+  ui: { scratch: 'তারিখ দেখতে ঘষুন', play: 'চালান', pause: 'থামান', sound: 'গান', replay: 'আবার দেখুন' },
 }

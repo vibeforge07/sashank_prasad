@@ -40,5 +40,5 @@ export default {
     units: ['days', 'hours', 'minutes'],
     until: 'until the wedding',
   },
-  ui: { play: 'Play', pause: 'Pause', sound: 'Music', replay: 'Watch again' },
+  ui: { scratch: 'Scratch to see the date', play: 'Play', pause: 'Pause', sound: 'Music', replay: 'Watch again' },
 }
