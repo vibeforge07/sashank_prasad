@@ -4,8 +4,12 @@ import { relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const root = fileURLToPath(new URL('.', import.meta.url))
-// the art workshop folders at the top of the project are not part of the site (src/art is)
-const workshop = (p) => /^(art|reference stage|chatgpt generated[^\\/]*)([\\/]|$)/.test(relative(root, p))
+// the art workshop folders at the top of the project are not part of the site (src/art is), and neither is
+// anything else outside src and public, such as a download still being saved (a locked file stops the watcher)
+const workshop = (p) => {
+  const r = relative(root, p)
+  return /\.(crdownload|part|tmp)$/i.test(r) || /^(?!src[\\/]|public[\\/]|index\.html$|vite\.config\.js$|package\.json$)[^\\/]+[\\/]/.test(r)
+}
 
 export default defineConfig({
   plugins: [react()],
