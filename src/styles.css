@@ -49,6 +49,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   mask: linear-gradient(#000 60%, #0000); }
 /* the dhol and harmonium need the room a laptop gives beside the dancers */
 @container (max-aspect-ratio: 1/1) { #sangeet [data-l='sangeet-music'] { display: none; } }
+/* the Sangeet garden and the Wedding skyline: one way for laptops (-w), another for phones (-t) */
+@container (min-aspect-ratio: 1/1) { :is(#sangeet, #wedding) [data-l$='-t'] { display: none; } }
+@container (max-aspect-ratio: 1/1) { :is(#sangeet, #wedding) [data-l$='-w'] { display: none; } }
 .moon { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #fffbe8; box-shadow: 0 0 calc(60 * var(--u)) calc(18 * var(--u)) #fff2c488; }
 
 /* shown until the real picture for a layer arrives */

@@ -7,9 +7,15 @@ import { artUrl } from '../art/index.js'
 //   w,h size of the picture
 const u = (n) => `calc(${n} * var(--u))`
 
-export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall }) {
+export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall, repeat }) {
   const name = art || id
   const url = artUrl(name)
+  // a backdrop drawn so its two ends meet: it repeats across the whole width at its own height,
+  // one copy centred on the picture (so the low middle stays behind the stage)
+  if (url && repeat) {
+    const style = { zIndex: z, left: 0, right: 0, bottom: u(y), height: u(h), background: `url(${url}) calc(50% + var(--dx)) 100% / auto 100% repeat-x` }
+    return <div className={`layer k-${kind}`} data-l={id} style={style}><div className="layer-in" /></div>
+  }
   // something that rides on a painted road: sized and placed as fractions of the backdrop strip's width,
   // so it stays on its lane whatever the screen size ({ base: strip width in units, at: lane height, rw: own width })
   if (road) {

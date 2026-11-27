@@ -174,7 +174,9 @@ export const SCENES = [
     layers: [
       // a garden of fairy-lit trees behind the stage, the dance floor in front of it, and on laptops the dhol and
       // harmonium beside the groom
-      L('sangeet-garden', 1500, 645, { y: 150, z: 1 }),
+      // laptops: the garden repeats across the whole width; phones: one garden, lifted so its lit trees show above the stage
+      L('garden-w', 1500, 645, { art: 'sangeet-garden', y: 150, z: 1, repeat: true }),
+      L('garden-t', 1300, 559, { art: 'sangeet-garden', y: 640, z: 1 }),
       L('sangeet-floor', 2200, 267, { z: 1, full: true, kind: 'ground' }),
       L('sangeet-music', 420, 189, { y: 40, x: -720, z: 4 }),
       L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
@@ -188,6 +190,7 @@ export const SCENES = [
     ],
     play(tl, q, root) {
       slide(tl, q, 'sangeet-hanging', 'up', 0, 1.1)
+      rise(tl, q, ['garden-w', 'garden-t'], 0.2, 1.8)
       slide(tl, q, 'sangeet-music', 'left', 0.6, 1.1)
       slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
       slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
@@ -209,7 +212,9 @@ export const SCENES = [
       L('cloud-l', 380, 167, { art: 'cloud-night', ax: 'l', x: -150, y: 1250, z: 1 }),
       L('cloud-r', 440, 193, { art: 'cloud-night', ax: 'r', x: -190, y: 1080, z: 1, flip: true }),
       // the bride's Kolkata and the groom's Jamshedpur on the skyline behind the stage, the red carpet with its alpana
-      L('wedding-city-art', 1800, 495, { y: 200, z: 2 }),
+      // laptops: the skyline spans the whole width; phones: lifted so Howrah Bridge shows above the stage
+      L('city-w', 2200, 605, { art: 'wedding-city-art', y: 300, z: 2, full: true }),
+      L('city-t', 1300, 358, { art: 'wedding-city-art', y: 720, z: 2 }),
       L('wedding-floor', 2200, 330, { z: 2, full: true, kind: 'ground' }),
       L('wedding-stage-small', 1000, 621, { y: 330, z: 3 }),
       L('wedding-hanging', 1100, 350, { full: true, ay: 't', y: -24, z: 4 }),
@@ -223,6 +228,7 @@ export const SCENES = [
     ],
     play(tl, q, root) {
       slide(tl, q, 'wedding-hanging', 'up', 0, 1.1)
+      rise(tl, q, ['city-w', 'city-t'], 0.2, 1.8)
       slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
       slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
