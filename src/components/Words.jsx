@@ -559,7 +559,8 @@ export function Closing({ c, lang }) {
     <div className="cl-kin" data-r>
       <p className="cl-head"><i />{k.awaiting}<i /></p>
       <div className="cl-names">
-        {k.names.slice(0, -1).map((n) => <span key={n}>{n}</span>)}
+        {k.names.slice(0, -1).reduce((rows, n, i) => (i % 2 ? rows[rows.length - 1].push(n) : rows.push([n]), rows), [])
+          .map((row) => <span key={row[0]} className="cl-pair">{row.map((n, i) => [i > 0 && <i key="d" />, <b key={n}>{n}</b>])}</span>)}
         <span className="cl-last">{k.names[k.names.length - 1]}</span>
       </div>
     </div>
@@ -582,9 +583,9 @@ export function Closing({ c, lang }) {
         {face}
         <div className="cl-ledge" />
         <button type="button" className={`cl-lamp scratch${lit ? ' done' : ''}`} onClick={tap} aria-label={c.ui.light} disabled={lit}>
-          {/* the brass lamp of the reception table, each of its three flames on its own (scripts/closing-lamp.py) */}
-          <img className="cl-lamp-art" src={artUrl('closing-lamp')} alt="" draggable="false" />
-          {['l', 'c', 'r'].map((f) => <span key={f} className={`cl-flame cl-flame-${f}`}><img src={artUrl(`closing-flame-${f}`)} alt="" draggable="false" /></span>)}
+          {/* a simple clay pradeep, its one flame on the wick at the spout */}
+          <img className="cl-lamp-art" src={artUrl('closing-diya')} alt="" draggable="false" />
+          <span className="cl-flame"><img src={artUrl('closing-flame-c')} alt="" draggable="false" /></span>
         </button>
         <p className="cl-hint"><i />{c.ui.light}<i /></p>
       </div>
