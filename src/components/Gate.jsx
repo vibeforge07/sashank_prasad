@@ -29,7 +29,7 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
       tl.from('.g-bed-l', { xPercent: -110, duration: 1.3, ease: 'power3.out' }, 1.1)
       tl.from('.g-bed-r', { xPercent: 110, duration: 1.3, ease: 'power3.out' }, 1.25)
       gsap.to('.g-mala', { rotation: 1.2, duration: 2.6, yoyo: true, repeat: -1, ease: 'sine.inOut', delay: 1.6, stagger: 0.7 })
-      tl.from(['.g-inv', '.g-names', '.g-date'], { y: 14, autoAlpha: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out' }, 1.4)
+      tl.from(['.g-ganesh', '.g-inv', '.g-names', '.g-date'], { y: 14, autoAlpha: 0, duration: 0.8, stagger: 0.15, ease: 'power2.out' }, 1.4)
       tl.from(['.g-langs', '.g-hint'], { autoAlpha: 0, duration: 0.8, stagger: 0.2 }, 2)
       gsap.to('.g-ring', { rotation: 360, duration: 120, ease: 'none', repeat: -1 })
       gsap.fromTo('.g-pulse', { scale: 0.95, autoAlpha: 0.9 }, { scale: 1.5, autoAlpha: 0, duration: 2.6, ease: 'power1.out', repeat: -1, delay: 2.2 })
@@ -73,7 +73,8 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
   }
 
   return (
-    <div className="gate" ref={root}>
+    // a tap anywhere on the cover opens it (only the language buttons do their own thing)
+    <div className="gate" ref={root} onClick={(e) => { if (!e.target.closest('.g-langs')) open() }}>
       <div className="g-doors" aria-hidden="true">
         <div className="g-light" />
         <div className="g-door g-door-l"><i className="g-panel" /><i className="g-panel" /><b className="g-knock" /></div>
@@ -83,27 +84,30 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
       <div className="g-page" style={{ backgroundImage: `url(${paper})` }}>
         <img className="g-pais g-pais-l" src={artUrl('gate-paisley')} alt="" />
         <img className="g-pais g-pais-r" src={artUrl('gate-paisley')} alt="" />
-        {['l', 'r'].flatMap((s) => [1, 2, 3, 4, 5, 6].map((n) => <img key={s + n} className={`g-mala g-mala-${s} g-m${n}`} src={artUrl('gate-mala')} alt="" />))}
+        {/* a strand as long as it needs to be: repeating marigolds down to the last flowers and the bell */}
+        {['l', 'r'].flatMap((s) => [1, 2, 3, 4, 5, 6].map((n) => <span key={s + n} className={`g-mala g-mala-${s} g-m${n}`}><i style={{ backgroundImage: `url(${artUrl('gate-mala-beads')})` }} /><img src={artUrl('gate-mala-end')} alt="" /></span>))}
         <div className="g-garland" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
         <div className="g-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
         <img className="g-bed g-bed-l" src={artUrl('gate-elephant')} alt="" />
         <img className="g-bed g-bed-r" src={artUrl('gate-thali')} alt="" />
 
         <div className="g-inner">
+          {/* a small Ganesha above the blessing line, once src/art/gate-ganesh.webp is in */}
+          {artUrl('gate-ganesh') && <img className="g-ganesh" src={artUrl('gate-ganesh')} alt="" />}
           <p className="g-inv">{c.hero.invocation}</p>
-          <button className="g-seal" onClick={open} aria-label={c.gate.open}>
+          <button className="g-seal" aria-label={c.gate.open}>
             <span className="g-flood" />
             <img className="g-ring" src={ring} alt="" />
             <img className="g-disc" src={sindoor} alt="" />
             <span className="g-title" lang={lang}>{c.gate.seal.map((w) => <span key={w}>{w}</span>)}</span>
             <span className="g-pulse" />
           </button>
-          <h1 className="g-names">{names}</h1>
+          <h1 className="g-names">{names.map((n, i) => <span key={i} className={i === 1 ? 'g-weds' : undefined}>{n}</span>)}</h1>
           <p className="g-date">{c.gate.date}</p>
           <div className="g-langs" role="group" aria-label={c.gate.choose}>
             {langs.map(([l, label]) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{label}</button>)}
           </div>
-          <button className="g-hint" onClick={open}>{c.gate.tap}</button>
+          <button className="g-hint">{c.gate.tap}</button>
         </div>
       </div>
     </div>

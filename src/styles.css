@@ -141,16 +141,19 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 }
 
 /* ---- opening screen: a sindoor seal on cream paper, then the doors ---- */
-.gate { position: fixed; inset: 0; z-index: 50; overflow: hidden; --seal: min(66vw, 40svh, 430px); --bed: min(46vw, 330px, 21svh); }
+.gate { position: fixed; inset: 0; z-index: 50; overflow: hidden; cursor: pointer; -webkit-tap-highlight-color: transparent; --seal: min(66vw, 40svh, 430px); --bed: min(46vw, 330px, 21svh); }
 .g-page { position: absolute; inset: 0; z-index: 2; overflow: hidden; background: #fbefd6 50% 50% / cover no-repeat; }
 .g-garland { position: absolute; z-index: 4; top: -1px; left: 0; right: 0; height: min(15vw, 120px); background: 50% 0 / auto 100% repeat-x; pointer-events: none; }
 /* marigold strands hanging from the toran: a long one with a shorter one inside it (and a third outside on wide screens) */
 /* marigold strands hanging from the toran, all the same size: each one is the same picture,
    pulled up so only --len shows, and the bells make a V (longest near the edge, shorter inward) */
-.g-mala { position: absolute; z-index: 3; height: var(--mh); top: calc(var(--len) - var(--mh)); width: auto; pointer-events: none; transform-origin: 50% 0; }
+.g-mala { position: absolute; z-index: 3; top: 0; height: var(--len); width: calc(var(--mh) * 0.0889); display: flex; flex-direction: column; pointer-events: none; transform-origin: 50% 0; }
+.g-mala i { flex: 1; min-height: 0; background: 50% 100% / 100% auto repeat-y; }
+.g-mala img { display: block; width: 100%; height: auto; flex: none; }
 .g-mala-l { left: calc(var(--i) * var(--mh) * 0.096 + 0.4vw); } .g-mala-r { right: calc(var(--i) * var(--mh) * 0.096 + 0.4vw); }
 .gate { --mh: 40svh; }
-.g-m1 { --i: 0; --len: 30svh; } .g-m2 { --i: 1; --len: 36svh; } .g-m3 { --i: 2; --len: 24svh; }
+/* on a phone the outer strand is the longest and each one inward is shorter, so the sides beside the names are not empty */
+.g-m1 { --i: 0; --len: 64svh; } .g-m2 { --i: 1; --len: 47svh; } .g-m3 { --i: 2; --len: 27svh; }
 .g-m4, .g-m5, .g-m6 { display: none; }
 .g-inv { max-width: calc(100vw - 2 * (var(--mh) * 0.288 + 0.4vw) - 12px); }
 .g-pais { position: absolute; z-index: 1; width: min(46vw, 360px); opacity: .5; pointer-events: none; }
@@ -160,6 +163,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-bed-l { left: 1vw; } .g-bed-r { right: 1vw; }
 .g-inner { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15svh 20px calc(var(--bed) * 0.86 + 2svh); }
 .g-inv { position: relative; z-index: 3; color: var(--crimson); font-size: 16px; margin-bottom: 1.6svh; }
+.g-ganesh { position: relative; z-index: 3; width: min(15vw, 7svh, 90px); height: auto; margin: -2svh 0 .6svh; filter: drop-shadow(0 3px 6px #7a3a0a40); }
 .g-seal { position: relative; width: var(--seal); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; -webkit-tap-highlight-color: transparent; }
 .g-seal > * { grid-area: 1 / 1; }
 .g-flood { position: absolute; left: 21%; top: 21%; width: 58%; aspect-ratio: 1; border-radius: 50%; z-index: 0;
@@ -169,7 +173,11 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-title { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: center; font: 400 calc(var(--seal) * 0.13) / 1.05 var(--display); color: #fff6e4; text-shadow: 0 2px 10px #4e0a0e73; }
 .g-title:lang(en) { font-size: calc(var(--seal) * 0.105); }
 .g-pulse { position: absolute; inset: 22%; z-index: 2; border-radius: 50%; border: 2px solid #fff1d6bf; pointer-events: none; }
-.g-names { position: relative; z-index: 3; margin-top: 2.4svh; font: 400 clamp(24px, 6.6vw, 46px) / 1.2 var(--display); color: var(--crimson); }
+.g-names { position: relative; z-index: 3; margin-top: 2.4svh; font: 400 clamp(24px, 6.6vw, 46px) / 1.08 var(--display); color: var(--crimson); }
+/* the bride first, 'weds' small between the two names */
+.g-names > span { display: block; }
+.g-names .g-weds { margin: .1em 0; font: italic 400 .6em / 1.2 'EB Garamond', serif; color: var(--ink); }
+.g-names .g-weds:lang(bn), .g-names .g-weds:lang(hi) { font-style: normal; }
 .g-date { position: relative; z-index: 3; margin-top: 4px; font-size: clamp(15px, 4vw, 20px); color: var(--ink); }
 .g-langs { position: relative; z-index: 5; display: flex; gap: 6px; margin-top: 2.2svh; }
 .g-langs button { min-height: 40px; padding: 6px 16px; border: 1px solid #b3123f66; border-radius: 99px; font-size: 16px; background: #fffaf0cc; }
