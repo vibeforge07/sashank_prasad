@@ -1101,108 +1101,495 @@
    to the buttons: its carved crown and base keep their shape and only the straight runs between them stretch
    (a border-image cut at the crown, the pillars and the base). On a wide screen it is drawn at its own shape.
    --bt / --bb: the room for the words, from the crown down to the lamp. 1 k is about 1px on a 390 x 844 phone. */
-.cl { position: absolute; inset: 0; z-index: 20; overflow: hidden; color: var(--cream);
-  --aw: 100cqw; --ah: calc(100cqh - 74px); --top: 0px;
+.cl {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  overflow: hidden;
+  color: var(--cream);
+  --aw: 100cqw;
+  --ah: calc(100cqh - 74px);
+  --top: 0px;
   --f: calc((100cqw / 1064 + (100cqh - 74px) / 1800) / 2);
-  --bt: calc(205 * var(--f)); --bb: calc(468 * var(--f));
-  --k: min(calc((var(--aw) - 300 * var(--f)) / 255), calc((var(--ah) - var(--bt) - var(--bb)) / 450), 1.3px); }
-.cl-wing { display: none; }
+  --bt: calc(190 * var(--f));
+  --bb: calc(470 * var(--f));
+  --k: min(calc((var(--aw) - 300 * var(--f)) / 255), calc((var(--ah) - var(--bt) - var(--bb)) / 440), 1.3px);
+}
+
+.cl-wing {
+  display: none;
+}
+
 /* a dark marble floor under the arch, warmed once the lamp burns */
-.cl-floor { position: absolute; left: 0; right: 0; bottom: 0; top: calc(var(--top) + var(--ah) - 2px);
-  background: linear-gradient(#2b2452, #16123a 45%, #0a0822); box-shadow: inset 0 2px 0 #b8903f; }
-.cl-floor::after { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 90% at 50% 0, #ffb45a40, #ff9a3a14 55%, #0000); opacity: 0; transition: opacity 1.8s ease .4s; }
-.cl.is-lit .cl-floor::after { opacity: 1; }
-.cl-arch, .cl-wing { position: absolute; left: 50%; top: var(--top); width: var(--aw); height: var(--ah); margin-left: calc(var(--aw) / -2); }
-.cl-face { position: absolute; inset: 0; box-sizing: border-box; pointer-events: none;
-  border: solid transparent; border-width: calc(380 * var(--f)) calc(140 * var(--f)) calc(60 * var(--f));
-  border-image-slice: 380 140 60; border-image-repeat: stretch; }
+.cl-floor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: calc(var(--top) + var(--ah) - 2px);
+  background: linear-gradient(#2b2452, #16123a 45%, #0a0822);
+  box-shadow: inset 0 2px 0 #b8903f;
+}
+
+.cl-floor::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(70% 90% at 50% 0, #ffb45a40, #ff9a3a14 55%, #0000);
+  opacity: 0;
+  transition: opacity 1.8s ease .4s;
+}
+
+.cl.is-lit .cl-floor::after {
+  opacity: 1;
+}
+
+.cl-arch,
+.cl-wing {
+  position: absolute;
+  left: 50%;
+  top: var(--top);
+  width: var(--aw);
+  height: var(--ah);
+  margin-left: calc(var(--aw) / -2);
+}
+
+.cl-face {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+  border: solid transparent;
+  border-width: calc(380 * var(--f)) calc(140 * var(--f)) calc(60 * var(--f));
+  border-image-slice: 380 140 60;
+  border-image-repeat: stretch;
+}
+
 /* the arch by night in moon-blue; the light of the lamp wipes it away to show the warm one under it (scripts/tint-arch.py) */
-.cl-night { --r: -25%;
+.cl-night {
+  --r: -25%;
   -webkit-mask-image: radial-gradient(circle at var(--cx, 50%) 90%, #0000 var(--r), #000 calc(var(--r) + 22%));
-  mask-image: radial-gradient(circle at var(--cx, 50%) 90%, #0000 var(--r), #000 calc(var(--r) + 22%)); }
-.cl-glow { position: absolute; left: -40%; width: 180%; aspect-ratio: 1; top: calc(var(--ah) - 365 * var(--f) - var(--aw) * .9); border-radius: 50%; pointer-events: none;
-  background: radial-gradient(closest-side, #ffcf7a70, #ff9a3a38 28%, #ff7a2a14 55%, #0000); filter: brightness(var(--g, 1)); visibility: hidden; }
+  mask-image: radial-gradient(circle at var(--cx, 50%) 90%, #0000 var(--r), #000 calc(var(--r) + 22%));
+}
+
+.cl-glow {
+  position: absolute;
+  left: -40%;
+  width: 180%;
+  aspect-ratio: 1;
+  top: calc(var(--ah) - 380 * var(--f) - var(--aw) * .9);
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, #ffcf7a70, #ff9a3a38 28%, #ff7a2a14 55%, #0000);
+  filter: brightness(var(--g, 1));
+  visibility: hidden;
+}
+
 /* the hanging lanterns in the crown's corners, and the little lamps up the pillars (in picture pixels) */
-.cl-lantern { position: absolute; top: calc(263 * var(--f)); left: calc(38 * var(--f)); width: calc(138 * var(--f)); aspect-ratio: 1; margin: calc(-69 * var(--f)) 0 0 calc(-69 * var(--f));
-  border-radius: 50%; pointer-events: none; visibility: hidden;
-  background: radial-gradient(closest-side, #fff1c4cc, #ffc4588a 35%, #ff9a3a2a 65%, #0000); mix-blend-mode: screen; }
-.cl-lantern.is-r { left: calc(100% - 38 * var(--f)); }
-.cl-niche { position: absolute; width: calc(49 * var(--f)); aspect-ratio: 1; margin: calc(-24.5 * var(--f)) 0 0 calc(-24.5 * var(--f)); border-radius: 50%; pointer-events: none; visibility: hidden;
-  left: calc(98 * var(--f) + var(--nx) * (100% - 196 * var(--f))); top: calc(380 * var(--f) + var(--ny) * (100% - 440 * var(--f)));
-  background: radial-gradient(closest-side, #fffbe6 0 20%, #ffd067 36%, #ff9a3a77 60%, #0000); filter: brightness(var(--f2, 1)); }
+.cl-lantern {
+  position: absolute;
+  top: calc(263 * var(--f));
+  left: calc(38 * var(--f));
+  width: calc(138 * var(--f));
+  aspect-ratio: 1;
+  margin: calc(-69 * var(--f)) 0 0 calc(-69 * var(--f));
+  border-radius: 50%;
+  pointer-events: none;
+  visibility: hidden;
+  background: radial-gradient(closest-side, #fff1c4cc, #ffc4588a 35%, #ff9a3a2a 65%, #0000);
+  mix-blend-mode: screen;
+}
+
+.cl-lantern.is-r {
+  left: calc(100% - 38 * var(--f));
+}
+
+.cl-niche {
+  position: absolute;
+  width: calc(49 * var(--f));
+  aspect-ratio: 1;
+  margin: calc(-24.5 * var(--f)) 0 0 calc(-24.5 * var(--f));
+  border-radius: 50%;
+  pointer-events: none;
+  visibility: hidden;
+  left: calc(98 * var(--f) + var(--nx) * (100% - 196 * var(--f)));
+  top: calc(380 * var(--f) + var(--ny) * (100% - 440 * var(--f)));
+  background: radial-gradient(closest-side, #fffbe6 0 20%, #ffd067 36%, #ff9a3a77 60%, #0000);
+  filter: brightness(var(--f2, 1));
+}
+
 /* the marble ledge across the foot of the arch, warmed by the flame once it burns */
-.cl-ledge { position: absolute; z-index: 2; left: calc(131 * var(--f)); right: calc(131 * var(--f)); bottom: calc(51 * var(--f)); height: calc(110 * var(--f));
-  background: linear-gradient(#fffaf1, #efe6d6 30%, #ddd1bd 75%, #c9baa2); box-shadow: inset 0 calc(7.5 * var(--f)) 0 #d6a64b, 0 calc(-3.8 * var(--f)) 0 #3a1c08; }
-.cl-ledge::after { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 120% at 50% 0, #ffb45a88, #ff9a3a22 55%, #0000); opacity: 0; transition: opacity 1.6s ease .3s; }
-.cl.is-lit .cl-ledge::after { opacity: 1; }
+.cl-ledge {
+  position: absolute;
+  z-index: 2;
+  left: calc(131 * var(--f));
+  right: calc(131 * var(--f));
+  bottom: calc(51 * var(--f));
+  height: calc(140 * var(--f));
+  background: linear-gradient(#fffaf1, #efe6d6 30%, #ddd1bd 75%, #c9baa2);
+  box-shadow: inset 0 calc(7.5 * var(--f)) 0 #d6a64b, 0 calc(-3.8 * var(--f)) 0 #3a1c08;
+}
+
+.cl-ledge::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 120% at 50% 0, #ffb45a88, #ff9a3a22 55%, #0000);
+  opacity: 0;
+  transition: opacity 1.6s ease .3s;
+}
+
+.cl.is-lit .cl-ledge::after {
+  opacity: 1;
+}
+
 /* the brass lamp stands on the ledge, its foot just behind the ledge's edge */
-.cl-lamp { position: absolute; z-index: 1; left: 50%; bottom: calc(154 * var(--f)); width: calc(190 * var(--f)); margin-left: calc(-95 * var(--f));
-  padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.cl-lamp:disabled { cursor: default; }
-.cl-lamp-art { display: block; width: 100%; height: auto; filter: drop-shadow(0 calc(6 * var(--f)) calc(10 * var(--f)) #05031a99) drop-shadow(0 0 calc(var(--halo, 0) * 10px) #ffd27aaa); }
-.cl-lamp:focus-visible { outline: 2px solid #f6d38a; outline-offset: 4px; border-radius: 8px; }
+.cl-lamp {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: calc(184 * var(--f));
+  width: calc(170 * var(--f));
+  margin-left: calc(-85 * var(--f));
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cl-lamp:disabled {
+  cursor: default;
+}
+
+.cl-lamp-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 calc(6 * var(--f)) calc(10 * var(--f)) #05031a99) drop-shadow(0 0 calc(var(--halo, 0) * 10px) #ffd27aaa);
+}
+
+.cl-lamp:focus-visible {
+  outline: 2px solid #f6d38a;
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
 /* each flame where its wick is (scripts/closing-lamp.py prints these) */
-.cl-flame { position: absolute; transform-origin: 50% 92%; visibility: hidden; pointer-events: none; }
-.cl-flame-l { left: 4.72%; top: 24%; width: 16.54%; height: 16%; }
-.cl-flame-r { left: 80.31%; top: 24%; width: 16.54%; height: 16%; }
-.cl-flame-c { left: 45.67%; top: 30.5%; width: 10.63%; height: 13.75%; }
-.cl-flame img { position: relative; display: block; width: 100%; height: 100%; transform-origin: 50% 92%; }
-.cl-flame::before { content: ""; position: absolute; left: 50%; top: 55%; width: 420%; aspect-ratio: 1; translate: -50% -50%; border-radius: 50%;
-  background: radial-gradient(closest-side, #ffe3a055, #ffb45a22 45%, #0000); }
-.cl-hint { position: absolute; z-index: 3; left: 10%; right: 10%; bottom: calc(475 * var(--f)); display: flex; align-items: center; justify-content: center; gap: calc(10 * var(--k));
-  font-size: calc(16 * var(--k)); color: #fbe6bd; text-align: center; pointer-events: none; }
-.cl-hint i { flex: none; width: calc(12 * var(--k)); height: calc(12 * var(--k)); background: #f3c96a;
-  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); }
-.cl.is-lit .cl-hint { visibility: hidden; }
+.cl-flame {
+  position: absolute;
+  transform-origin: 50% 92%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.cl-flame-l {
+  left: 4.72%;
+  top: 24%;
+  width: 16.54%;
+  height: 16%;
+}
+
+.cl-flame-r {
+  left: 80.31%;
+  top: 24%;
+  width: 16.54%;
+  height: 16%;
+}
+
+.cl-flame-c {
+  left: 45.67%;
+  top: 30.5%;
+  width: 10.63%;
+  height: 13.75%;
+}
+
+.cl-flame img {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 92%;
+}
+
+.cl-flame::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 55%;
+  width: 420%;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, #ffe3a055, #ffb45a22 45%, #0000);
+}
+
+.cl-hint {
+  position: absolute;
+  z-index: 3;
+  left: 10%;
+  right: 10%;
+  bottom: calc(480 * var(--f));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(10 * var(--k));
+  font-size: calc(16 * var(--k));
+  color: #fbe6bd;
+  text-align: center;
+  pointer-events: none;
+}
+
+.cl-hint i {
+  flex: none;
+  width: calc(12 * var(--k));
+  height: calc(12 * var(--k));
+  background: #f3c96a;
+  clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%);
+}
+
+.cl.is-lit .cl-hint {
+  visibility: hidden;
+}
 
 /* the words, inside the arch above the lamp; nothing shows until the lamp is lit */
-.cl-body { position: absolute; left: 50%; width: calc(var(--aw) - 300 * var(--f)); margin-left: calc((var(--aw) - 300 * var(--f)) / -2);
-  top: calc(var(--top) + var(--bt)); height: calc(var(--ah) - var(--bt) - var(--bb));
-  display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; gap: calc(6 * var(--k)); text-align: center; }
-.cl:not(.is-lit) .cl-body [data-r] { visibility: hidden; }
+.cl-body {
+  position: absolute;
+  left: 50%;
+  width: calc(var(--aw) - 300 * var(--f));
+  margin-left: calc((var(--aw) - 300 * var(--f)) / -2);
+  top: calc(var(--top) + var(--bt));
+  height: calc(var(--ah) - var(--bt) - var(--bb));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  gap: calc(6 * var(--k));
+  text-align: center;
+}
+
+.cl:not(.is-lit) .cl-body [data-r] {
+  visibility: hidden;
+}
+
 /* glints on the carving while it is still night */
-.cl-arch .iv-sparks { z-index: 1; pointer-events: none; }
-.cl.is-lit .cl-arch .iv-sparks { visibility: hidden; }
-.cl-line { font: 400 calc(24 * var(--k)) / 1.18 var(--display); color: #f6d38a; text-shadow: 0 2px 12px #0b062a; }
-.cl-line span { display: block; }
-.cl-count { display: flex; gap: calc(8 * var(--k)); margin-top: calc(4 * var(--k)); }
-.cl-count p { display: flex; flex-direction: column; align-items: center; gap: calc(5 * var(--k)); }
-.cl-tile { width: calc(56 * var(--k)); height: calc(58 * var(--k)); display: grid; place-items: center; overflow: hidden; border-radius: calc(10 * var(--k));
-  background: radial-gradient(120% 90% at 50% 30%, #b3173f, #7d0d27 70%, #560a1b); box-shadow: 0 0 0 1.5px #e0b45a, 0 0 0 calc(4 * var(--k)) #e0b45a33, 0 8px 18px #05031a99; }
-.cl-tile b { display: block; font: 400 calc(28 * var(--k)) / 1 var(--display); color: #ffe3a3; font-variant-numeric: tabular-nums; }
-.cl-unit { font-size: calc(11 * var(--k)); letter-spacing: .14em; text-transform: uppercase; color: #f1d79b; }
-:lang(bn) .cl-unit, :lang(hi) .cl-unit { letter-spacing: 0; font-size: calc(13 * var(--k)); }
-.cl-until { font-size: calc(14.5 * var(--k)); font-style: italic; color: #fbe6bd; margin-top: calc(-3 * var(--k)); }
-.cl-kin { margin-top: calc(4 * var(--k)); }
-.cl-head { display: flex; align-items: center; justify-content: center; gap: calc(9 * var(--k)); font-size: calc(16 * var(--k)); font-style: italic; color: #f6d38a; }
-.cl-head i { flex: none; width: calc(30 * var(--k)); height: 1px; background: linear-gradient(90deg, #e0b45a00, #e0b45a); }
-.cl-head i:last-child { scale: -1 1; }
+.cl-arch .iv-sparks {
+  z-index: 1;
+  pointer-events: none;
+}
+
+.cl.is-lit .cl-arch .iv-sparks {
+  visibility: hidden;
+}
+
+.cl-line {
+  font: 400 calc(27 * var(--k)) / 1.18 var(--display);
+  color: #f6d38a;
+  text-shadow: 0 2px 12px #0b062a;
+}
+
+.cl-line span {
+  display: block;
+}
+
+.cl-count {
+  display: flex;
+  gap: calc(8 * var(--k));
+  margin-top: calc(4 * var(--k));
+}
+
+.cl-count p {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(5 * var(--k));
+}
+
+.cl-tile {
+  width: calc(56 * var(--k));
+  height: calc(58 * var(--k));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: calc(10 * var(--k));
+  background: radial-gradient(120% 90% at 50% 30%, #b3173f, #7d0d27 70%, #560a1b);
+  box-shadow: 0 0 0 1.5px #e0b45a, 0 0 0 calc(4 * var(--k)) #e0b45a33, 0 8px 18px #05031a99;
+}
+
+.cl-tile b {
+  display: block;
+  font: 400 calc(28 * var(--k)) / 1 var(--display);
+  color: #ffe3a3;
+  font-variant-numeric: tabular-nums;
+}
+
+.cl-unit {
+  font-size: calc(11 * var(--k));
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #f1d79b;
+}
+
+:lang(bn) .cl-unit,
+:lang(hi) .cl-unit {
+  letter-spacing: 0;
+  font-size: calc(13 * var(--k));
+}
+
+.cl-until {
+  font-size: calc(14.5 * var(--k));
+  font-style: italic;
+  color: #fbe6bd;
+  margin-top: calc(-3 * var(--k));
+}
+
+.cl-kin {
+  margin-top: calc(4 * var(--k));
+}
+
+.cl-head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(9 * var(--k));
+  font-size: calc(16 * var(--k));
+  font-style: italic;
+  color: #f6d38a;
+}
+
+.cl-head i {
+  flex: none;
+  width: calc(30 * var(--k));
+  height: 1px;
+  background: linear-gradient(90deg, #e0b45a00, #e0b45a);
+}
+
+.cl-head i:last-child {
+  scale: -1 1;
+}
+
 /* the names two by two, a small gold diamond between each pair, the little one last on his own line */
-.cl-names { display: grid; grid-template-columns: auto auto; justify-content: center; gap: calc(3 * var(--k)) calc(22 * var(--k)); margin-top: calc(7 * var(--k));
-  font-size: calc(15 * var(--k)); line-height: 1.3; color: #fff3dc; }
-.cl-names span { position: relative; text-align: left; white-space: nowrap; }
-.cl-names span:nth-child(odd) { text-align: right; }
-.cl-names span:nth-child(odd):not(.cl-last)::after { content: ""; position: absolute; right: calc(-14.5 * var(--k)); top: .5em; width: calc(7 * var(--k)); height: calc(7 * var(--k));
-  background: #e0b45a; rotate: 45deg; }
-.cl-names span.cl-last { grid-column: 1 / -1; text-align: center; font-style: italic; color: #f6d38a; margin-top: calc(2 * var(--k)); }
-.cl-side { display: grid; gap: calc(6 * var(--k)); font-size: calc(11.5 * var(--k)); line-height: 1.38; color: #f3e6cc; }
-.cl-side em { display: block; font-size: calc(12.5 * var(--k)); color: #e9c77e; }
-.cl-side a { color: #ffd98a; text-underline-offset: 3px; }
-.cl-side .shloka { margin: calc(2 * var(--k)) 0 0; font-size: calc(12 * var(--k)); line-height: 1.45; color: #ffd9a8; }
+.cl-names {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: calc(3 * var(--k)) calc(22 * var(--k));
+  margin-top: calc(7 * var(--k));
+  font-size: calc(15 * var(--k));
+  line-height: 1.3;
+  color: #fff3dc;
+}
+
+.cl-names span {
+  position: relative;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.cl-names span:nth-child(odd) {
+  text-align: right;
+}
+
+.cl-names span:nth-child(odd):not(.cl-last)::after {
+  content: "";
+  position: absolute;
+  right: calc(-14.5 * var(--k));
+  top: .5em;
+  width: calc(7 * var(--k));
+  height: calc(7 * var(--k));
+  background: #e0b45a;
+  rotate: 45deg;
+}
+
+.cl-names span.cl-last {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-style: italic;
+  color: #f6d38a;
+  margin-top: calc(2 * var(--k));
+}
+
+.cl-side {
+  display: grid;
+  gap: calc(6 * var(--k));
+  font-size: calc(11.5 * var(--k));
+  line-height: 1.38;
+  color: #f3e6cc;
+}
+
+.cl-side em {
+  display: block;
+  font-size: calc(12.5 * var(--k));
+  color: #e9c77e;
+}
+
+.cl-side a {
+  color: #ffd98a;
+  text-underline-offset: 3px;
+}
+
+.cl-side .shloka {
+  margin: calc(2 * var(--k)) 0 0;
+  font-size: calc(12 * var(--k));
+  line-height: 1.45;
+  color: #ffd9a8;
+}
 
 @container (min-aspect-ratio: 1/1) {
-  .cl { --aw: calc(100cqh * 1064 / 1800); --ah: 100cqh; --f: calc(100cqh / 1800); --k: calc(var(--aw) / 421); --top: 0px;
-    --bt: calc(var(--ah) * .15); --bb: calc(var(--ah) * .27); }
-  .cl-body { width: calc(var(--aw) * .7); margin-left: calc(var(--aw) * -.35); justify-content: center; gap: calc(9 * var(--k)); }
-  .cl-line { font-size: calc(27 * var(--k)); }
-  .cl-wing { display: block; margin-left: 0; left: calc(50% + (var(--o) - .5) * var(--aw)); --cx: calc(50% - var(--o) * 100%); }
-  .cl-wing .cl-lantern { display: none; }
+  .cl {
+    --aw: calc(100cqh * 1064 / 1800);
+    --ah: 100cqh;
+    --f: calc(100cqh / 1800);
+    --k: calc(var(--aw) / 421);
+    --top: 0px;
+    --bt: calc(var(--ah) * .15);
+    --bb: calc(var(--ah) * .27);
+  }
+
+  .cl-body {
+    width: calc(var(--aw) * .7);
+    margin-left: calc(var(--aw) * -.35);
+    justify-content: center;
+    gap: calc(9 * var(--k));
+  }
+
+  .cl-wing {
+    display: block;
+    margin-left: 0;
+    left: calc(50% + (var(--o) - .5) * var(--aw));
+    --cx: calc(50% - var(--o) * 100%);
+  }
+
+  .cl-wing .cl-lantern {
+    display: none;
+  }
+
   /* the family's numbers and homes beside the arch, one side each */
-  .cl-side { position: absolute; top: 50%; translate: 0 -50%; width: calc(var(--aw) * .66); font-size: calc(15 * var(--k)); gap: calc(14 * var(--k)); text-align: center; }
-  .cl-side em { font-size: calc(16 * var(--k)); }
-  .cl-side .shloka { font-size: calc(15 * var(--k)); }
-  .cl-side-l { right: calc(100% + var(--aw) * .32); }
-  .cl-side-r { left: calc(100% + var(--aw) * .32); }
+  .cl-side {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    width: calc(var(--aw) * .66);
+    font-size: calc(15 * var(--k));
+    gap: calc(14 * var(--k));
+    text-align: center;
+  }
+
+  .cl-side em {
+    font-size: calc(16 * var(--k));
+  }
+
+  .cl-side .shloka {
+    font-size: calc(15 * var(--k));
+  }
+
+  .cl-side-l {
+    right: calc(100% + var(--aw) * .32);
+  }
+
+  .cl-side-r {
+    left: calc(100% + var(--aw) * .32);
+  }
 }
 
 /* lighting the lamp (Closing in Words.jsx): the night arch stays put and the warm one fades in over it */

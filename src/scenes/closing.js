@@ -1,10 +1,13 @@
 import { gsap } from 'gsap'
 
-// The last page (components/Words.jsx Closing): the carved arch rises out of the night, the ledge and the unlit
-// lamp settle, then the hint asks for a tap. Lighting the lamp is the guest's (Closing's own timeline).
+// The last page (components/Words.jsx Closing): the two flanking arches rise from below while the
+// center arch descends from above, the brass lamp settles onto its ledge, then the hint asks for a tap.
+// Lighting the lamp is the guest's (Closing's own timeline).
 export function playClosing(tl, root) {
   const $ = (s) => root.querySelector(s)
-  tl.fromTo($('.cl-arch'), { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 1.4, ease: 'power3.out' }, 0)
+  const $$ = (s) => [...root.querySelectorAll(s)]
+  tl.fromTo($$('.cl-wing'), { yPercent: 115 }, { yPercent: 0, duration: 1.4, ease: 'power3.out' }, 0)
+    .fromTo($('.cl-arch'), { yPercent: -115 }, { yPercent: 0, duration: 1.4, ease: 'power3.out' }, 0)
     .fromTo($('.cl-lamp'), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 0.9)
     .fromTo($('.cl-hint'), { autoAlpha: 0, y: 8 }, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power1.out' }, 1.4)
 }
