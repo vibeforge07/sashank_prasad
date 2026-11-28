@@ -55,6 +55,10 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   :is(#sangeet, #wedding) [data-l$='-w'] { display: none; }
   /* phones: the moon moves up and out past the words, clear of the lifted skyline */
   #wedding .moon { bottom: calc(1330 * var(--u)) !important; left: calc(50% + 330 * var(--u)) !important; }
+  /* phones: clear the hanging garlands above and keep the Sangeet trees below the venue address */
+  #sangeet .words { --top: 290 !important; }
+  #sangeet [data-l='garden-t'] { bottom: calc(640 * var(--u)) !important; }
+  #reception .words { --top: 415 !important; }
 }
 .layer .base { position: absolute; left: 0; right: 0; top: calc(100% - 1px); height: 100cqh; }
 .moon { position: absolute; aspect-ratio: 1; border-radius: 50%; background: #fffbe8; box-shadow: 0 0 calc(60 * var(--u)) calc(18 * var(--u)) #fff2c488; }
@@ -112,6 +116,9 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* Sangeet: the flower strands hang a little higher, the words sit a little lower */
   #sangeet [data-l='sangeet-hanging'] { margin-top: calc(-70 * var(--u)); }
   #sangeet .words { --top: 280 !important; }
+  /* Reception: lift the garland slightly so words stay clear on compact phones */
+  #reception [data-l='reception-hanging'] { margin-top: calc(-50 * var(--u)); }
+  #reception .words { --top: 405 !important; }
   /* Wedding: the toran hangs a little higher and the words sit a little lower, so the bells stay clear of
      them; no sky is left for the moon and clouds */
   #wedding [data-l='wedding-hanging'] { margin-top: calc(-70 * var(--u)); }
