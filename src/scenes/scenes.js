@@ -117,7 +117,7 @@ export const SCENES = [
       L('mehendi-wall', 2200, 2000, { z: 2, full: true, kind: 'wall' }),
       L('mehendi-window', 1180, 2000, { y: 0, z: 3, kind: 'frame' }),
       L('mehendi-seat', 1500, 450, { y: 0, z: 4 }),
-      person('mehendi-couple', 980, 650, -10, 40, 5),
+      person('mehendi-couple', 950, 682, -10, 40, 5),
       ...foliage(7), ...flowers('flowers-white').map((f) => ({ ...f, y: -90 })),
     ],
     play(tl, q, root) {
@@ -179,7 +179,7 @@ export const SCENES = [
       L('garden-w', 1500, 645, { art: 'sangeet-garden', y: 150, z: 1, repeat: true }),
       L('garden-t', 1080, 464, { art: 'sangeet-garden', y: 820, z: 1, full: true, base: '#8c8401' }),
       L('sangeet-floor', 2200, 267, { z: 1, full: true, kind: 'ground' }),
-      L('sangeet-music', 420, 189, { y: 40, x: -720, z: 4 }),
+      L('sangeet-music', 660, 297, { y: 25, x: -720, z: 4 }),
       L('sangeet-stage-small', 1250, 668, { y: 330, z: 2 }),
       L('candle-l', 200, 763, { art: 'sangeet-candles', ax: 'l', x: 6, y: 70, z: 4 }),
       L('candle-r', 200, 763, { art: 'sangeet-candles', ax: 'r', x: 6, y: 70, z: 4, flip: true }),
