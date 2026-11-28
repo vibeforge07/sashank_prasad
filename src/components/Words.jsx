@@ -4,8 +4,8 @@ import { shower } from './petals.js'
 import { EVENTS, WEDDING_AT } from '../content/events.js'
 import { SHLOKAS } from '../content/shlokas.js'
 import { artUrl } from '../art/index.js'
-import ring from '../opening/ring.webp'
-import sindoor from '../opening/sindoor.webp'
+import alpona from '../opening/alpona-white.webp'
+import chandelier from '../opening/chandelier.webp'
 
 // phone number and home addresses live outside git, see .gitignore
 const contact = Object.values(import.meta.glob('../content/contact.js', { eager: true }))[0]?.CONTACT
@@ -44,7 +44,6 @@ function useWide() {
 // gold glints over the crimson: [left %, top %, size], each twinkles on its own beat (scenes/invitation.js)
 const SPARKS = [[7, 30, 1], [17, 54, 0.7], [26, 21, 0.8], [11, 74, 0.9], [33, 41, 0.6], [44, 17, 1], [57, 27, 0.7], [67, 15, 0.9],
   [75, 45, 0.8], [87, 25, 1], [93, 57, 0.7], [81, 71, 0.9], [63, 79, 0.6], [23, 87, 0.8], [47, 89, 0.7], [71, 59, 0.6]]
-const clamp1 = (v) => Math.max(-1, Math.min(1, v))
 
 export function Family({ c, lang }) {
   const f = c.family
@@ -53,45 +52,6 @@ export function Family({ c, lang }) {
   // the couple's picture inside the card arch, once art/raw/couple-photo.png has been through `npm run art`
   const photo = artUrl('couple-photo')
 
-  // the room answers the guest: the layers drift apart with the mouse (or the tilt of an Android phone),
-  // and a touch sets the marigold strands and their bells swinging
-  useEffect(() => {
-    const el = inv.current
-    if (!el || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const live = () => el.closest('.scene')?.classList.contains('is-live')
-    const movers = [['.iv-far', 10], ['.iv-mid', 18], ['.iv-near', 26], ['.iv-glow', -12]].map(([s, d]) => {
-      const t = el.querySelector(s)
-      return [gsap.quickTo(t, 'x', { duration: 1, ease: 'power3' }), gsap.quickTo(t, 'y', { duration: 1, ease: 'power3' }), d]
-    })
-    const look = (px, py) => movers.forEach(([mx, my, d]) => { mx(-px * d); my(-py * d * 0.6) })
-    const onMove = (e) => {
-      if (e.pointerType !== 'mouse') return
-      const r = el.getBoundingClientRect()
-      look(((e.clientX - r.left) / r.width) * 2 - 1, ((e.clientY - r.top) / r.height) * 2 - 1)
-    }
-    const onTilt = (e) => { if (e.gamma != null && live()) look(clamp1(e.gamma / 25), clamp1((e.beta - 40) / 25)) }
-    // a strand swings away from the touch (its idle sway runs on the picture inside, this on its holder)
-    const malas = [...el.querySelectorAll('.iv-mala')]
-    const onDown = (e) => {
-      malas.forEach((m) => {
-        const r = m.getBoundingClientRect()
-        if (!r.width) return
-        const mid = r.left + r.width / 2
-        const k = (mid > e.clientX ? -1 : 1) * 6 * Math.max(0.3, 1 - Math.abs(e.clientX - mid) / window.innerWidth)
-        gsap.killTweensOf(m)
-        gsap.timeline().to(m, { rotation: k, duration: 0.2, ease: 'power2.out' })
-          .to(m, { rotation: 0, duration: 2.6, ease: 'elastic.out(1, 0.25)' })
-      })
-    }
-    el.addEventListener('pointermove', onMove)
-    el.addEventListener('pointerdown', onDown)
-    window.addEventListener('deviceorientation', onTilt)
-    return () => {
-      el.removeEventListener('pointermove', onMove)
-      el.removeEventListener('pointerdown', onDown)
-      window.removeEventListener('deviceorientation', onTilt)
-    }
-  }, [])
   const frame = <><i className="cp-frame" /><i className="cp-c cp-c-tl" /><i className="cp-c cp-c-tr" /><i className="cp-c cp-c-bl" /><i className="cp-c cp-c-br" /></>
   const kin = (rows) => rows.map(([k, v]) => <p className="kin" key={k}><em>{k}</em><span>{v}</span></p>)
   const family = (name, rows) => <div className="cp"><div className="cp-in"><i className="cp-orn" /><h3 className="nm">{name}</h3>{kin(rows)}<i className="cp-orn" /></div>{frame}</div>
@@ -99,7 +59,7 @@ export function Family({ c, lang }) {
     cover: (
       <div className="cp cp-cover">
         <div className="cp-in">
-          <img className="cv-ring" src={ring} alt="" />
+          <span className="cv-mono"><Mono /></span>
           <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
           <p className="cv-names"><span>{c.hero.bride}</span><small>{c.hero.and}</small><span>{c.hero.groom}</span></p>
           <p className="cv-date">{c.gate.date}</p>
@@ -141,29 +101,39 @@ export function Family({ c, lang }) {
   // desktop: a leaf carries a right page on its front and the next left page on its back;
   // phone: one page per leaf with plain card on its back, so every page gets the whole screen
   const order = wide ? [['cover', 'arch'], ['request', 'bride']] : [['cover'], ['arch'], ['request'], ['bride']]
+  // the room of the red-rose card, as it is there: a maroon damask wall inside a thin gold frame, velvet drapes
+  // tied back at the two sides, a chandelier, and a white alpona turning slowly behind the card on each side,
+  // with the couple's monogram at its heart (one large alpona behind the card on a phone)
   return (
     <div className="inv" ref={inv}>
-      {/* back to front: the warm light and the glints, the paisleys, the drapes and strands, the elephants */}
       <div className="inv-decor" data-l="iv-decor" aria-hidden="true">
-        <div className="iv-glow"><i /></div>
-        <div className="iv-sparks">
-          {SPARKS.map(([x, y, s]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': s }} />)}
-        </div>
-        <div className="iv-far">
-          <img className="iv-pais iv-pais-l" src={artUrl('gate-paisley')} alt="" />
-          <img className="iv-pais iv-pais-r" src={artUrl('gate-paisley')} alt="" />
-        </div>
-        <div className="iv-mid">
-          {['l', 'r'].map((s) => <div key={s} className={`iv-drape iv-drape-${s}`}><img src={artUrl('haldi-drape')} alt="" /></div>)}
-          {['l', 'r'].flatMap((s) => [1, 2, 3].map((n) => <span key={s + n} className={`iv-mala iv-mala-${s} iv-m${n}`}><img src={artUrl('gate-mala')} alt="" /></span>))}
-        </div>
-        <div className="iv-near">
-          {['l', 'r'].map((s) => <div key={s} className={`iv-ele iv-ele-${s}`}><img src={artUrl('gate-elephant')} alt="" /></div>)}
-        </div>
-        <div className="iv-toran" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />
-        <div className="iv-flowers" style={{ backgroundImage: `url(${artUrl('gate-flowers')})` }} />
+        <i className="iv-damask" />
+        {['l', 'r'].map((s) => (
+          <div key={s} className={`iv-alpona iv-alpona-${s}`}>
+            <i className="iv-alpona-turn"><img className="iv-alpona-art" src={alpona} alt="" /></i>
+            <Mono />
+          </div>
+        ))}
+        <i className="iv-edge" />
+        {['l', 'r'].map((s) => (
+          <div key={s} className={`iv-drape iv-drape-${s}`}>
+            <i className="iv-fab" />
+            <svg className="iv-tassel" viewBox="0 0 40 120">
+              <defs>
+                <linearGradient id={`tv-${s}`} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#f8e7b0" /><stop offset=".5" stopColor="#d8b064" /><stop offset="1" stopColor="#8a6326" /></linearGradient>
+                <linearGradient id={`tb-${s}`} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#5e4013" /><stop offset=".22" stopColor="#f6e3a8" /><stop offset=".45" stopColor="#d8b064" /><stop offset=".72" stopColor="#a87c34" /><stop offset="1" stopColor="#4a3410" /></linearGradient>
+              </defs>
+              <path d="M20 0C8 14 6 30 20 40C34 30 32 14 20 0Z" fill="none" stroke={`url(#tv-${s})`} strokeWidth="3" />
+              <circle cx="20" cy="44" r="6.5" fill={`url(#tv-${s})`} stroke="#5e4013" strokeWidth=".6" />
+              <path d="M13 50h14l2 8H11z" fill={`url(#tb-${s})`} stroke="#5e4013" strokeWidth=".5" />
+              <path d="M11 58q9 3 18 0l3 52q-12 6-24 0z" fill={`url(#tb-${s})`} />
+              <path d="M13 62v46M16 62v48M19 62v48M22 62v48M25 62v48M28 62v46" stroke="#6e4d19" strokeWidth=".7" opacity=".7" />
+              <path d="M10 110q10 6 20 0" fill="none" stroke="#5e4013" strokeWidth=".8" />
+            </svg>
+          </div>
+        ))}
+        <img className="iv-chand" src={chandelier} alt="" />
       </div>
-      <img className="inv-ring" src={ring} alt="" aria-hidden="true" />
       <h2 className="inv-head">{f.title}</h2>
       <div className="env-stage">
         <div className="env">
@@ -181,11 +151,25 @@ export function Family({ c, lang }) {
           </div>
           <div className="env-front"><span className="env-edge" /></div>
           <div className="env-flap"><div className="env-flap-face" /><div className="env-flap-back" /></div>
-          <div className="env-seal"><img src={sindoor} alt="" /><img className="seal-ring" src={ring} alt="" /></div>
+          <div className="env-seal"><Mono /></div>
         </div>
       </div>
       <p className="inv-hint">{c.hero.scroll}</p>
     </div>
+  )
+}
+
+// D & S in a double gold ring: on the wax seal and at the heart of each alpona
+function Mono() {
+  return (
+    <svg className="mono" viewBox="0 0 120 120" aria-hidden="true">
+      <circle cx="60" cy="60" r="57" fill="none" stroke="currentColor" strokeWidth="1.3" />
+      <circle cx="60" cy="60" r="51" fill="none" stroke="currentColor" strokeWidth=".6" opacity=".7" />
+      <text x="37" y="75" textAnchor="middle" fontSize="42" fill="currentColor" style={{ fontFamily: "'Yeseva One', serif" }}>D</text>
+      <text x="60" y="70" textAnchor="middle" fontSize="20" fontStyle="italic" fill="currentColor" style={{ fontFamily: "'EB Garamond', serif" }}>&amp;</text>
+      <text x="83" y="75" textAnchor="middle" fontSize="42" fill="currentColor" style={{ fontFamily: "'Yeseva One', serif" }}>S</text>
+      <path d="M60 27v11M60 79v14" stroke="currentColor" strokeWidth=".8" opacity=".7" />
+    </svg>
   )
 }
 
