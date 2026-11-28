@@ -87,13 +87,13 @@
 .sch-grid { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(26px, 2.6vw, 44px); max-width: 1180px; margin: 0 auto; align-items: stretch; perspective: 1400px; }
 /* the slot holds the scroll's resting point and stays put; the card inside it is the one dealt in */
 .ev-slot { scroll-snap-align: center; display: flex; }
-.ev { position: relative; display: flex; flex-direction: column; width: 100%; }
+.ev { position: relative; display: flex; flex-direction: column; width: 100%; will-change: transform, opacity; backface-visibility: hidden; }
 .sch-arch { position: relative; --bleed: 24px; height: 100%; display: flex; flex-direction: column; flex: 1; }
 .sch-arch .arch__inner { position: relative; height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; background: linear-gradient(180deg, #fffcf4, #f7ebd2); color: var(--text); box-shadow: 0 0 0 var(--bleed) #f9efd9; }
 /* the cusped shoulders bulge outside the box, so once the outline clips it the picture and the paper run under them */
 .sch-arch .arch__inner[style*='clip-path'] { overflow: visible; }
 .sch-arch .arch__frame { position: absolute; z-index: 2; overflow: visible; pointer-events: none; filter: drop-shadow(0 22px 30px rgba(15, 1, 4, .45)); }
-.ev__media { position: relative; margin: 0 calc(-1 * var(--bleed)); aspect-ratio: 1080 / 1120; flex-shrink: 0; overflow: hidden; background: radial-gradient(circle at 50% 38%, #6e1525, #2a0911 76%); }
+.ev__media { position: relative; margin: 0 calc(-1 * var(--bleed)); aspect-ratio: 1080 / 1120; flex-shrink: 0; overflow: hidden; isolation: isolate; transform: translateZ(0); background: radial-gradient(circle at 50% 38%, #6e1525, #2a0911 76%); }
 .ev__media::after { content: ''; position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; height: 4px; background: linear-gradient(90deg, #8a6326, #f1d796, #b4873c, #f1d796, #8a6326); }
 .ev__body { padding: 20px 16px 24px; min-height: clamp(116px, 11vw, 150px); text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .ev__title { font-family: var(--f-head); font-weight: 600; font-size: clamp(30px, 2.6vw, 38px); line-height: 1.25; color: var(--wine); white-space: pre-line; }
@@ -109,8 +109,9 @@
 
 /* the ceremony's own scenery, drawn small inside its frame: the bottom of a phone-shaped stage, where the
    people and the ground are; its sky runs up into the arch */
-.scene.mini { position: absolute; left: 0; right: 0; bottom: 0; height: auto; aspect-ratio: 1080 / 1800; scroll-snap-align: none; scroll-snap-stop: normal; content-visibility: visible; contain-intrinsic-size: none; }
+.scene.mini { position: absolute; left: 0; right: 0; bottom: 0; height: auto; aspect-ratio: 1080 / 1800; scroll-snap-align: none; scroll-snap-stop: normal; contain: none; content-visibility: visible; contain-intrinsic-size: none; }
 .scene.mini .world { --u: calc(100cqw / 1080); --dx: 0px; }
+.scene.mini .layer { backface-visibility: hidden; }
 
 /* ---- the diya timeline ---- */
 .sch-night { padding-top: calc(48px + clamp(90px, 10vw, 150px)); }

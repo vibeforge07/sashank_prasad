@@ -97,7 +97,7 @@ export default forwardRef(function Scene({ scene, lang, children, mini }, ref) {
           {scene.stars && <div className="stars" />}
           {scene.stars && artUrl('sky-sparkle-tile') && <div className="sparkle" style={{ backgroundImage: `url(${artUrl('sky-sparkle-tile')})` }} />}
           {scene.moon && <div className="moon" style={{ left: `calc(50% + ${scene.moon.x} * var(--u) + var(--dx))`, bottom: `calc(${scene.moon.y} * var(--u))`, width: `calc(${scene.moon.s} * var(--u))` }} />}
-          {scene.layers.map((l) => <Layer key={l.id} {...l} />)}
+          {scene.layers.map((l) => <Layer key={l.id} {...l} eager={mini} />)}
           {mini ? null : scene.own ? children : <div className="words" style={{ '--top': scene.text.top }}><i className="card" data-t="-0.4" />{children}</div>}
         </div>
       </div>

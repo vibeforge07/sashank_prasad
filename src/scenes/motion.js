@@ -11,7 +11,7 @@ const list = (q, ids) => [].concat(ids).map(q).filter(Boolean)
 export function slide(tl, q, ids, from, at, dur = 0.9, ease = 'power3.out') {
   const els = list(q, ids)
   if (!els.length) return
-  const v = { left: { x: '-115vw' }, right: { x: '115vw' }, up: { yPercent: -115 }, down: { yPercent: 115 } }[from]
+  const v = { left: { x: '-115cqw' }, right: { x: '115cqw' }, up: { yPercent: -115 }, down: { yPercent: 115 } }[from]
   tl.fromTo(els, v, { x: 0, yPercent: 0, duration: dur, ease, stagger: 0.12 }, at)
 }
 

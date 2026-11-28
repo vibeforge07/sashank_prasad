@@ -7,7 +7,7 @@ import { artUrl } from '../art/index.js'
 //   w,h size of the picture
 const u = (n) => `calc(${n} * var(--u))`
 
-export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall, repeat, base }) {
+export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b', z = 1, flip, full, kind = 'prop', fit = 'contain', road, tall, repeat, base, eager }) {
   const name = art || id
   const url = artUrl(name)
   // a backdrop drawn so its two ends meet: it repeats across the whole width at its own height,
@@ -48,11 +48,11 @@ export default function Layer({ id, art, w, h, x = 0, y = 0, ax = 'c', ay = 'b',
     <div className={`layer k-${kind}${full ? ' strip' : ''} at-${ay}`} data-l={id} style={style}>
       <div className="layer-in">
         {url
-          ? <img src={url} alt="" draggable="false" decoding="async" loading="lazy" style={look} />
+          ? <img src={url} alt="" draggable="false" decoding={eager ? 'sync' : 'async'} loading={eager ? 'eager' : 'lazy'} style={look} />
           : <span className="todo"><i>{name}</i></span>}
         {/* a backdrop lifted above the stage: its ground carries on down behind the stage, in its own bottom colour */}
         {url && base && <i className="base" style={{ background: base }} />}
-        {url && lids.map((l) => <img key={l} className="blink" src={l} alt="" draggable="false" decoding="async" loading="lazy" style={look} />)}
+        {url && lids.map((l) => <img key={l} className="blink" src={l} alt="" draggable="false" decoding={eager ? 'sync' : 'async'} loading={eager ? 'eager' : 'lazy'} style={look} />)}
       </div>
     </div>
   )

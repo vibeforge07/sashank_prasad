@@ -106,15 +106,25 @@ export function Events({ c, lang }) {
   const minis = useRef([])
   useArches(root, [lang])
 
-  // each frame's scenery plays while its card is on screen and rests when it leaves
+  // each frame's scenery plays while its card is on screen and rests when it leaves, but only once the card has
+  // landed: its people do not start walking in while the card is still flying toward you in 3D (that doubled
+  // the work in every frame of the deal and showed as stutter inside the frame)
+  // observe the static .ev-slot wrapper so the 3D scroll deal on .ev never causes threshold jitter
+  const dealt = useRef([])
+  const seen = useRef([])
   useEffect(() => {
     const io = new IntersectionObserver((es) => es.forEach((e) => {
-      const s = minis.current.find((m) => m?.el === e.target)
+      const i = minis.current.findIndex((m) => m?.el.closest('.ev-slot') === e.target)
+      const s = minis.current[i]
       if (!s) return
-      if (e.isIntersecting) s.enter()
-      else s.exit()
+      seen.current[i] = e.isIntersecting
+      if (e.isIntersecting && (still() || dealt.current[i])) s.enter()
+      else if (!e.isIntersecting) s.exit()
     }), { root: reelOf(root.current), threshold: 0.3 })
-    minis.current.forEach((m) => m && io.observe(m.el))
+    minis.current.forEach((m) => {
+      const slot = m?.el.closest('.ev-slot')
+      if (slot) io.observe(slot)
+    })
     return () => io.disconnect()
   }, [])
 
@@ -128,7 +138,14 @@ export function Events({ c, lang }) {
         gsap.fromTo(ev,
           { z: -760, rotateX: 38, y: 190, autoAlpha: 0, transformOrigin: '50% 100%' },
           { z: 0, rotateX: 0, y: 0, autoAlpha: 1, ease: 'power2.out',
-            scrollTrigger: { trigger: ev.parentElement, scroller, start: `top ${102 - k * 5}%`, end: `top ${52 - k * 5}%`, scrub: 1 } })
+            scrollTrigger: { trigger: ev.parentElement, scroller, start: `top ${102 - k * 5}%`, end: `top ${52 - k * 5}%`, scrub: 1 },
+            // the card has landed: its scenery may start (once it is also on screen)
+            onUpdate() {
+              const down = this.progress() > 0.92
+              if (down === !!dealt.current[i]) return
+              dealt.current[i] = down
+              if (down && seen.current[i]) minis.current[i]?.enter()
+            } })
       })
     }, root)
     return () => ctx.revert()
@@ -182,6 +199,11 @@ export function Timeline({ c, lang }) {
     const cap = () => pos(root.current) + root.current.offsetHeight - scroller.clientHeight - 2
     const line = (el) => pos(el) - scroller.clientHeight * 0.62
     const ctx = gsap.context(() => {
+      // as on the red-rose card: the rose strings unroll down from the frieze with the scroll as the page comes in
+      gsap.fromTo('.sch-strand', { clipPath: 'inset(0% 0% 100% 0%)' }, {
+        clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', stagger: 0.08,
+        scrollTrigger: { trigger: root.current, scroller, start: 'top 75%', end: () => Math.min(pos(root.current) + scroller.clientHeight * 0.6, cap()), scrub: 1.2 },
+      })
       ScrollTrigger.create({
         trigger: tl, scroller, start: () => line(tl), end: () => Math.min(line(tl) + tl.offsetHeight, cap()), scrub: true,
         onUpdate: (s) => tl.style.setProperty('--fill', s.progress.toFixed(3)),
