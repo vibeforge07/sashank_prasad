@@ -207,7 +207,7 @@ function foil(cv) {
   if (!W || !H) return
   cv.width = W
   cv.height = H
-  const g = cv.getContext('2d')
+  const g = cv.getContext('2d', { willReadFrequently: true })
   const m = Math.min(W, H)
   g.globalCompositeOperation = 'source-over'
   const f = g.createLinearGradient(0, 0, W, H)
@@ -283,6 +283,10 @@ export function DatePage({ c, lang }) {
   const wide = useWide()
   const row = useRef(null)
   const cal = useRef(null)
+  // `rubbed`: tiles the guest has rubbed open (the scratching stops on them); `shown`: tiles whose foil has
+  // already dropped. Two lists on purpose: when they were one, a tile marked rubbed counted as already shown,
+  // so its foil never dropped and the guest was left with a half-scratched tile that would not rub any more
+  const rubbed = useRef([false, false, false])
   const shown = useRef([false, false, false])
   const revealed = useRef(false)
   const revealTl = useRef(null)
@@ -293,7 +297,7 @@ export function DatePage({ c, lang }) {
   useEffect(() => {
     const el = row.current
     const cvs = [...el.querySelectorAll('canvas')]
-    const gone = shown.current
+    const gone = rubbed.current
     let last = null
     let start = null
     let moved = false
@@ -311,7 +315,7 @@ export function DatePage({ c, lang }) {
     }
     const checkDone = (cv, i) => {
       if (gone[i] || !cv.width || !cv.height) return
-      const px = cv.getContext('2d').getImageData(0, 0, cv.width, cv.height).data
+      const px = cv.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, cv.width, cv.height).data
       let clear = 0
       let n = 0
       for (let j = 3; j < px.length; j += 4 * 17) { n++; if (px[j] < 40) clear++ }
@@ -328,7 +332,7 @@ export function DatePage({ c, lang }) {
         const r = cv.getBoundingClientRect()
         if (!r.width || !r.height) return
         const k = cv.width / r.width
-        const g = cv.getContext('2d')
+        const g = cv.getContext('2d', { willReadFrequently: true })
         const w = Math.min(cv.width, cv.height) * 0.42
         g.globalCompositeOperation = 'destination-out'
         g.lineCap = 'round'; g.lineJoin = 'round'; g.lineWidth = w
