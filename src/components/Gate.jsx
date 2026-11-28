@@ -22,6 +22,7 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
       tl.from('.g-garland', { yPercent: -100, duration: 1, ease: 'power3.out' }, 0)
       tl.from('.g-mala', { yPercent: -100, duration: 1.2, ease: 'power3.out', stagger: 0.1 }, 0.3)
       tl.from('.g-pais', { autoAlpha: 0, duration: 1.4 }, 0.4)
+      if (q('.g-motif')) tl.from('.g-motif', { autoAlpha: 0, duration: 1.4 }, 0.5)
       tl.from('.g-flowers', { yPercent: 100, duration: 1, ease: 'power3.out' }, 1)
       tl.from('.g-disc', { scale: 0.25, autoAlpha: 0, duration: 0.8, ease: 'back.out(1.6)' }, 0.3)
       tl.from('.g-ring', { scale: 0.7, autoAlpha: 0, duration: 1.3, ease: 'power3.out' }, 0.75)
@@ -84,6 +85,10 @@ export default function Gate({ c, lang, langs, names, setLang, onTap, onOpen, on
       <div className="g-page" style={{ backgroundImage: `url(${paper})` }}>
         <img className="g-pais g-pais-l" src={artUrl('gate-paisley')} alt="" />
         <img className="g-pais g-pais-r" src={artUrl('gate-paisley')} alt="" />
+        {artUrl('gate-motif-low') && <>
+          <img className="g-motif g-motif-l" src={artUrl('gate-motif-low')} alt="" />
+          <img className="g-motif g-motif-r" src={artUrl('gate-motif-low')} alt="" />
+        </>}
         {/* a strand as long as it needs to be: repeating marigolds down to the last flowers and the bell */}
         {['l', 'r'].flatMap((s) => [1, 2, 3, 4, 5, 6].map((n) => <span key={s + n} className={`g-mala g-mala-${s} g-m${n}`}><i style={{ backgroundImage: `url(${artUrl('gate-mala-beads')})` }} /><img src={artUrl('gate-mala-end')} alt="" /></span>))}
         <div className="g-garland" style={{ backgroundImage: `url(${artUrl('gate-toran')})` }} />

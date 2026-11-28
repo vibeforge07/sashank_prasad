@@ -165,12 +165,14 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-inv { max-width: calc(100vw - 2 * (var(--mh) * 0.288 + 0.4vw) - 12px); }
 .g-pais { position: absolute; z-index: 1; width: min(46vw, 360px); opacity: .5; pointer-events: none; }
 .g-pais-l { left: 0; top: 9svh; } .g-pais-r { right: 0; top: 9svh; scale: -1 1; }
+.g-motif { position: absolute; z-index: 1; width: min(33vw, 200px); bottom: 23svh; opacity: .21; pointer-events: none; }
+.g-motif-l { left: -6vw; } .g-motif-r { right: -6vw; scale: -1 1; }
 .g-flowers { position: absolute; z-index: 3; left: 0; right: 0; bottom: 0; height: min(9svh, 90px); background: 50% 100% / auto 100% repeat-x; pointer-events: none; }
 .g-bed { position: absolute; z-index: 4; bottom: 1svh; width: var(--bed); pointer-events: none; }
 .g-bed-l { left: 1vw; } .g-bed-r { right: 1vw; }
 .g-inner { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 15svh 20px calc(var(--bed) * 0.86 + 2svh); }
 .g-inv { position: relative; z-index: 3; color: var(--crimson); font-size: 16px; margin-bottom: 1.6svh; }
-.g-ganesh { position: relative; z-index: 3; width: min(15vw, 7svh, 90px); height: auto; margin: -2svh 0 .6svh; filter: drop-shadow(0 3px 6px #7a3a0a40); }
+.g-ganesh { position: relative; z-index: 3; width: min(26vw, 11svh, 115px); height: auto; margin: -1.5svh 0 .6svh; filter: drop-shadow(0 3px 6px #7a3a0a40); }
 .g-seal { position: relative; width: var(--seal); aspect-ratio: 1; display: grid; place-items: center; border-radius: 50%; -webkit-tap-highlight-color: transparent; }
 .g-seal > * { grid-area: 1 / 1; }
 .g-flood { position: absolute; left: 21%; top: 21%; width: 58%; aspect-ratio: 1; border-radius: 50%; z-index: 0;
@@ -220,13 +222,16 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   .g-m4 { --i: 3; --len: 54svh; } .g-m5 { --i: 4; --len: 51svh; } .g-m6 { --i: 5; --len: 48svh; }
   .g-m4, .g-m5, .g-m6 { display: block; }
   .g-pais { width: min(30vw, 440px); }
+  .g-motif { width: min(22vw, 320px); bottom: 25svh; opacity: .2; }
+  .g-motif-l { left: 3vw; } .g-motif-r { right: 3vw; }
+  .g-ganesh { width: min(14vw, 11svh, 130px); margin: -2svh 0 .8svh; }
   .g-bed { width: min(21vw, 46svh, 330px); bottom: 2svh; }
   .g-bed-l { left: 3vw; } .g-bed-r { right: 3vw; }
   .g-inner { padding: 17svh 20px 8svh; }
   .g-names { font-size: clamp(30px, 6.4svh, 70px); }
 }
 @media (max-height: 720px) and (min-aspect-ratio: 1/1) { .gate { --seal: min(40svh, 600px); } .g-inner { padding-top: 17svh; } }
-@media (max-height: 680px) and (max-aspect-ratio: 1/1) { .gate { --seal: min(58vw, 34svh); } .g-inner { padding-top: 13svh; } }
+@media (max-height: 680px) and (max-aspect-ratio: 1/1) { .gate { --seal: min(58vw, 34svh); } .g-ganesh { width: min(20vw, 8.5svh, 90px); margin: -1svh 0 .4svh; } .g-inner { padding-top: 11svh; } }
 
 .langs { display: flex; gap: 8px; margin-top: 10px; }
 .langs button { min-height: 44px; padding: 8px 18px; border: 1px solid #b3123f66; border-radius: 99px; font-size: 17px; }
