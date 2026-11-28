@@ -154,7 +154,6 @@ export function Family({ c, lang }) {
           <div className="env-seal"><Mono /></div>
         </div>
       </div>
-      <p className="inv-hint">{c.hero.scroll}</p>
     </div>
   )
 }
