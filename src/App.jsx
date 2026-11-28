@@ -89,14 +89,38 @@ export default function App() {
     if (open) scroller.current.focus({ preventScroll: true })
   }, [open])
 
-  // a browser lets music start only after a tap, a click or a key: the guest's first one starts the song
-  // (a language button counts); if the browser still says no, the sound button simply shows it is off
+  // The song starts when the guest starts scrolling, not on a tap. A phone allows it as the finger lifts at the
+  // end of the first swipe (on the cover the swipe turns the page instead of scrolling it, so it counts).
+  // Scroll keys count everywhere. A mouse wheel starts it only where the browser allows that; where it does not,
+  // the first click after the guest has begun scrolling starts it. A refusal never turns the sound off.
+  const trying = useRef(false)
+  const scrolled = useRef(false)
   useEffect(() => {
     if (started) return
-    const first = () => startSound()
-    const evs = ['pointerdown', 'touchend', 'keydown']
-    evs.forEach((ev) => window.addEventListener(ev, first, { once: true, passive: true }))
-    return () => evs.forEach((ev) => window.removeEventListener(ev, first))
+    const tryPlay = () => {
+      const a = audio.current
+      if (!a || !sound || !song) { setStarted(true); return }
+      if (trying.current) return
+      trying.current = true
+      prevSong.current = song
+      fadeIn(a).then(() => setStarted(true), () => {}).finally(() => { trying.current = false })
+    }
+    const go = () => { scrolled.current = true; tryPlay() }
+    let y0 = null
+    const onTouchStart = (e) => { y0 = e.touches[0]?.clientY ?? null }
+    const onTouchEnd = (e) => {
+      const y = e.changedTouches[0]?.clientY
+      if (y0 != null && y != null && Math.abs(y - y0) > 10) go()
+      else if (scrolled.current) tryPlay()
+    }
+    const onKey = (e) => { if (['ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', ' ', 'End', 'Home'].includes(e.key)) go() }
+    const onDown = (e) => { if (e.pointerType === 'mouse' && scrolled.current) tryPlay() }
+    const onScroll = () => { scrolled.current = true }
+    const sc = scroller.current
+    const on = [['touchstart', onTouchStart], ['touchend', onTouchEnd], ['wheel', go], ['keydown', onKey], ['pointerdown', onDown]]
+    on.forEach(([ev, f]) => window.addEventListener(ev, f, { passive: true }))
+    sc?.addEventListener('scroll', onScroll, { passive: true })
+    return () => { on.forEach(([ev, f]) => window.removeEventListener(ev, f)); sc?.removeEventListener('scroll', onScroll) }
   }) // eslint-disable-line react-hooks/exhaustive-deps
 
   // the sound button dances only while the song is really playing
