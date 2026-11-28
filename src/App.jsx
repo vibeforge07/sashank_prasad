@@ -46,11 +46,13 @@ const words = (id, c, lang) => {
 
 export default function App() {
   const [lang, setLang] = useState(firstLang)
-  const [open, setOpen] = useState(false)
+  // the cover is the first page of the scroll, so the invitation is open from the start
+  const open = true
   const [started, setStarted] = useState(false)
-  const [gone, setGone] = useState(false)
+  const [playing, setPlaying] = useState(false)
   const [sound, setSound] = useState(true)
   const [at, setAt] = useState(0)
+  const [onCover, setOnCover] = useState(true)
   const scroller = useRef(null)
   const scenes = useRef([])
   const audio = useRef(null)
@@ -75,10 +77,39 @@ export default function App() {
     return () => io.disconnect()
   }, [open])
 
+  // while the cover fills the screen, the scroll word wears the cover's maroon instead of white
+  useEffect(() => {
+    const io = new IntersectionObserver(([e]) => setOnCover(e.isIntersecting), { root: scroller.current, threshold: 0.55 })
+    io.observe(document.getElementById('cover'))
+    return () => io.disconnect()
+  }, [])
+
   // nothing moves on by itself: the guest scrolls through every page; the keys scroll it too
   useEffect(() => {
     if (open) scroller.current.focus({ preventScroll: true })
   }, [open])
+
+  // a browser lets music start only after a tap, a click or a key: the guest's first one starts the song
+  // (a language button counts); if the browser still says no, the sound button simply shows it is off
+  useEffect(() => {
+    if (started) return
+    const first = () => startSound()
+    const evs = ['pointerdown', 'touchend', 'keydown']
+    evs.forEach((ev) => window.addEventListener(ev, first, { once: true, passive: true }))
+    return () => evs.forEach((ev) => window.removeEventListener(ev, first))
+  }) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // the sound button dances only while the song is really playing
+  useEffect(() => {
+    const a = audio.current
+    if (!a) return
+    const on = () => setPlaying(true)
+    const off = () => setPlaying(false)
+    a.addEventListener('playing', on)
+    a.addEventListener('pause', off)
+    a.addEventListener('ended', off)
+    return () => { a.removeEventListener('playing', on); a.removeEventListener('pause', off); a.removeEventListener('ended', off) }
+  }, [song])
 
   const startSound = () => {
     setStarted(true)
@@ -122,7 +153,9 @@ export default function App() {
 
   return (
     <>
-      <main className="reel" ref={scroller} tabIndex={-1} onClick={skip} inert={open ? undefined : ''}>
+      <main className="reel" ref={scroller} tabIndex={-1} onClick={skip}>
+        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, NATIVE[l]])}
+          names={[c.hero.bride, c.hero.and, c.hero.groom]} />
         {REEL.map((s, i) => [
           <Scene key={s.id} scene={s} lang={lang} ref={(r) => { if (r) scenes.current[i] = r }}>
             {words(s.id, c, lang)}
@@ -131,23 +164,18 @@ export default function App() {
         ])}
       </main>
 
-      {!gone && (
-        <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, NATIVE[l]])}
-          names={[c.hero.bride, c.hero.and, c.hero.groom]}
-          onTap={startSound} onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
-      )}
-
       {open && (
         <nav className="bar">
           <div className="langs small" role="group">
             {LANGS.map((l) => <button key={l} lang={l} aria-pressed={l === lang} onClick={() => setLang(l)}>{NATIVE[l]}</button>)}
           </div>
-          {song && <button className="round" aria-label={c.ui.sound} aria-pressed={sound} onClick={() => setSound(!sound)}><i className={sound ? 'i-sound' : 'i-mute'} /></button>}
+          {song && <button className={`round snd${playing ? ' on' : ''}`} aria-label={c.ui.sound} aria-pressed={sound && playing}
+            onClick={() => (sound && !playing ? startSound() : setSound(!sound))}><i className="eq"><b /><b /><b /><b /></i></button>}
         </nav>
       )}
       {/* a faint word at the foot of every page, so the guest knows there is more below; gone on the last page */}
       {open && (
-        <div className={`scroll-mark${at === REEL.length - 1 ? ' off' : ''}`} lang={lang} aria-hidden="true">
+        <div className={`scroll-mark${at === REEL.length - 1 ? ' off' : ''}${onCover ? ' on-cover' : ''}`} lang={lang} aria-hidden="true">
           <span>{c.hero.scroll}</span><i />
         </div>
       )}
