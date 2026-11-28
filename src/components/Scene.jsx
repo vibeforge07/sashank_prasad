@@ -17,7 +17,9 @@ const blinks = (root) => [...root.querySelectorAll('.blink')].map((el, i) => {
 const still = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 // Holds one scene's timeline and idle loops. App decides which scene is on screen.
-export default forwardRef(function Scene({ scene, lang, children }, ref) {
+// `mini`: the scene drawn small inside one of the schedule's arched frames (components/Schedule.jsx),
+// its picture, entrance, idle motion and blinks, without its words
+export default forwardRef(function Scene({ scene, lang, children, mini }, ref) {
   const root = useRef(null)
   const tl = useRef(null)
   const idles = useRef([])
@@ -89,14 +91,14 @@ export default forwardRef(function Scene({ scene, lang, children }, ref) {
   }), [scene])
 
   return (
-    <section ref={root} id={scene.id} className={`scene${scene.scroll ? ' swipe' : ''} tone-${scene.tone}${scene.card === 'right' ? ' card-right' : ''}`} style={{ background: scene.sky }}>
+    <section ref={root} id={scene.id} className={`scene${mini ? ' mini' : ''}${scene.scroll ? ' swipe' : ''} tone-${scene.tone}${scene.card === 'right' ? ' card-right' : ''}`} style={{ background: scene.sky }}>
       <div className="stage">
         <div className="world">
           {scene.stars && <div className="stars" />}
           {scene.stars && artUrl('sky-sparkle-tile') && <div className="sparkle" style={{ backgroundImage: `url(${artUrl('sky-sparkle-tile')})` }} />}
           {scene.moon && <div className="moon" style={{ left: `calc(50% + ${scene.moon.x} * var(--u) + var(--dx))`, bottom: `calc(${scene.moon.y} * var(--u))`, width: `calc(${scene.moon.s} * var(--u))` }} />}
           {scene.layers.map((l) => <Layer key={l.id} {...l} />)}
-          {scene.own ? children : <div className="words" style={{ '--top': scene.text.top }}><i className="card" data-t="-0.4" />{children}</div>}
+          {mini ? null : scene.own ? children : <div className="words" style={{ '--top': scene.text.top }}><i className="card" data-t="-0.4" />{children}</div>}
         </div>
       </div>
     </section>

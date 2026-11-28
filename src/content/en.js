@@ -3,6 +3,7 @@ export default {
   title: 'Debashruti Weds Shashank',
   gate: { line: 'The wedding of', date: '27 January 2027 · Jamshedpur', open: 'Open the invitation', seal: ['Shubh', 'Vivaah'], tap: 'Tap anywhere to open', choose: 'Choose your language' },
   hero: { invocation: 'With the blessings of Lord Ganesha', groom: 'Shashank', and: 'Weds', bride: 'Debashruti', scroll: 'Scroll' },
+  schedule: { kicker: '25 & 26 January 2027', title: 'The Ceremonies', beforeKicker: 'At home, before the wedding', before: 'Before the Wedding' },
   family: {
     title: 'The Invitation',
     request: ['With the blessings of our elders, we invite you', 'to the wedding of'],

@@ -1,0 +1,178 @@
+/* The ceremonies before the wedding (components/Schedule.jsx), in the red-rose card site's own look:
+   the cream page of arched gold frames and the maroon page with the diya timeline. Same colours,
+   paper, gold and type as that site; its textures are baked as see-through pictures here, so a phone
+   never has to blend them. */
+.sch {
+  --maroon-600: #6e1423; --maroon-800: #4c0b17; --crimson: #8d1427; --rose: #b51a32; --wine: #6b1120;
+  --gold-100: #f6e3a8; --gold-300: #e0bd72; --gold-500: #c0964a; --gold-700: #8a6326;
+  --ivory: #f8f1e3; --text: #3a1c16; --text-soft: #6b4c41;
+  --gold-grad: linear-gradient(105deg, #8a6326 0%, #f6e3a8 22%, #c0964a 40%, #fff4d6 52%, #b4873c 68%, #e9cd88 84%, #7d5a20 100%);
+  --gutter: clamp(20px, 5vw, 72px);
+  --edge: clamp(10px, 1.4vw, 20px);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --f-serif: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --f-caps: 'Cinzel', 'Cormorant Garamond', serif;
+  --f-head: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --f-text: 'Cormorant Garamond', 'EB Garamond', Georgia, serif;
+  --rosette: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='44' viewBox='0 0 64 44'%3E%3Cdefs%3E%3CradialGradient id='g' cx='.4' cy='.35' r='.7'%3E%3Cstop offset='0' stop-color='%23fff1c4'/%3E%3Cstop offset='.5' stop-color='%23d9b160'/%3E%3Cstop offset='1' stop-color='%238a6326'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cg fill='url(%23g)' stroke='%234a2f0a' stroke-width='.5'%3E%3Cg transform='translate(32 22)'%3E%3Cellipse rx='2.6' ry='8.2'/%3E%3Cellipse rx='2.6' ry='8.2' transform='rotate(45)'/%3E%3Cellipse rx='2.6' ry='8.2' transform='rotate(90)'/%3E%3Cellipse rx='2.6' ry='8.2' transform='rotate(135)'/%3E%3Ccircle r='3.4'/%3E%3C/g%3E%3Ccircle cy='22' r='2.2'/%3E%3Ccircle cx='64' cy='22' r='2.2'/%3E%3Ccircle cx='4' cy='4' r='1.5'/%3E%3Ccircle cx='12' cy='4' r='1.5'/%3E%3Ccircle cx='20' cy='4' r='1.5'/%3E%3Ccircle cx='28' cy='4' r='1.5'/%3E%3Ccircle cx='36' cy='4' r='1.5'/%3E%3Ccircle cx='44' cy='4' r='1.5'/%3E%3Ccircle cx='52' cy='4' r='1.5'/%3E%3Ccircle cx='60' cy='4' r='1.5'/%3E%3Ccircle cx='4' cy='40' r='1.5'/%3E%3Ccircle cx='12' cy='40' r='1.5'/%3E%3Ccircle cx='20' cy='40' r='1.5'/%3E%3Ccircle cx='28' cy='40' r='1.5'/%3E%3Ccircle cx='36' cy='40' r='1.5'/%3E%3Ccircle cx='44' cy='40' r='1.5'/%3E%3Ccircle cx='52' cy='40' r='1.5'/%3E%3Ccircle cx='60' cy='40' r='1.5'/%3E%3C/g%3E%3C/svg%3E");
+  position: relative;
+  padding: clamp(112px, 12vw, 176px) var(--gutter);
+  isolation: isolate;
+  overflow: hidden;
+  scroll-snap-align: start;
+  font-family: var(--f-serif);
+}
+/* Bangla and Hindi pages: the card's own Bengali and Devanagari faces, and no spaced-out capitals */
+:root:lang(bn) .sch { --f-head: 'Noto Serif Bengali', serif; --f-text: 'Tiro Bangla', serif; --f-caps: 'Tiro Bangla', serif; --f-serif: 'Tiro Bangla', serif; }
+:root:lang(hi) .sch { --f-head: 'Yatra One', serif; --f-text: 'Tiro Devanagari Hindi', serif; --f-caps: 'Tiro Devanagari Hindi', serif; --f-serif: 'Tiro Devanagari Hindi', serif; }
+
+.sch-cream { color: var(--text); background: radial-gradient(90% 70% at 50% 20%, #fffaf0, #f7ebd2 55%, #efdcae 100%); }
+.sch-cream::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: url('./opening/damask-shade.webp') 0 0 / 360px; opacity: .08; }
+.sch-maroon {
+  color: var(--ivory);
+  background-color: var(--maroon-600);
+  background-image:
+    radial-gradient(ellipse 70% 60% at 50% 38%, rgba(150, 32, 48, .42), transparent 72%),
+    radial-gradient(130% 100% at 50% 50%, transparent 45%, rgba(22, 2, 7, .66));
+}
+.sch-maroon::before { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: url('./opening/damask-light.webp') 0 0 / 360px; opacity: .15; }
+
+/* gold double border of a printed card */
+.sch-edge { position: absolute; inset: var(--edge); z-index: 3; border: 1px solid rgba(224, 189, 114, .6); pointer-events: none; }
+.sch-edge::before { content: ''; position: absolute; inset: 6px; border: 1px solid rgba(224, 189, 114, .28); }
+.sch-cream .sch-edge { border-color: rgba(168, 124, 52, .65); }
+.sch-cream .sch-edge::before { border-color: rgba(168, 124, 52, .3); }
+.sch-edge__c { position: absolute; width: clamp(46px, 5vw, 76px); height: clamp(46px, 5vw, 76px); color: var(--gold-300); overflow: visible; }
+.sch-cream .sch-edge__c { color: #a87c34; }
+.sch-edge__c--tl { left: -1px; top: -1px; }
+.sch-edge__c--tr { right: -1px; top: -1px; transform: scaleX(-1); }
+.sch-edge__c--bl { left: -1px; bottom: -1px; transform: scaleY(-1); }
+.sch-edge__c--br { right: -1px; bottom: -1px; transform: scale(-1, -1); }
+
+/* rose sprays in the corners */
+.sch-deco { position: absolute; z-index: 4; width: clamp(180px, 25vw, 440px); pointer-events: none; }
+.sch-deco img { display: block; width: 100%; height: auto; max-width: none; filter: drop-shadow(0 16px 20px rgba(15, 1, 4, .42)); }
+.sch-deco[data-deco='tl'] { left: -3%; top: -3%; }
+.sch-deco[data-deco='tr'] { right: -3%; top: -3%; }
+.sch-deco[data-deco='bl'] { left: -3%; bottom: -3%; }
+.sch-deco[data-deco='br'] { right: -3%; bottom: -3%; }
+.sch-deco[data-deco='tr'] img { transform: scaleX(-1); }
+.sch-deco[data-deco='bl'] img { transform: scaleY(-1); }
+.sch-deco[data-deco='br'] img { transform: scale(-1, -1); }
+
+/* rosette frieze along the top of the night page */
+.sch-frieze { position: absolute; left: 0; right: 0; top: 0; height: 48px; z-index: 2; background: var(--rosette) center / 64px 44px repeat-x, linear-gradient(var(--maroon-800), var(--maroon-800)); border-top: 2px solid #c0964a; border-bottom: 2px solid #c0964a; box-shadow: 0 1px 0 #6b4a17, 0 -1px 0 #6b4a17, 0 10px 18px rgba(10, 1, 3, .35); }
+
+/* rose and rajnigandha strings hanging down the sides of the night page */
+.sch-strand { position: absolute; top: 46px; bottom: 6%; z-index: 3; width: clamp(40px, 4.6vw, 78px); pointer-events: none; background: url('./opening/garland-v.webp') 50% 0 / 100% auto repeat-y; filter: drop-shadow(0 10px 12px rgba(15, 1, 4, .5)); transform-origin: 50% 0; animation: schSway 7s ease-in-out infinite; }
+.sch-strand--l { left: clamp(10px, 2.4vw, 46px); }
+.sch-strand--r { right: clamp(10px, 2.4vw, 46px); animation-delay: -3.5s; }
+@keyframes schSway { 0%, 100% { rotate: -.5deg; } 50% { rotate: .5deg; } }
+
+/* section titles */
+.sch-head { position: relative; z-index: 5; text-align: center; max-width: 960px; margin: 0 auto clamp(54px, 7vw, 96px); display: flex; flex-direction: column; align-items: center; }
+.sch-head__kicker { display: inline-flex; align-items: center; gap: 16px; font-family: var(--f-caps); font-size: 12px; font-weight: 600; letter-spacing: .36em; text-transform: uppercase; color: var(--gold-300); }
+.sch-head__kicker::before, .sch-head__kicker::after { content: ''; flex: none; width: clamp(26px, 6vw, 90px); height: 1px; background: linear-gradient(90deg, transparent, currentColor); opacity: .8; }
+.sch-head__kicker::after { background: linear-gradient(-90deg, transparent, currentColor); }
+.sch-head__title { margin-top: 12px; font-family: var(--f-head); font-weight: 600; font-size: clamp(46px, 6vw, 92px); line-height: 1.3; padding: 0 .06em .08em; background: var(--gold-grad) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 1px rgba(40, 10, 0, .45)); }
+.sch-cream .sch-head__kicker { color: var(--crimson); }
+.sch-cream .sch-head__title { background: none; color: var(--wine); -webkit-text-fill-color: var(--wine); filter: none; }
+.sch-lotusline { width: clamp(200px, 22vw, 280px); height: 36px; margin-top: 6px; color: var(--gold-300); }
+.sch-cream .sch-lotusline { color: #a87c34; }
+:root:not(:lang(en)) .sch-head__kicker { font-size: 16px; font-weight: 400; letter-spacing: .04em; }
+:root:lang(en) .sch-head__title { font-weight: 500; font-style: italic; }
+:root:lang(hi) .sch-head__title { font-weight: 400; }
+
+/* ---- the arched frames ---- */
+.sch-grid { position: relative; z-index: 5; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(26px, 2.6vw, 44px); max-width: 1180px; margin: 0 auto; align-items: stretch; perspective: 1400px; }
+/* the slot holds the scroll's resting point and stays put; the card inside it is the one dealt in */
+.ev-slot { scroll-snap-align: center; display: flex; }
+.ev { position: relative; display: flex; flex-direction: column; width: 100%; }
+.sch-arch { position: relative; --bleed: 24px; height: 100%; display: flex; flex-direction: column; flex: 1; }
+.sch-arch .arch__inner { position: relative; height: 100%; display: flex; flex-direction: column; flex: 1; overflow: hidden; background: linear-gradient(180deg, #fffcf4, #f7ebd2); color: var(--text); box-shadow: 0 0 0 var(--bleed) #f9efd9; }
+/* the cusped shoulders bulge outside the box, so once the outline clips it the picture and the paper run under them */
+.sch-arch .arch__inner[style*='clip-path'] { overflow: visible; }
+.sch-arch .arch__frame { position: absolute; z-index: 2; overflow: visible; pointer-events: none; filter: drop-shadow(0 22px 30px rgba(15, 1, 4, .45)); }
+.ev__media { position: relative; margin: 0 calc(-1 * var(--bleed)); aspect-ratio: 1080 / 1120; flex-shrink: 0; overflow: hidden; background: radial-gradient(circle at 50% 38%, #6e1525, #2a0911 76%); }
+.ev__media::after { content: ''; position: absolute; z-index: 30; left: 0; right: 0; bottom: 0; height: 4px; background: linear-gradient(90deg, #8a6326, #f1d796, #b4873c, #f1d796, #8a6326); }
+.ev__body { padding: 22px 18px 28px; text-align: center; flex: 1; display: flex; flex-direction: column; align-items: center; }
+.ev__title { font-family: var(--f-head); font-weight: 600; font-size: clamp(26px, 2.2vw, 32px); line-height: 1.25; color: var(--wine); white-space: pre-line; }
+:root:lang(en) .ev__title { font-size: clamp(30px, 2.5vw, 36px); line-height: 1.1; }
+:root:lang(hi) .ev__title { font-weight: 400; }
+.ev__day { margin-top: 6px; font-family: var(--f-caps); font-size: 10.5px; font-weight: 600; letter-spacing: .34em; text-transform: uppercase; color: var(--gold-700); }
+:root:not(:lang(en)) .ev__day { font-size: 15px; font-weight: 400; letter-spacing: .04em; }
+.ev__when { margin-top: 14px; font-family: var(--f-serif); font-weight: 600; font-size: 18px; line-height: 1.35; color: var(--text); }
+.ev__where { margin-top: 2px; font-family: var(--f-serif); font-style: italic; font-size: 17px; color: var(--text-soft); }
+.ev__note { margin-top: 10px; font-family: var(--f-text); font-size: 15px; line-height: 1.75; color: var(--text-soft); }
+:root:lang(en) .ev__note { font-size: 17px; line-height: 1.5; font-style: italic; }
+:root:not(:lang(en)) :is(.ev__when, .ev__where) { font-weight: 400; font-style: normal; }
+
+/* the ceremony's own scenery, drawn small inside its frame: the bottom of a phone-shaped stage, where the
+   people and the ground are; its sky runs up into the arch */
+.scene.mini { position: absolute; left: 0; right: 0; bottom: 0; height: auto; aspect-ratio: 1080 / 1800; scroll-snap-align: none; scroll-snap-stop: normal; content-visibility: visible; contain-intrinsic-size: none; }
+.scene.mini .world { --u: calc(100cqw / 1080); --dx: 0px; }
+
+/* ---- the diya timeline ---- */
+.sch-night { padding-top: calc(48px + clamp(90px, 10vw, 150px)); }
+.sch-night .sch-edge { top: calc(48px + var(--edge)); }
+.tl { position: relative; z-index: 5; list-style: none; margin: 0 auto; padding: 0; max-width: 1000px; }
+.tl__line { position: absolute; left: 50%; top: 40px; bottom: 40px; width: 1px; translate: -50% 0; background: rgba(224, 189, 114, .22); }
+.tl__fill { position: absolute; inset: 0; background: linear-gradient(var(--gold-300), var(--rose)); transform-origin: top; transform: scaleY(var(--fill, 0)); }
+.tl__item { position: relative; display: grid; grid-template-columns: 1fr 120px 1fr; align-items: center; padding: 30px 0; scroll-snap-align: center; }
+.tl__time { font-family: var(--f-caps); font-weight: 600; font-size: 14px; letter-spacing: .24em; text-transform: uppercase; color: var(--gold-300); }
+:root:not(:lang(en)) .tl__time { font-size: 17px; font-weight: 400; letter-spacing: .04em; }
+.tl__node { grid-column: 2; grid-row: 1; justify-self: center; position: relative; width: 70px; height: 70px; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle, #4a0c18, #250610); box-shadow: inset 0 0 0 1px rgba(224, 189, 114, .55), 0 0 0 5px rgba(60, 8, 18, .6); }
+.tl__glow { position: absolute; inset: -46px; border-radius: 50%; background: radial-gradient(circle, rgba(255, 190, 100, .36), transparent 65%); opacity: 0; transition: opacity .9s; pointer-events: none; }
+.tl__diya { position: relative; width: 42px; height: 26px; margin-top: 18px; color: #6e4d19; transition: color .6s; }
+.tl__flame { position: absolute; left: calc(50% + 12px); top: 12px; width: 11px; height: 20px; translate: -50% 0; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: radial-gradient(circle at 50% 72%, #fffbe6 0%, #ffd77e 34%, #ff8f2e 68%, transparent 72%); opacity: 0; transform: scale(.3); transform-origin: 50% 100%; transition: opacity .5s, transform .7s var(--ease); }
+.tl__item.lit .tl__flame { opacity: 1; transform: scale(1); animation: schFlame 1.7s ease-in-out infinite; }
+.tl__item.lit .tl__glow { opacity: 1; }
+.tl__item.lit .tl__diya { color: var(--gold-300); }
+@keyframes schFlame { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.08, .93) rotate(2.5deg); } }
+.sch .foil { background: var(--gold-grad) 0 0 / 220% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.tl__card h3 { font-family: var(--f-head); font-style: italic; font-weight: 500; font-size: clamp(30px, 2.8vw, 42px); line-height: 1.15; padding: 0 .06em .08em; white-space: pre-line; }
+:root:not(:lang(en)) .tl__card h3 { font-style: normal; font-weight: 600; font-size: clamp(26px, 2.4vw, 36px); line-height: 1.35; }
+:root:lang(hi) .tl__card h3 { font-weight: 400; }
+.tl__date { margin-top: 2px; font-family: var(--f-serif); font-weight: 600; font-size: 18px; color: var(--gold-100); }
+:root:not(:lang(en)) .tl__date { font-weight: 400; }
+.tl__card p:not(.tl__date) { margin-top: 8px; font-family: var(--f-text); font-size: 16px; line-height: 1.8; color: rgba(248, 241, 227, .72); }
+:root:lang(en) .tl__card p:not(.tl__date) { font-size: 18px; line-height: 1.5; }
+.tl__card .tl__venue { margin-top: 4px; font-style: italic; font-size: 15px; color: rgba(246, 227, 168, .62); }
+:root:not(:lang(en)) .tl__card .tl__venue { font-style: normal; }
+.tl__item:nth-of-type(odd) .tl__time { grid-column: 1; grid-row: 1; text-align: right; }
+.tl__item:nth-of-type(odd) .tl__card { grid-column: 3; grid-row: 1; text-align: left; }
+.tl__item:nth-of-type(even) .tl__time { grid-column: 3; grid-row: 1; text-align: left; }
+.tl__item:nth-of-type(even) .tl__card { grid-column: 1; grid-row: 1; text-align: right; }
+
+@media (max-width: 1100px) {
+  .sch-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 760px; }
+}
+@media (max-width: 760px) {
+  .sch { padding-top: 104px; padding-bottom: 104px; }
+  .sch-night { padding: calc(48px + 90px) 32px 104px; }
+  .sch-deco { width: 40vw; }
+  .sch-strand { width: 20px; left: 0; }
+  .sch-strand--r { left: auto; right: 0; }
+  .sch-grid { grid-template-columns: 1fr; max-width: min(300px, 100% - 36px); gap: 56px; }
+  .tl__line { left: 35px; }
+  .tl__item { grid-template-columns: 70px 1fr; column-gap: 20px; padding: 22px 0; }
+  .tl__item .tl__node { grid-column: 1; grid-row: 1 / span 2; align-self: start; }
+  .tl__item:nth-of-type(n) .tl__time { grid-column: 2; grid-row: 1; text-align: left; }
+  .tl__item:nth-of-type(n) .tl__card { grid-column: 2; grid-row: 2; text-align: left; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sch-strand, .tl__item.lit .tl__flame { animation: none; }
+}
+
+/* ---- the scroll watermark: a faint word at the foot of the screen that keeps saying "keep going" ---- */
+.scroll-mark { position: fixed; z-index: 35; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; color: #fff; opacity: .78; text-shadow: 0 0 12px rgba(20, 8, 10, .7), 0 0 4px rgba(20, 8, 10, .55), 0 1px 2px rgba(20, 8, 10, .6); transition: opacity .6s; }
+.scroll-mark span { font: 600 11px/1 'Cinzel', serif; letter-spacing: .42em; padding-left: .42em; text-transform: uppercase; }
+.scroll-mark:lang(bn), .scroll-mark:lang(hi) { gap: 6px; }
+.scroll-mark:lang(bn) span, .scroll-mark:lang(hi) span { font: 400 14px/1.2 var(--body); letter-spacing: .06em; padding: 0; text-transform: none; }
+.scroll-mark i { position: relative; width: 1px; height: 28px; overflow: hidden; background: rgba(255, 255, 255, .28); box-shadow: 0 0 6px rgba(20, 8, 10, .5); }
+.scroll-mark i::after { content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 12px; background: #fff; animation: schDrip 1.8s cubic-bezier(.65, 0, .35, 1) infinite; }
+@keyframes schDrip { 0% { translate: 0 -14px; } 100% { translate: 0 30px; } }
+.scroll-mark.off { opacity: 0; }
+/* on a phone the language and sound buttons sit along the bottom edge, so the word rides just above them */
+@media (max-width: 600px) { .scroll-mark { bottom: calc(64px + env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion: reduce) { .scroll-mark i::after { animation: none; translate: 0 8px; } }
