@@ -193,6 +193,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .g-langs button[aria-pressed='true'] { background: var(--crimson); color: #fff; border-color: var(--crimson); }
 .g-langs [lang='en'] { font-family: 'EB Garamond', serif; } .g-langs [lang='hi'] { font-family: 'Tiro Devanagari Hindi', serif; } .g-langs [lang='bn'] { font-family: 'Tiro Bangla', serif; }
 .g-hint { position: relative; z-index: 5; margin-top: 1.4svh; min-height: 40px; padding: 6px 14px; font-size: 16px; color: var(--crimson); }
+.g-doorway { position: fixed; inset: 0; z-index: 38; visibility: hidden; pointer-events: none; }
+.gate.grab { touch-action: none; }
 .g-doors { position: absolute; inset: 0; z-index: 1; display: flex; perspective: 1500px; pointer-events: none; }
 .g-light { position: absolute; inset: 0; z-index: 2; visibility: hidden; background: radial-gradient(40% 60% at 50% 50%, #fff4cfcc, #ffe3a000 70%); }
 .g-door { position: relative; width: 50%; height: 100%; transform-style: preserve-3d; backface-visibility: hidden;

@@ -176,6 +176,7 @@
 /* on a phone the language and sound buttons sit along the bottom edge, so the word rides just above them */
 @media (max-width: 600px) { .scroll-mark { bottom: calc(64px + env(safe-area-inset-bottom)); } }
 .scroll-mark.on-cover { color: #8a1430; opacity: .9; text-shadow: 0 0 10px rgba(255, 246, 226, .9); }
-.scroll-mark.on-cover i { background: rgba(138, 20, 48, .25); box-shadow: none; }
-.scroll-mark.on-cover i::after { background: #8a1430; }
+.scroll-mark.on-cover { gap: 4px; translate: -50% 18px; }
+.scroll-mark.on-cover i { height: 16px; background: rgba(138, 20, 48, .25); box-shadow: none; }
+.scroll-mark.on-cover i::after { background: currentColor; }
 @media (prefers-reduced-motion: reduce) { .scroll-mark i::after { animation: none; translate: 0 8px; } }
