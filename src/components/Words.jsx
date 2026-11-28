@@ -23,9 +23,9 @@ export function Hero({ c, lang }) {
   return <>
     <p className="invocation" data-t="0">{c.hero.invocation}</p>
     <Shloka id="hero" t="0.9" lang={lang} />
-    <h1 className="name" data-t="2">{c.hero.groom}</h1>
+    <h1 className="name" data-t="2">{c.hero.bride}</h1>
     <p className="amp" data-t="3.4">{c.hero.and}</p>
-    <h1 className="name" data-t="4">{c.hero.bride}</h1>
+    <h1 className="name" data-t="4">{c.hero.groom}</h1>
   </>
 }
 
@@ -101,7 +101,7 @@ export function Family({ c, lang }) {
         <div className="cp-in">
           <img className="cv-ring" src={ring} alt="" />
           <h2 className="cv-title">{c.gate.seal.join(' ')}</h2>
-          <p className="cv-names"><span>{c.hero.groom}</span><small>{c.hero.and}</small><span>{c.hero.bride}</span></p>
+          <p className="cv-names"><span>{c.hero.bride}</span><small>{c.hero.and}</small><span>{c.hero.groom}</span></p>
           <p className="cv-date">{c.gate.date}</p>
         </div>
         {frame}
@@ -113,10 +113,10 @@ export function Family({ c, lang }) {
           <p className="cp-word">{c.hero.invocation}</p>
           <div className="arch">
             {photo
-              ? <img className="arch-photo" src={photo} alt={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`} />
+              ? <img className="arch-photo" src={photo} alt={`${c.hero.bride} ${c.hero.and} ${c.hero.groom}`} />
               : <><img className="arch-g" src={artUrl('hero-groom')} alt="" /><img className="arch-b" src={artUrl('hero-bride')} alt="" /></>}
           </div>
-          <p className="cp-pair">{c.hero.groom} <i>{c.hero.and}</i> {c.hero.bride}</p>
+          <p className="cp-pair">{c.hero.bride} <i>{c.hero.and}</i> {c.hero.groom}</p>
         </div>
         {frame}
       </div>
@@ -127,9 +127,9 @@ export function Family({ c, lang }) {
           <Shloka id="family" lang={lang} />
           <i className="cp-orn" />
           <p className="req">{f.request.map((l) => <span key={l}>{l}</span>)}</p>
-          <h3 className="nm">{f.groom}</h3>
-          <p className="amp2">{f.and}</p>
           <h3 className="nm">{f.bride}</h3>
+          <p className="amp2">{f.and}</p>
+          <h3 className="nm">{f.groom}</h3>
           <i className="cp-orn" />
         </div>
         {frame}
@@ -140,7 +140,7 @@ export function Family({ c, lang }) {
   }
   // desktop: a leaf carries a right page on its front and the next left page on its back;
   // phone: one page per leaf with plain card on its back, so every page gets the whole screen
-  const order = wide ? [['cover', 'arch'], ['request', 'groom']] : [['cover'], ['arch'], ['request'], ['groom']]
+  const order = wide ? [['cover', 'arch'], ['request', 'bride']] : [['cover'], ['arch'], ['request'], ['bride']]
   return (
     <div className="inv" ref={inv}>
       {/* back to front: the warm light and the glints, the paisleys, the drapes and strands, the elephants */}
@@ -176,7 +176,7 @@ export function Family({ c, lang }) {
                   <div className="leaf-face leaf-back">{back ? pages[back] : <div className="cp cp-blank">{frame}</div>}</div>
                 </div>
               ))}
-              <div className="leaf leaf-base" style={{ zIndex: 0 }}><div className="leaf-face leaf-front">{pages.bride}</div></div>
+              <div className="leaf leaf-base" style={{ zIndex: 0 }}><div className="leaf-face leaf-front">{pages.groom}</div></div>
             </div>
           </div>
           <div className="env-front"><span className="env-edge" /></div>
@@ -252,7 +252,7 @@ const burst = (r, n) => shower(r.left + r.width / 2, r.top + r.height / 2, n)
 // and Outlook on the web, in the reader's own language
 function calendars(c) {
   const e = c.events.wedding
-  const title = `${e.title} · ${c.hero.groom} ${c.hero.and} ${c.hero.bride}`
+  const title = `${e.title} · ${c.hero.bride} ${c.hero.and} ${c.hero.groom}`
   const about = [e.time, ...e.venue].join('\n')
   const place = c.date.place
   const q = (o) => new URLSearchParams(o).toString()
@@ -271,7 +271,7 @@ function calendars(c) {
     }
     return [...out, cur].join('\r\n')
   }
-  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Shashank and Debashruti//Invitation//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
+  const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Debashruti and Shashank//Invitation//EN', 'CALSCALE:GREGORIAN', 'METHOD:PUBLISH',
     'BEGIN:VEVENT', 'UID:shashank-debashruti-wedding-20270127', 'DTSTAMP:20261127T000000Z', `DTSTART:${AT[0]}`, `DTEND:${AT[1]}`,
     `SUMMARY:${esc(title)}`, `DESCRIPTION:${esc(about)}`, `LOCATION:${esc(place)}`,
     'BEGIN:VALARM', 'TRIGGER:-P1D', 'ACTION:DISPLAY', `DESCRIPTION:${esc(title)}`, 'END:VALARM', 'END:VEVENT', 'END:VCALENDAR'].map(fold).join('\r\n')

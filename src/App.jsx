@@ -176,7 +176,7 @@ export default function App() {
 
       {!gone && (
         <Gate c={c} lang={lang} setLang={setLang} langs={LANGS.map((l) => [l, NATIVE[l]])}
-          names={`${c.hero.groom} ${c.hero.and} ${c.hero.bride}`}
+          names={[c.hero.bride, c.hero.and, c.hero.groom]}
           onTap={startSound} onOpen={() => setOpen(true)} onGone={() => setGone(true)} />
       )}
 
