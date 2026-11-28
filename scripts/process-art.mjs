@@ -10,7 +10,7 @@ const OUT = 'src/art'
 const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
-const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape|date-arch|date-corner|\w+-tile|intro-sky)/ // meant to run off the picture
+const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape|date-arch|date-corner|\w+-tile|intro-sky|couple-photo)/ // meant to run off the picture
 // (a small stage stands on its own, so it is not a strip)
 const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon|-floor|-garden|-wall|-ledge|-city-art|date-arch-wide|intro-mountains|intro-trees|intro-river|intro-railing|intro-road|intro-howrah-bridge)/
 // backgrounds a phone shows larger than they were drawn (a wide strip shows only its middle there, at about
@@ -21,8 +21,8 @@ const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)
 // a repeating tile keeps its whole frame (trimming it would break the repeat)
-const TILE = /(-tile|^intro-sky)$/
-const NO_KEY = /^intro-sky$/
+const TILE = /(-tile|^intro-sky|^couple-photo)$/
+const NO_KEY = /^(intro-sky|couple-photo)$/
 
 const SPLIT = {
   'haldi-groom': { part: 'haldi-arm', keep: [0.564, 0, 1, 0.467], cut: [0.587, 0, 1, 0.467] },

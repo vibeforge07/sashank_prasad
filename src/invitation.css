@@ -612,7 +612,7 @@
   width: calc(100% - 12px);
   height: calc(100% - 12px);
   object-fit: cover;
-  object-position: 50% 25%;
+  object-position: 62% 20%;
   border-radius: 92px 92px 2px 2px;
   box-shadow: 0 0 0 1.5px #fff3dc;
 }
