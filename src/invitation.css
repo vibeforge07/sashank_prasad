@@ -733,7 +733,9 @@
   z-index: 20;
   overflow: hidden;
   color: var(--cream);
-  --k: min(100cqw / 490, 100cqh / 920);
+  --dt-top: 16.5cqh;
+  --dt-bot: calc(100cqw * 532 / 1914 + max(1.5cqh, 12px));
+  --k: min(100cqw / 490, (100cqh - var(--dt-top) - var(--dt-bot)) / 690);
   --gold: #e2bd6e;
 }
 
@@ -791,8 +793,8 @@
   z-index: 5;
   left: 13cqw;
   right: 13cqw;
-  top: 18cqh;
-  bottom: calc(100cqw * 532 / 1914 + 1cqh);
+  top: var(--dt-top);
+  bottom: var(--dt-bot);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -801,6 +803,7 @@
 }
 
 .dt-main {
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -920,6 +923,7 @@
 /* January, opening under the tiles (beside them on wide screens) once all three are scratched */
 .dt-cal {
   position: relative;
+  flex-shrink: 0;
   overflow: hidden;
   height: 0;
   visibility: hidden;
