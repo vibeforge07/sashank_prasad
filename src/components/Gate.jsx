@@ -73,7 +73,7 @@ export default function Gate({ c, lang, langs, names, setLang }) {
       .to($$('.g-inv, .g-date'), { color: '#fff1d6', duration: 0.5 }, 0.8)
       // the maroon Ganesh mark and the scroll word turn gold on the red
       .fromTo($('.g-ganesh'), { filter: 'brightness(1) sepia(0) saturate(1)' }, { filter: 'brightness(2.6) sepia(1) saturate(1.6)', duration: 0.5, immediateRender: false }, 0.8)
-      .to(document.querySelectorAll('.scroll-mark'), { color: '#f6d38a', duration: 0.5 }, 0.8)
+      .fromTo(document.querySelectorAll('.scroll-mark'), { '--mark-cover': '#8a1430' }, { '--mark-cover': '#f6d38a', duration: 0.5, immediateRender: false }, 0.8)
       .to($('.g-seal'), { scale: 1.08, duration: 1.6, ease: 'power1.inOut' }, 0.2)
       .addLabel('rest-red', 1.9)
       // the red page lifts away; the doors show from below as it goes
@@ -89,7 +89,7 @@ export default function Gate({ c, lang, langs, names, setLang }) {
       // the reel steps on to the next page behind the closed doors, then they swing open on it
       const next = el.nextElementSibling
       if (next) sc.scrollTo({ top: next.offsetTop, behavior: 'instant' })
-      opening = gsap.timeline({ onComplete: () => { gsap.set(doors, { autoAlpha: 0 }); gsap.set(doors.querySelectorAll('.g-door'), { rotationY: 0 }); t.progress(0); opening = null } })
+      opening = gsap.timeline({ onComplete: () => { gsap.set(doors, { autoAlpha: 0 }); gsap.set(doors.querySelectorAll('.g-door'), { rotationY: 0 }); t.progress(0); gsap.set(document.querySelectorAll('.scroll-mark'), { clearProps: 'color,--mark-cover' }); opening = null } })
         .to(doors.querySelector('.g-door-l'), { rotationY: -104, duration: 1.5, ease: 'power2.inOut' }, 0.15)
         .to(doors.querySelector('.g-door-r'), { rotationY: 104, duration: 1.5, ease: 'power2.inOut' }, 0.15)
         .fromTo(doors.querySelector('.g-light'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 0.2)

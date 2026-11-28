@@ -1108,9 +1108,9 @@
   overflow: hidden;
   color: var(--cream);
   --aw: 100cqw;
-  --ah: 100cqh;
+  --ah: calc(100cqh - 74px);
   --top: 0px;
-  --f: calc((100cqw / 1064 + 100cqh / 1800) / 2);
+  --f: calc((100cqw / 1064 + (100cqh - 74px) / 1800) / 2);
   --bt: calc(190 * var(--f));
   --bb: calc(470 * var(--f));
   --k: min(calc((var(--aw) - 300 * var(--f)) / 255), calc((var(--ah) - var(--bt) - var(--bb)) / 440), 1.3px);
@@ -1243,14 +1243,14 @@
   opacity: 1;
 }
 
-/* the pradeep stands on the ledge, its foot just behind the ledge's edge */
+/* the brass lamp stands on the ledge, its foot just behind the ledge's edge */
 .cl-lamp {
   position: absolute;
   z-index: 1;
   left: 50%;
-  bottom: calc(178 * var(--f));
-  width: calc(270 * var(--f));
-  margin-left: calc(-135 * var(--f));
+  bottom: calc(184 * var(--f));
+  width: calc(170 * var(--f));
+  margin-left: calc(-85 * var(--f));
   padding: 0;
   border: 0;
   background: none;
@@ -1275,16 +1275,33 @@
   border-radius: 8px;
 }
 
-/* the flame on the wick at the diya's spout (the wick tip is 5.9% across, 12.1% down the picture) */
+/* each flame where its wick is (scripts/closing-lamp.py prints these) */
 .cl-flame {
   position: absolute;
-  left: 0.4%;
-  top: -24.7%;
-  width: 11%;
-  height: 40%;
   transform-origin: 50% 92%;
   visibility: hidden;
   pointer-events: none;
+}
+
+.cl-flame-l {
+  left: 4.72%;
+  top: 24%;
+  width: 16.54%;
+  height: 16%;
+}
+
+.cl-flame-r {
+  left: 80.31%;
+  top: 24%;
+  width: 16.54%;
+  height: 16%;
+}
+
+.cl-flame-c {
+  left: 45.67%;
+  top: 30.5%;
+  width: 10.63%;
+  height: 13.75%;
 }
 
 .cl-flame img {
@@ -1451,11 +1468,12 @@
   scale: -1 1;
 }
 
-/* the names two by two, each pair centred on its own line with a small gold diamond between, the little one last */
+/* the names two by two, a small gold diamond between each pair, the little one last on his own line */
 .cl-names {
   display: grid;
-  justify-items: center;
-  gap: calc(3 * var(--k));
+  grid-template-columns: auto auto;
+  justify-content: center;
+  gap: calc(3 * var(--k)) calc(22 * var(--k));
   margin-top: calc(7 * var(--k));
   font-size: calc(15 * var(--k));
   line-height: 1.3;
@@ -1463,30 +1481,29 @@
 }
 
 .cl-names span {
-  text-align: center;
+  position: relative;
+  text-align: left;
   white-space: nowrap;
 }
 
-.cl-pair {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: calc(9 * var(--k));
+.cl-names span:nth-child(odd) {
+  text-align: right;
 }
 
-.cl-pair b {
-  font-weight: inherit;
-}
-
-.cl-pair i {
-  flex: none;
-  width: calc(6 * var(--k));
-  height: calc(6 * var(--k));
+.cl-names span:nth-child(odd):not(.cl-last)::after {
+  content: "";
+  position: absolute;
+  right: calc(-14.5 * var(--k));
+  top: .5em;
+  width: calc(7 * var(--k));
+  height: calc(7 * var(--k));
   background: #e0b45a;
   rotate: 45deg;
 }
 
 .cl-names span.cl-last {
+  grid-column: 1 / -1;
+  text-align: center;
   font-style: italic;
   color: #f6d38a;
   margin-top: calc(2 * var(--k));

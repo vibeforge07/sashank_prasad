@@ -165,7 +165,7 @@
 }
 
 /* ---- the scroll watermark: a faint word at the foot of the screen that keeps saying "keep going" ---- */
-.scroll-mark { position: fixed; z-index: 35; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; color: #fff; opacity: .78; text-shadow: 0 0 12px rgba(20, 8, 10, .7), 0 0 4px rgba(20, 8, 10, .55), 0 1px 2px rgba(20, 8, 10, .6); transition: opacity .6s; }
+.scroll-mark { position: fixed; z-index: 35; left: 50%; bottom: max(20px, env(safe-area-inset-bottom)); translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; color: #fff; opacity: .88; text-shadow: 0 0 12px rgba(20, 8, 10, .85), 0 0 4px rgba(20, 8, 10, .75), 0 1px 2px rgba(20, 8, 10, .8); transition: opacity .6s; }
 .scroll-mark span { font: 600 11px/1 'Cinzel', serif; letter-spacing: .42em; padding-left: .42em; text-transform: uppercase; }
 .scroll-mark:lang(bn), .scroll-mark:lang(hi) { gap: 6px; }
 .scroll-mark:lang(bn) span, .scroll-mark:lang(hi) span { font: 400 14px/1.2 var(--body); letter-spacing: .06em; padding: 0; text-transform: none; }
@@ -175,7 +175,7 @@
 .scroll-mark.off { opacity: 0; }
 /* on a phone the language and sound buttons sit along the bottom edge, so the word rides just above them */
 @media (max-width: 600px) { .scroll-mark { bottom: calc(64px + env(safe-area-inset-bottom)); } }
-.scroll-mark.on-cover { color: #8a1430; opacity: .9; text-shadow: 0 0 10px rgba(255, 246, 226, .9); }
+.scroll-mark.on-cover { color: var(--mark-cover, #8a1430); opacity: .9; text-shadow: 0 0 10px rgba(255, 246, 226, .9); }
 .scroll-mark.on-cover { gap: 4px; translate: -50% 18px; }
 .scroll-mark.on-cover i { height: 16px; background: rgba(138, 20, 48, .25); box-shadow: none; }
 .scroll-mark.on-cover i::after { background: currentColor; }
