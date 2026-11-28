@@ -516,6 +516,11 @@ export function Closing({ c, lang }) {
     light()
   }
 
+  // both arch pictures decoded up front, so lighting never waits on one
+  useEffect(() => {
+    ['closing-arch-night', 'closing-arch-warm'].forEach((n) => { const i = new Image(); i.src = artUrl(n); i.decode?.().catch(() => {}) })
+  }, [])
+
   // nobody tapped: the lamp lights itself after a while on screen
   useEffect(() => {
     if (lit) return
@@ -535,7 +540,10 @@ export function Closing({ c, lang }) {
       .to($('.cl-hint'), { autoAlpha: 0, duration: 0.3 }, 0)
       .fromTo($$('.cl-flame'), { scale: 0, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.7, ease: 'back.out(2.4)', stagger: 0.12 }, 0)
       .fromTo($('.cl-glow'), { autoAlpha: 0, scale: 0.3 }, { autoAlpha: 1, scale: 1, duration: 1.6, ease: 'power2.out' }, 0.1)
-      .fromTo($$('.cl-night'), { '--r': '-25%' }, { '--r': '140%', duration: 2.4, ease: 'power1.inOut' }, 0.2)
+      // the warm arch fades in over the night one, which stays underneath the whole time, so the frame never
+      // goes blank: only the see-through changes, which a phone does not have to draw again (a growing mask did,
+      // and on a phone the big arch showed empty while it was redrawn)
+      .fromTo($$('.cl-warm'), { opacity: 0.001 }, { opacity: 1, duration: 1.8, ease: 'power1.inOut' }, 0.25)
       .fromTo($$('.cl-niche'), { autoAlpha: 0, scale: 0.2 }, { autoAlpha: 1, scale: 1, duration: 0.5, ease: 'back.out(2)', stagger: { each: 0.07, from: 'end' } }, 0.5)
       .fromTo($$('.cl-lantern'), { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.6)
       .fromTo($$('.cl-body [data-r]'), { autoAlpha: 0, y: 14, filter: 'blur(6px)' },
@@ -559,8 +567,8 @@ export function Closing({ c, lang }) {
   )
   // the carved arch in its two lights, with its lanterns, the lamps on its pillars and the glints on its carving
   const face = <>
-    <i className="cl-face cl-warm" style={{ borderImageSource: `url(${artUrl('closing-arch-warm')})` }} />
     <i className="cl-face cl-night" style={{ borderImageSource: `url(${artUrl('closing-arch-night')})` }} />
+    <i className="cl-face cl-warm" style={{ borderImageSource: `url(${artUrl('closing-arch-warm')})` }} />
     {['l', 'r'].map((x) => <i key={x} className={`cl-lantern is-${x}`} />)}
     {NICHES.map(([x, y]) => <i key={`${x}-${y}`} className="cl-niche" style={{ '--nx': x, '--ny': y.toFixed(4) }} />)}
     <div className="iv-sparks">{GLINTS.map(([x, y, sz]) => <i key={`${x}-${y}`} className="iv-spark" style={{ left: `${x}%`, top: `${y}%`, '--s': sz }} />)}</div>

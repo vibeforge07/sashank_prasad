@@ -1204,3 +1204,14 @@
   .cl-side-l { right: calc(100% + var(--aw) * .32); }
   .cl-side-r { left: calc(100% + var(--aw) * .32); }
 }
+
+/* lighting the lamp (Closing in Words.jsx): the night arch stays put and the warm one fades in over it */
+.cl-night {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+.cl-warm {
+  opacity: .001;
+  will-change: opacity;
+}
