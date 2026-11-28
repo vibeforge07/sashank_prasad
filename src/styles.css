@@ -244,7 +244,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .i-pause { clip-path: polygon(0 0, 36% 0, 36% 100%, 0 100%, 0 0, 64% 0, 100% 0, 100% 100%, 64% 100%, 64% 0); }
 .i-sound { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); }
 .i-mute { clip-path: polygon(0 30%, 28% 30%, 62% 0, 62% 100%, 28% 70%, 0 70%); opacity: .4; }
-/* first page: the tall backdrop on phones, the wide one on laptops */
+/* first page: full-viewport sky and phone/laptop layout toggle */
+#hero [data-l='intro-sky'] { inset: 0 !important; width: 100% !important; height: 100% !important; margin: 0 !important; }
 @container (min-aspect-ratio: 1/1) { #hero [data-l$='-t'] { display: none; } }
 @container (max-aspect-ratio: 1/1) { #hero [data-l$='-w'] { display: none; } }
 /* the Reception's stage is still a whole painting with square edges: its sides and top fade into the night,
@@ -255,9 +256,3 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   mask-image: linear-gradient(90deg, #0000, #000 11%, #000 89%, #0000), linear-gradient(#0000, #000 8%);
   mask-composite: intersect;
 }
-/* tall phones have sky to spare between the names and the city: the city, the couple and the tram come up
-   (at most 400 units), and the floor picture fills in below them */
-@container (max-aspect-ratio: 53/100) { #hero .world { --lift: min(400 * var(--u), max(0px, (100cqh - 1920 * var(--u)) * 0.6)); } }
-#hero :is([data-l='scene-t'], [data-l='tram-t'], [data-l='taxi-t'], [data-l^='hero-']) { margin-bottom: var(--lift, 0px); }
-#hero [data-l='floor-t'] { bottom: var(--lift, 0px) !important; translate: 0 100%; }
-#hero [data-l^='scene-'] img { max-height: none !important; } /* the road must stay where the tram and taxi ride */

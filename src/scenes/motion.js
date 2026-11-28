@@ -34,8 +34,13 @@ export function lines(tl, root, at, { dur = 0.75, step = 0.55 } = {}) {
 const inner = (q, id) => q(id)?.firstElementChild
 
 export const idle = {
-  // drives across the whole screen to the right, again and again
-  drive: (q, id, dur, rest) => inner(q, id) && gsap.fromTo(inner(q, id), { x: '-75vw' }, { x: '75vw', duration: dur, ease: 'none', repeat: -1, repeatDelay: rest }),
+  // drives across the whole screen (rightward by default, or pass from/to for leftward), again and again
+  drive: (q, id, dur, rest, from = '-85vw', to = '85vw') => inner(q, id) && gsap.fromTo(inner(q, id), { x: from }, { x: to, duration: dur, ease: 'none', repeat: -1, repeatDelay: rest }),
+  spin: (q, id, dur, rest, deg = 2880) => {
+    const img = q(id)?.querySelector('img')
+    return img && gsap.fromTo(img, { rotation: 0 }, { rotation: deg, duration: dur, ease: 'none', repeat: -1, repeatDelay: rest })
+  },
+  glow: (q, id, dur = 3.6) => inner(q, id) && gsap.fromTo(inner(q, id), { opacity: 0.88, filter: 'brightness(0.96)' }, { opacity: 1, filter: 'brightness(1.12)', duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
   drift: (q, id, x, dur) => gsap.fromTo(inner(q, id), { x: -x }, { x, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut' }),
   bob: (q, id, y = 5, dur = 2.4, rot = 1) => gsap.fromTo(inner(q, id), { y: -y, rotation: -rot }, { y, rotation: rot, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: '50% 100%' }),
   sway: (q, id, deg = 1.5, dur = 2.6, origin = '50% 0%') => gsap.fromTo(inner(q, id), { rotation: -deg }, { rotation: deg, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: origin }),

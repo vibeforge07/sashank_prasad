@@ -37,27 +37,88 @@ export const SCENES = [
   {
     id: 'hero', sky: CALM, tone: 'day', text: { top: 85 }, leave: 'cut', hold: 4,
     layers: [
-      ...clouds(),
-      // one painted far bank (Howrah Bridge, the steel works, the Tata Park diamond, a road with tram rails),
-      // a wide picture for laptops and a tall one for phones; the tram and the taxi drive along its road
-      L('scene-w', 2200, 1103, { art: 'hero-wide', z: 2, full: true, kind: 'ground', tall: 0.88 }),
-      L('scene-t', 1300, 1765, { art: 'hero-tall', z: 2, full: true, kind: 'ground' }),
-      // tall phones lift the scene up to the words (styles.css, --lift); this floor fills in below it
-      L('floor-t', 1300, 401, { art: 'hero-floor', z: 2, full: true, kind: 'ground' }),
-      L('tram-w', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 2200, tall: 1.7552, at: 0.236, rw: 0.095 } }),
-      L('taxi-w', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 2200, tall: 1.7552, at: 0.2177, rw: 0.066 } }),
-      L('tram-t', 1400, 588, { art: 'kolkata-tram', z: 3, road: { base: 1300, at: 0.4317, rw: 0.2 } }),
-      L('taxi-t', 1400, 629, { art: 'kolkata-taxi', z: 4, road: { base: 1300, at: 0.3889, rw: 0.135 } }),
-      person('hero-groom', 470, 960, -230, 110, 7), person('hero-bride', 520, 960, 210, 110, 8),
-      ...flowers('flowers-yellow'),
+      L('intro-sky', 768, 1376, { z: 0, fit: 'fill' }),
+      // sun and sunset clouds
+      L('sun-t', 360, 360, { art: 'intro-sun', x: 255, y: 800, z: 1 }),
+      L('sun-w', 320, 320, { art: 'intro-sun', x: 260, y: 780, z: 1 }),
+      L('cloud-a-t', 540, 160, { art: 'intro-cloud-a', ax: 'l', x: -50, y: 1060, z: 2 }),
+      L('cloud-b-t', 450, 103, { art: 'intro-cloud-b', ax: 'r', x: -30, y: 980, z: 2 }),
+      L('cloud-a-w', 480, 143, { art: 'intro-cloud-a', ax: 'l', x: 40, y: 1140, z: 2 }),
+      L('cloud-b-w', 400, 91, { art: 'intro-cloud-b', ax: 'r', x: 40, y: 1080, z: 2 }),
+      // distant hills
+      L('mountains-t', 1913, 270, { art: 'intro-mountains', y: 650, z: 3, repeat: true }),
+      L('mountains-w', 1913, 250, { art: 'intro-mountains', y: 540, z: 3, repeat: true }),
+      // Kolkata (left) and Jamshedpur (right)
+      L('victoria-t', 440, 289, { art: 'intro-victoria', x: -340, y: 555, z: 4, kind: 'building' }),
+      L('steel-t', 580, 336, { art: 'intro-steel-plant', x: 270, y: 550, z: 4, kind: 'building' }),
+      L('howrah-t', 690, 170, { art: 'intro-howrah-bridge', x: -250, y: 515, z: 5, kind: 'building' }),
+      L('victoria-w', 440, 289, { art: 'intro-victoria', x: -450, y: 470, z: 4, kind: 'building' }),
+      L('steel-w', 560, 325, { art: 'intro-steel-plant', x: 320, y: 480, z: 4, kind: 'building' }),
+      L('howrah-w', 720, 178, { art: 'intro-howrah-bridge', x: -290, y: 440, z: 5, kind: 'building' }),
+      // greenery, school & diamond
+      L('trees-t', 1914, 240, { art: 'intro-trees', y: 405, z: 5, repeat: true }),
+      L('trees-w', 1914, 220, { art: 'intro-trees', y: 360, z: 5, repeat: true }),
+      L('school-t', 500, 243, { art: 'intro-school', x: 20, y: 410, z: 6, kind: 'building' }),
+      L('diamond-t', 270, 237, { art: 'intro-diamond', x: 345, y: 420, z: 7 }),
+      L('school-w', 480, 233, { art: 'intro-school', x: 30, y: 360, z: 6, kind: 'building' }),
+      L('diamond-w', 250, 220, { art: 'intro-diamond', x: 480, y: 365, z: 7 }),
+      // river and boats
+      L('river-t', 1914, 140, { art: 'intro-river', y: 310, z: 7, repeat: true }),
+      L('river-w', 1914, 120, { art: 'intro-river', y: 280, z: 7, repeat: true }),
+      L('boat-a-t', 195, 70, { art: 'intro-boat-a', x: -330, y: 375, z: 8 }),
+      L('boat-b-t', 135, 87, { art: 'intro-boat-b', x: -120, y: 390, z: 8 }),
+      L('boat-a-w', 185, 66, { art: 'intro-boat-a', x: -370, y: 335, z: 8 }),
+      L('boat-b-w', 130, 84, { art: 'intro-boat-b', x: -160, y: 350, z: 8 }),
+      // road, lamps, tram, taxi + wheels, and foreground railing
+      L('road-t', 1914, 350, { art: 'intro-road', y: 40, z: 9, repeat: true }),
+      L('road-w', 1914, 315, { art: 'intro-road', y: 35, z: 9, repeat: true }),
+      L('lamp-1-t', 76, 356, { art: 'intro-lamp-post', x: -370, y: 295, z: 10 }),
+      L('lamp-2-t', 76, 356, { art: 'intro-lamp-post', x: 320, y: 295, z: 10 }),
+      L('lamp-1-w', 70, 328, { art: 'intro-lamp-post', x: -450, y: 260, z: 10 }),
+      L('lamp-2-w', 70, 328, { art: 'intro-lamp-post', x: 60, y: 260, z: 10 }),
+      L('lamp-3-w', 70, 328, { art: 'intro-lamp-post', x: 460, y: 260, z: 10 }),
+      L('tram-t', 540, 196, { art: 'intro-tram', x: 0, y: 155, z: 10 }),
+      L('tram-w', 520, 188, { art: 'intro-tram', x: 0, y: 138, z: 10 }),
+      L('wheel-r-t', 64, 64, { art: 'intro-taxi-wheel', x: -117, y: 208, z: 11 }),
+      L('wheel-f-t', 64, 64, { art: 'intro-taxi-wheel', x: 119, y: 208, z: 11 }),
+      L('taxi-t', 420, 162, { art: 'intro-taxi', x: 0, y: 230, z: 12 }),
+      L('wheel-r-w', 61, 61, { art: 'intro-taxi-wheel', x: -112, y: 184, z: 11 }),
+      L('wheel-f-w', 61, 61, { art: 'intro-taxi-wheel', x: 113, y: 184, z: 11 }),
+      L('taxi-w', 400, 154, { art: 'intro-taxi', x: 0, y: 205, z: 12 }),
+      L('railing-t', 1914, 165, { art: 'intro-railing', y: 0, z: 13, repeat: true }),
+      L('railing-w', 1914, 150, { art: 'intro-railing', y: 0, z: 13, repeat: true }),
+      person('hero-groom', 470, 960, -230, 110, 14), person('hero-bride', 520, 960, 210, 110, 15),
+      ...flowers('flowers-yellow', 16),
     ],
     play(tl, q, root) {
+      rise(tl, q, ['mountains-t', 'mountains-w'], 0, 1.3)
+      rise(tl, q, ['victoria-t', 'victoria-w', 'steel-t', 'steel-w'], 0.12, 1.2)
+      rise(tl, q, ['howrah-t', 'howrah-w', 'school-t', 'school-w', 'diamond-t', 'diamond-w'], 0.22, 1.2)
+      rise(tl, q, ['trees-t', 'trees-w'], 0.2, 1.1)
+      for (const id of ['river-t', 'river-w', 'boat-a-t', 'boat-b-t', 'boat-a-w', 'boat-b-w']) slide(tl, q, id, 'down', 0.3, 1.0)
+      for (const id of ['road-t', 'road-w', 'lamp-1-t', 'lamp-2-t', 'lamp-1-w', 'lamp-2-w', 'lamp-3-w', 'tram-t', 'tram-w', 'taxi-t', 'wheel-r-t', 'wheel-f-t', 'taxi-w', 'wheel-r-w', 'wheel-f-w']) slide(tl, q, id, 'down', 0.4, 1.0)
+      for (const id of ['railing-t', 'railing-w']) slide(tl, q, id, 'down', 0.5, 0.95)
       slide(tl, q, 'hero-groom', 'left', 1.5, 1.1)
       slide(tl, q, 'hero-bride', 'right', 1.5, 1.1)
       lines(tl, root, 3, { step: 0.55 })
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9),
-      idle.drive(q, 'taxi-w', 11, 1.5), idle.drive(q, 'tram-w', 30, 0), idle.drive(q, 'taxi-t', 8, 1.5), idle.drive(q, 'tram-t', 20, 0)],
+    idle: (q) => [
+      idle.glow(q, 'sun-t', 3.6), idle.glow(q, 'sun-w', 3.6),
+      idle.drift(q, 'cloud-a-t', 26, 9), idle.drift(q, 'cloud-b-t', 34, 11),
+      idle.drift(q, 'cloud-a-w', 28, 10), idle.drift(q, 'cloud-b-w', 36, 12),
+      idle.bob(q, 'boat-a-t', 4, 2.8, 1.6), idle.drift(q, 'boat-a-t', 18, 7),
+      idle.bob(q, 'boat-b-t', 4, 3.2, -1.8), idle.drift(q, 'boat-b-t', 14, 8),
+      idle.bob(q, 'boat-a-w', 4, 2.8, 1.6), idle.drift(q, 'boat-a-w', 18, 7),
+      idle.bob(q, 'boat-b-w', 4, 3.2, -1.8), idle.drift(q, 'boat-b-w', 14, 8),
+      ...petals(q),
+      idle.lean(q, 'hero-groom', 0.8, 1.7), idle.lean(q, 'hero-bride', -0.8, 1.9),
+      idle.drive(q, 'taxi-w', 11, 1.5), idle.drive(q, 'wheel-r-w', 11, 1.5), idle.drive(q, 'wheel-f-w', 11, 1.5),
+      idle.spin(q, 'wheel-r-w', 11, 1.5, 3600), idle.spin(q, 'wheel-f-w', 11, 1.5, 3600),
+      idle.drive(q, 'tram-w', 24, 0, '85vw', '-85vw'),
+      idle.drive(q, 'taxi-t', 8, 1.5), idle.drive(q, 'wheel-r-t', 8, 1.5), idle.drive(q, 'wheel-f-t', 8, 1.5),
+      idle.spin(q, 'wheel-r-t', 8, 1.5, 2880), idle.spin(q, 'wheel-f-t', 8, 1.5, 2880),
+      idle.drive(q, 'tram-t', 18, 0, '85vw', '-85vw'),
+    ],
   },
   {
     // the invitation card itself: envelope, seal, cover, pages (scenes/invitation.js),
