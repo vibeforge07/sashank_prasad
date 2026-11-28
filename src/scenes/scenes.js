@@ -180,21 +180,15 @@ export const SCENES = [
       L('garden-t', 1080, 464, { art: 'sangeet-garden', y: 820, z: 1, full: true, base: '#8c8401' }),
       L('sangeet-floor', 2200, 267, { z: 1, full: true, kind: 'ground' }),
       L('sangeet-music', 420, 189, { y: 40, x: -720, z: 4 }),
-      L('sangeet-hanging', 1300, 375, { full: true, ay: 't', y: -12, z: 3 }),
       L('sangeet-stage-small', 1250, 668, { y: 330, z: 2 }),
-      L('drape-l', 330, 790, { art: 'sangeet-drape', ax: 'l', x: -60, ay: 't', y: -10, z: 2 }),
-      L('drape-r', 330, 790, { art: 'sangeet-drape', ax: 'r', x: -60, ay: 't', y: -10, z: 2, flip: true }),
       L('candle-l', 200, 763, { art: 'sangeet-candles', ax: 'l', x: 6, y: 70, z: 4 }),
       L('candle-r', 200, 763, { art: 'sangeet-candles', ax: 'r', x: 6, y: 70, z: 4, flip: true }),
       person('sangeet-groom', 450, 692, -150, 130, 5), person('sangeet-bride', 485, 684, 130, 120, 6),
       ...flowers('flowers-white'),
     ],
     play(tl, q, root) {
-      slide(tl, q, 'sangeet-hanging', 'up', 0, 1.1)
       rise(tl, q, ['garden-w', 'garden-t'], 0.2, 1.8)
       slide(tl, q, 'sangeet-music', 'left', 0.6, 1.1)
-      slide(tl, q, 'drape-l', 'left', 0.2, 1.2)
-      slide(tl, q, 'drape-r', 'right', 0.2, 1.2)
       slide(tl, q, ['candle-l'], 'left', 0.1, 1.1)
       slide(tl, q, ['candle-r'], 'right', 0.1, 1.1)
       slide(tl, q, 'sangeet-bride', 'right', 0.3, 1.3)
@@ -202,7 +196,7 @@ export const SCENES = [
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.1, 1.2)
       lines(tl, root, 2.7)
     },
-    idle: (q) => [...petals(q), ...drapes(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
+    idle: (q) => [...petals(q), idle.lean(q, 'sangeet-groom', 2.2, 0.75), idle.lean(q, 'sangeet-bride', -2.2, 0.75)],
   },
   {
     // the reference film's Wedding, laid out like Haldi and Mehendi: a moonlit night, a marigold toran across the top,
