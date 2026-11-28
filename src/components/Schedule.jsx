@@ -144,7 +144,6 @@ export function Events({ c, lang }) {
       <div className="sch-grid">
         {FRAMED.map((id, i) => {
           const e = c.events[id]
-          const where = [e.time, e.venue[0]].filter(Boolean).join(' · ')
           return (
             <div className="ev-slot" key={id}>
               <article className="ev">
@@ -153,12 +152,9 @@ export function Events({ c, lang }) {
                     <div className="ev__media">
                       <Scene scene={SCENES.find((s) => s.id === id)} lang={lang} mini ref={(r) => { minis.current[i] = r }} />
                     </div>
+                    {/* only the name here: the day, date and the rest are on the timeline below */}
                     <div className="ev__body">
                       <h3 className="ev__title">{e.title}</h3>
-                      <p className="ev__day">{e.day}</p>
-                      <p className="ev__when">{e.date}</p>
-                      {where && <p className="ev__where">{where}</p>}
-                      <p className="ev__note">{e.tag}</p>
                     </div>
                   </div>
                 </div>
