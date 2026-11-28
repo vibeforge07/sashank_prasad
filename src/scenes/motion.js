@@ -70,6 +70,22 @@ export const idle = {
       .to(el, { opacity: 0.93, filter: 'brightness(1.02)', duration: 0.36, ease: 'sine.inOut' })
       .to(el, { opacity: 1, filter: 'brightness(1.09)', duration: 0.26, ease: 'sine.inOut' })
   },
+  // the havan fire: the two flame drawings trade places in an uneven rhythm and stretch a little from their
+  // base, so the fire seems alive (a fixed pattern, the same every time)
+  fire: (q, aId, bId) => {
+    const a = inner(q, aId)
+    const b = inner(q, bId)
+    if (!a || !b) return null
+    gsap.set([a, b], { transformOrigin: '50% 100%' })
+    gsap.set(b, { opacity: 0 })
+    const steps = [[1, 1.05, 0.18], [0, 0.97, 0.22], [1, 1.09, 0.15], [0.45, 1, 0.2], [0, 1.06, 0.24], [1, 0.96, 0.17], [0.6, 1.04, 0.21], [0, 0.99, 0.19]]
+    const t = gsap.timeline({ repeat: -1 })
+    steps.forEach(([oa, sy, d]) => {
+      t.to(a, { opacity: oa, scaleY: sy, skewX: (sy - 1) * 30, duration: d, ease: 'sine.inOut' })
+        .to(b, { opacity: 1 - oa, scaleY: 2 - sy, skewX: (1 - sy) * 30, duration: d, ease: 'sine.inOut' }, '<')
+    })
+    return t
+  },
   // couple walks right in front of the fire (frontId), then turns and walks left behind it (backId)
   pheras: (q, frontId, backId, span = 22, halfDur = 5.5) => {
     const f = inner(q, frontId)
