@@ -25,6 +25,7 @@ EYES = {  # figure: one list of eye centres per person; (x, y, r) looks only r p
     'aibur-family': [[(383, 184, 18), (430, 178, 18)], [(650, 203, 24), (712, 210, 24)], [(964, 118, 18), (1016, 146, 18)], [(1113, 366, 16), (1155, 396, 16)]],
     'haldi-couple': [[(460, 158, 26), (520, 138, 24)], [(928, 203), (993, 215)]],
     'sangeet-bride': [[(458, 233), (522, 248)]],
+    'wedding-pheras': [[('box', 328, 226, 360, 240), ('box', 372, 232, 389, 243)], [('box', 911, 178, 940, 188)]],
 }
 SS = 4  # drawn this many times larger, then shrunk, for smooth edges
 LASH = (44, 26, 20)

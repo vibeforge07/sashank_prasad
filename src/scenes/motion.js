@@ -61,4 +61,31 @@ export const idle = {
     return t
   },
   hinge: (q, id, from, to, dur, origin) => gsap.fromTo(inner(q, id), { rotation: from }, { rotation: to, duration: dur, yoyo: true, repeat: -1, ease: 'sine.inOut', transformOrigin: origin }),
+  flicker: (q, id) => {
+    const el = inner(q, id)
+    if (!el) return null
+    return gsap.timeline({ repeat: -1 })
+      .to(el, { opacity: 0.88, filter: 'brightness(0.95)', duration: 0.3, ease: 'sine.inOut' })
+      .to(el, { opacity: 1, filter: 'brightness(1.15)', duration: 0.24, ease: 'sine.inOut' })
+      .to(el, { opacity: 0.93, filter: 'brightness(1.02)', duration: 0.36, ease: 'sine.inOut' })
+      .to(el, { opacity: 1, filter: 'brightness(1.09)', duration: 0.26, ease: 'sine.inOut' })
+  },
+  // couple walks right in front of the fire (frontId), then turns and walks left behind it (backId)
+  pheras: (q, frontId, backId, span = 22, halfDur = 5.5) => {
+    const f = inner(q, frontId)
+    const b = inner(q, backId)
+    if (!f || !b) return null
+    const fade = 0.6
+    const t = gsap.timeline({ repeat: -1 })
+    t.set(f, { xPercent: -span, autoAlpha: 1 }, 0)
+      .set(b, { xPercent: span, autoAlpha: 0 }, 0)
+      .to(f, { xPercent: span, duration: halfDur, ease: 'sine.inOut' }, 0)
+      .to(f, { autoAlpha: 0, duration: fade, ease: 'sine.inOut' }, halfDur - fade)
+      .to(b, { autoAlpha: 1, duration: fade, ease: 'sine.inOut' }, halfDur - fade)
+      .set(f, { xPercent: -span }, halfDur + 0.05)
+      .to(b, { xPercent: -span, duration: halfDur, ease: 'sine.inOut' }, halfDur)
+      .to(b, { autoAlpha: 0, duration: fade, ease: 'sine.inOut' }, halfDur * 2 - fade)
+      .to(f, { autoAlpha: 1, duration: fade, ease: 'sine.inOut' }, halfDur * 2 - fade)
+    return t
+  },
 }

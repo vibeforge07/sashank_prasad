@@ -279,8 +279,9 @@ export const SCENES = [
       L('drape-r', 330, 842, { art: 'wedding-drape', ax: 'r', x: -60, ay: 't', y: -10, z: 3, flip: true }),
       L('banana-l', 280, 438, { art: 'wedding-banana', ax: 'l', x: -90, y: 150, z: 7 }),
       L('banana-r', 280, 438, { art: 'wedding-banana', ax: 'r', x: -90, y: 150, z: 7, flip: true }),
-      L('wedding-sofa', 1180, 475, { y: 70, z: 5 }),
-      person('wedding-couple', 1020, 737, 0, 95, 6),
+      L('pheras-b', 520, 462, { art: 'wedding-pheras', y: 185, z: 5, kind: 'person', flip: true }),
+      L('wedding-agni', 220, 220, { y: 115, z: 6 }),
+      L('pheras-f', 600, 533, { art: 'wedding-pheras', y: 95, z: 7, kind: 'person' }),
       ...flowers('flowers-yellow'),
     ],
     play(tl, q, root) {
@@ -291,10 +292,11 @@ export const SCENES = [
       slide(tl, q, ['fg-l', 'fg-r'], 'down', 0.2, 1)
       slide(tl, q, 'banana-l', 'left', 0.4, 1.1)
       slide(tl, q, 'banana-r', 'right', 0.4, 1.1)
-      slide(tl, q, ['wedding-sofa', 'wedding-couple'], 'down', 0.7, 1.2)
+      slide(tl, q, 'wedding-agni', 'down', 0.65, 1.1)
+      slide(tl, q, ['pheras-f', 'pheras-b'], 'down', 0.8, 1.2)
       lines(tl, root, 2.8)
     },
-    idle: (q) => [...cloudIdle(q), ...petals(q), ...drapes(q), idle.sway(q, 'banana-l', 1, 3.4, '50% 100%'), idle.sway(q, 'banana-r', 1, 3.8, '50% 100%'), idle.breathe(q, 'wedding-couple')],
+    idle: (q) => [...cloudIdle(q), ...petals(q), ...drapes(q), idle.sway(q, 'banana-l', 1, 3.4, '50% 100%'), idle.sway(q, 'banana-r', 1, 3.8, '50% 100%'), idle.flicker(q, 'wedding-agni'), idle.pheras(q, 'pheras-f', 'pheras-b', 22, 5.5)],
   },
   {
     // the Reception laid out like Sangeet and Wedding, inside the hotel's hall: the client's reception stage drawn

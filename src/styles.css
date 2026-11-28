@@ -127,7 +127,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
   /* the garden and the skyline need room between the words and the stage: the stage and the people stand a
      little smaller here, and the backdrop sits just under the words */
   #sangeet :is([data-l='sangeet-stage-small'], [data-l='sangeet-groom'], [data-l='sangeet-bride'], [data-l^='candle-']),
-  #wedding :is([data-l='wedding-stage-small'], [data-l='wedding-sofa'], [data-l='wedding-couple'], [data-l^='banana-']) { --u: calc(100cqh / 2010 * .84); }
+  #wedding :is([data-l='wedding-stage-small'], [data-l='wedding-agni'], [data-l^='pheras-'], [data-l^='banana-']) { --u: calc(100cqh / 2010 * .84); }
   #sangeet [data-l='garden-t'] { bottom: calc(470 * var(--u)) !important; }
   #wedding [data-l='city-t'] { bottom: calc(720 * var(--u)) !important; }
 }
