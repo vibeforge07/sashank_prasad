@@ -7,3 +7,4 @@ dist/
 *.log
 src/content/contact.js
 __pycache__/
+vercel-env-VITE_CONTACT.txt

@@ -8,7 +8,10 @@ import alpona from '../opening/alpona-white.webp'
 import chandelier from '../opening/chandelier.webp'
 
 // phone number and home addresses live outside git, see .gitignore
-const contact = Object.values(import.meta.glob('../content/contact.js', { eager: true }))[0]?.CONTACT
+// the family's phone and home addresses stay out of the public repository: on this computer they come from
+// src/content/contact.js (not in git), on Vercel from the VITE_CONTACT environment variable (the same object as JSON)
+const fromEnv = () => { try { return import.meta.env.VITE_CONTACT ? JSON.parse(import.meta.env.VITE_CONTACT) : null } catch { return null } }
+const contact = Object.values(import.meta.glob('../content/contact.js', { eager: true }))[0]?.CONTACT ?? fromEnv()
 
 
 // every number in the reader's own digits
