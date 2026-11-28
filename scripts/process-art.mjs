@@ -10,9 +10,9 @@ const OUT = 'src/art'
 const PREVIEW = 'art/preview'
 // wide strips keep their full width
 const MAX = { default: 1400, wide: 2600 }
-const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape|date-arch|date-corner|\w+-tile)/ // meant to run off the picture
+const EDGE = /^(foliage-corner|flowers-|mehendi-window|\w+-drape|date-arch|date-corner|\w+-tile|intro-sky)/ // meant to run off the picture
 // (a small stage stands on its own, so it is not a strip)
-const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon|-floor|-garden|-wall|-ledge|-city-art|date-arch-wide)/
+const WIDE = /(-ground|-courtyard|-veranda|-stage(?!-small)|-hall|-seat|-hanging|-hills|sunrise|clouds-horizon|-floor|-garden|-wall|-ledge|-city-art|date-arch-wide|intro-mountains|intro-trees|intro-river|intro-railing|intro-road|intro-howrah-bridge)/
 // backgrounds a phone shows larger than they were drawn (a wide strip shows only its middle there, at about
 // 1.5 times its pixels): written at twice their size and sharpened, so the ink lines stay crisp on the phone
 // instead of being stretched soft by the browser
@@ -21,7 +21,8 @@ const SHARP = /^(briddhi-courtyard|tilak-ground|tilak-madwa|aibur-veranda|river-
 // a picture that is cut in two so one part can move: the part keeps the same frame as the rest
 // (fractions of the raw picture: keep = the part's box, cut = what the rest loses)
 // a repeating tile keeps its whole frame (trimming it would break the repeat)
-const TILE = /-tile$/
+const TILE = /(-tile|^intro-sky)$/
+const NO_KEY = /^intro-sky$/
 
 const SPLIT = {
   'haldi-groom': { part: 'haldi-arm', keep: [0.564, 0, 1, 0.467], cut: [0.587, 0, 1, 0.467] },
@@ -39,16 +40,23 @@ const excess = {
   blue: (r, g, b) => b - Math.max(r, g),
   magenta: (r, g, b) => Math.min(r, b) - g,
 }
+// per-file keying tweaks so sage hills stay solid and tight lattice / smoke edges stay clean
+const KEY_TUNING = {
+  'intro-mountains': { low: 0.52, span: 0.26, despill: 2 },
+  'intro-steel-plant': { low: 0.03, span: 0.35, despill: 0 },
+  'intro-howrah-bridge': { low: 0.10, span: 0.30, despill: 0 },
+  'intro-sun': { low: 0.16, span: 0.32, despill: 0 },
+}
 
 async function one(file) {
   const name = path.parse(file).name
   const { data, info } = await sharp(path.join(RAW, file)).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
   const { width: W, height: H } = info
-  let note = 'already transparent'
+  let note = NO_KEY.test(name) ? 'kept whole' : 'already transparent'
   let bad = ''
 
   const hasAlpha = data.some((v, i) => i % 4 === 3 && v < 250)
-  if (!hasAlpha) {
+  if (!hasAlpha && !NO_KEY.test(name)) {
     // the key is the flat colour that covers most of the picture
     const count = { green: [], blue: [], magenta: [] }
     for (let i = 0; i < data.length; i += 4 * 13) {
@@ -62,10 +70,11 @@ async function one(file) {
     else {
       const ref = [0, 1, 2].map((c) => hits.map((h) => h[c]).sort((x, y) => x - y)[hits.length >> 1])
       const full = excess[k](...ref)
+      const { low, span, despill } = KEY_TUNING[name] || { low: 0.22, span: 0.5, despill: 6 }
       for (let i = 0; i < data.length; i += 4) {
         const [r, g, b] = data.subarray(i, i + 3)
         const e = excess[k](r, g, b)
-        const a = Math.min(1, Math.max(0, 1 - (e - full * 0.22) / (full * 0.5)))
+        const a = Math.min(1, Math.max(0, 1 - (e - full * low) / (full * span)))
         if (a < 1) {
           if (a > 0) for (let c = 0; c < 3; c++) data[i + c] = Math.min(255, Math.max(0, (data[i + c] - ref[c] * (1 - a)) / a))
           data[i + 3] = Math.round(a * 255)
@@ -73,8 +82,8 @@ async function one(file) {
         // take the leftover tint off the edges
         if (a < 1) {
           const [R, G, B] = data.subarray(i, i + 3)
-          if (k === 'green') data[i + 1] = Math.min(G, Math.max(R, B) + 6)
-          if (k === 'blue') data[i + 2] = Math.min(B, Math.max(R, G) + 6)
+          if (k === 'green') data[i + 1] = Math.min(G, Math.max(R, B) + despill)
+          if (k === 'blue') data[i + 2] = Math.min(B, Math.max(R, G) + despill)
           if (k === 'magenta') { data[i] = Math.min(R, G + 40); data[i + 2] = Math.min(B, G + 40) }
         }
       }
